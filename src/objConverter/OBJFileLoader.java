@@ -77,11 +77,15 @@ public class OBJFileLoader {
 		float[] verticesArray = new float[vertices.size() * 3];
 		float[] texturesArray = new float[vertices.size() * 2];
 		float[] normalsArray = new float[vertices.size() * 3];
+		Vector3f min = new Vector3f(0, 0, 0);
+		Vector3f max = new Vector3f(0, 0, 0);
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray,
-				texturesArray, normalsArray);
+				texturesArray, normalsArray, min, max);
 		int[] indicesArray = convertIndicesListToArray(indices);
 		ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray,
 				furthest);
+		data.setMax(max);
+		data.setMin(min);
 		return data;
 	}
 
@@ -110,8 +114,15 @@ public class OBJFileLoader {
 
 	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures,
 			List<Vector3f> normals, float[] verticesArray, float[] texturesArray,
-			float[] normalsArray) {
+			float[] normalsArray, Vector3f min, Vector3f max) {
 		float furthestPoint = 0;
+		min.x = vertices.get(0).getPosition().x;
+		min.y = vertices.get(0).getPosition().y;
+		min.z = vertices.get(0).getPosition().z;
+		max.x = vertices.get(0).getPosition().x;
+		max.y = vertices.get(0).getPosition().y;
+		max.z = vertices.get(0).getPosition().z;
+		
 		for (int i = 0; i < vertices.size(); i++) {
 			Vertex currentVertex = vertices.get(i);
 			if (currentVertex.getLength() > furthestPoint) {
@@ -128,6 +139,24 @@ public class OBJFileLoader {
 			normalsArray[i * 3] = normalVector.x;
 			normalsArray[i * 3 + 1] = normalVector.y;
 			normalsArray[i * 3 + 2] = normalVector.z;
+			if (position.x < min.x) {
+				min.x = position.x;
+			}
+			else if (position.x > max.x){
+				max.x = position.x;
+			}
+			if (position.y < min.y) {
+				min.y = position.y;
+			}
+			else if (position.y > max.y){
+				max.y = position.y;
+			}
+			if (position.z < min.z) {
+				min.z = position.z;
+			}
+			else if (position.z > max.z){
+				max.z = position.z;
+			}
 		}
 		return furthestPoint;
 	}

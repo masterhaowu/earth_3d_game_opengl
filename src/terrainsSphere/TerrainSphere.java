@@ -30,36 +30,14 @@ import toolbox.Maths;
 
 public class TerrainSphere {
 
-	public static final int SNOW_TERRAIN = 0;
-	public static final int MOUNTAIN_TERRAIN = 1;
-	public static final int GRASS_TERRAIN = 2;
-	public static final int CLIFF_TERRAIN = 3;
-	public static final int SHALLOW_WATER_TERRAIN = 4;
-	public static final int DEEP_WATER_TERRAIN = 5;
-	public static final int PLAIN_TERRAIN = 6;
-
-	public static final Vector3f SNOW_COLOUR = new Vector3f(1, 1, 1);
-	public static final Vector3f MOUNTAIN_COLOUR = new Vector3f((float) 90 / 255, (float) 90 / 255, (float) 90 / 255);
-	public static final Vector3f GRASS_COLOUR = new Vector3f((float) 181 / 255, (float) 215 / 255, (float) 101 / 255);
-	public static final Vector3f CLIFF_COLOUR = new Vector3f((float) 134 / 255, (float) 95 / 255, (float) 47 / 255);
-	public static final Vector3f SHALLOW_WATER_COLOUR = new Vector3f((float) 144 / 255, (float) 208 / 255,
-			(float) 177 / 255);
-	public static final Vector3f DEEEP_WATER_COLOUR = new Vector3f((float) 49 / 255, (float) 67 / 255,
-			(float) 178 / 255);
-	public static final Vector3f PLAIN_COLOUR = new Vector3f((float) 158 / 255, (float) 149 / 255, (float) 100 / 255);
-
-	public static final Vector3f[] terrainColourArray = { SNOW_COLOUR, MOUNTAIN_COLOUR, GRASS_COLOUR, CLIFF_COLOUR,
-			SHALLOW_WATER_COLOUR, DEEEP_WATER_COLOUR, PLAIN_COLOUR };
-
-	private static final int HEIGHT_MAP_WIDTH = 720;
-	private static final int HEIGHT_MAP_HEIGHT = 360;
-	private static final float HEIGHT_SCALE = 100;
 	// private Loader loader;
 	private RawModel model;
 	private float x;
 	private float y;
 	private float z;
 	private float scale;
+
+	private HeightMapController heightMapController;
 
 	private int faceLoops;
 
@@ -77,11 +55,8 @@ public class TerrainSphere {
 	private List<TerrainVertex> terrainVerticesList = new ArrayList<TerrainVertex>();
 	private HashMap<Long, Integer> middlePointIndexCache;
 
-	private HeightGeneratorSphere heightGeneratorSphere;
+	// private HeightGeneratorSphere heightGeneratorSphere;
 	// private Random random = new Random();
-
-	private float heights[][];
-	private int terrainTypes[][];
 
 	private List<TerrainFace> terrainFacesList = new ArrayList<TerrainFace>();
 	private List<TerrainFace> initTerrainFaces = new ArrayList<TerrainFace>();
@@ -96,127 +71,12 @@ public class TerrainSphere {
 		this.faceLoops = loops;
 		// verticesList = new ArrayList<Vector3f>();
 		middlePointIndexCache = new HashMap<Long, Integer>();
-		heightGeneratorSphere = new HeightGeneratorSphere(HEIGHT_MAP_HEIGHT, HEIGHT_MAP_WIDTH);
-		fillTerrainHeightMapAndTypes();
+
+		heightMapController = new HeightMapController();
+		heightMapController.fillTerrainHeightMapAndTypes();
+		// heightMapController.fillTerrainHeightMapWithEarth();
 
 		this.model = generateTerrainSphereIco(loader);
-	}
-	
-	
-	public void updateColourVBO(Loader loader){
-		int vbo = this.model.getVboColourID();
-		//float[] testingColour = new float[colourFinal.length];
-		//for (int i = 0; i < colourFinal.length; i++) {
-		//	colourFinal[i] = colourFinal[i]/2;
-		//}
-		
-		loader.updateColourData(vbo, colourFinal);
-	}
-	
-	public void setFaceColour(TerrainFace face, Vector3f colour, Loader loader) {
-		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
-
-		for (int i=0; i<neighborVertices.size(); i++){
-			setVertexColour(neighborVertices.get(i), colour);
-		}
-		updateColourVBO(loader);
-	}
-	
-	public void addObjectToFace(TerrainFace face, TerrainObject object, Loader loader){
-		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
-
-		for (int i=0; i<neighborVertices.size(); i++){
-		//for (int i=0; i<1; i++){
-			TerrainVertex vertex = neighborVertices.get(i);
-			vertex.addObject(object);
-			updateVertexColour(vertex);
-		}
-		//updateColourVBO(loader);
-	}
-	
-	public void updateVertexColour(TerrainVertex vertex){
-		//store the vertex colour into colourFinal
-		Vector3f colour = vertex.getColour();
-		int i = vertex.getIndex();
-		colourFinal[i * 3] = colour.x;
-		colourFinal[i * 3 + 1] = colour.y;
-		colourFinal[i * 3 + 2] = colour.z;
-		//colourFinal[i * 3] = 0;
-		//colourFinal[i * 3 + 1] = colour.y;
-		//colourFinal[i * 3 + 2] = colour.z;
-		
-	}
-	
-	public void simpleResetColour(TerrainFace face, Loader loader){
-		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
-
-		for (int i=0; i<neighborVertices.size(); i++){
-			TerrainVertex vertex = neighborVertices.get(i);
-			simpleResetColour(vertex);
-		}
-		updateColourVBO(loader);
-		
-	}
-	
-	public void simpleResetColour(TerrainVertex vertex){
-		Vector3f colour = vertex.getFilteredColour();
-		int i = vertex.getIndex();
-		colourFinal[i * 3] = colour.x;
-		colourFinal[i * 3 + 1] = colour.y;
-		colourFinal[i * 3 + 2] = colour.z;
-	}
-	
-
-	public void setVertexColour(TerrainVertex vertex, Vector3f colour){
-		vertex.setColour(colour);
-		int i = vertex.getIndex();
-		System.out.print("updating index " + i + " \n");
-		colourFinal[i * 3] = colour.x;
-		colourFinal[i * 3 + 1] = colour.y;
-		colourFinal[i * 3 + 2] = colour.z;
-		
-	}
-
-	private void fillTerrainHeightMapAndTypes() {
-		heights = new float[HEIGHT_MAP_HEIGHT][HEIGHT_MAP_WIDTH];
-		terrainTypes = new int[HEIGHT_MAP_HEIGHT][HEIGHT_MAP_WIDTH];
-		for (int i = 0; i < HEIGHT_MAP_HEIGHT; i++) {
-			for (int j = 0; j < HEIGHT_MAP_WIDTH; j++) {
-				float height;
-				if (i < HEIGHT_MAP_HEIGHT * 1 / 8 || i > HEIGHT_MAP_HEIGHT * 7 / 8) {
-					height = heightGeneratorSphere.generateHeight(i, j / 8);
-				}
-				// else if(i > HEIGHT_MAP_HEIGHT * 7/8){
-
-				// }
-				else {
-					height = heightGeneratorSphere.generateHeight(i, j);
-					//height = HeightGeneratorSphere.AMPLITUDE/8f;
-				}
-				// float factor = (float) Math.abs((i - (0.5 *
-				// HEIGHT_MAP_HEIGHT))/HEIGHT_MAP_HEIGHT) * 16;
-				// height = heightGeneratorSphere.generateHeight(i,
-				// (int)(j/factor));
-				
-				heights[i][j] = height;
-				int terrainType = 0;
-				if (height > HeightGeneratorSphere.AMPLITUDE * 0.45) {
-					terrainType = SNOW_TERRAIN;
-					// terrainTypes[j][i] = SNOW_TERRAIN;
-				} else if (height > HeightGeneratorSphere.AMPLITUDE * 0.18) {
-					terrainType = MOUNTAIN_TERRAIN;
-				} else if (height > HeightGeneratorSphere.AMPLITUDE * 0.02) {
-					terrainType = PLAIN_TERRAIN;
-				} else if (height > -HeightGeneratorSphere.AMPLITUDE * 0.05) {
-					terrainType = CLIFF_TERRAIN;
-				} else if (height > -HeightGeneratorSphere.AMPLITUDE * 0.18) {
-					terrainType = SHALLOW_WATER_TERRAIN;
-				} else {
-					terrainType = DEEP_WATER_TERRAIN;
-				}
-				terrainTypes[i][j] = terrainType;
-			}
-		}
 	}
 
 	private RawModel generateTerrainSphereIco(Loader loader) {
@@ -246,29 +106,11 @@ public class TerrainSphere {
 		}
 
 		// int facesCount = 0;
-		//List<Vector3f> finalFaces = new ArrayList<Vector3f>();
+		// List<Vector3f> finalFaces = new ArrayList<Vector3f>();
 
 		for (int i = 0; i < faceLoops; i++) {
 
-			// List<Vector3f> faces2 = new ArrayList<Vector3f>();
-			/*
-			 * for (Vector3f face : faces) { // replace triangle by 4 triangles
-			 * int a = getMiddlePoint((int) face.x, (int) face.y); int b =
-			 * getMiddlePoint((int) face.y, (int) face.z); int c =
-			 * getMiddlePoint((int) face.z, (int) face.x);
-			 * 
-			 * // faces2.add(new TriangleIndices(tri.v1, a, c)); //
-			 * faces2.add(new TriangleIndices(tri.v2, b, a)); // faces2.add(new
-			 * TriangleIndices(tri.v3, c, b)); // faces2.add(new
-			 * TriangleIndices(a, b, c));
-			 * 
-			 * faces2.add(new Vector3f(face.x, a, c)); faces2.add(new
-			 * Vector3f(face.y, b, a)); faces2.add(new Vector3f(face.z, c, b));
-			 * faces2.add(new Vector3f(a, b, c));
-			 * 
-			 * } faces = faces2;
-			 */
-			// Iterator<TerrainFace> faceIterator = terrainFacesList.iterator();
+			
 			int listSize = terrainFacesList.size();
 
 			// for (TerrainFace face : terrainFacesList){
@@ -283,7 +125,7 @@ public class TerrainSphere {
 					if (i == faceLoops - 1) {
 						isFinal = true;
 						// facesCount += 4;
-						
+
 						// connect the neighbors
 						TerrainVertex vertexX = terrainVerticesList.get((int) face.getIndices().x);
 						TerrainVertex vertexY = terrainVerticesList.get((int) face.getIndices().y);
@@ -291,39 +133,22 @@ public class TerrainSphere {
 						TerrainVertex vertexA = terrainVerticesList.get(a);
 						TerrainVertex vertexB = terrainVerticesList.get(b);
 						TerrainVertex vertexC = terrainVerticesList.get(c);
-						
+
 						vertexX.addNeighbor(vertexA);
 						vertexA.addNeighbor(vertexX);
 						vertexX.addNeighbor(vertexC);
 						vertexC.addNeighbor(vertexX);
-						
+
 						vertexY.addNeighbor(vertexA);
 						vertexA.addNeighbor(vertexY);
 						vertexY.addNeighbor(vertexB);
 						vertexB.addNeighbor(vertexY);
-						
+
 						vertexZ.addNeighbor(vertexB);
 						vertexB.addNeighbor(vertexZ);
 						vertexZ.addNeighbor(vertexC);
 						vertexC.addNeighbor(vertexZ);
-						
-						// connect the neighbors
-						/*
-						terrainVerticesList.get((int) face.getIndices().x).addNeighbor(a);
-						terrainVerticesList.get(a).addNeighbor((int) face.getIndices().x);
-						terrainVerticesList.get((int) face.getIndices().x).addNeighbor(c);
-						terrainVerticesList.get(c).addNeighbor((int) face.getIndices().x);
 
-						terrainVerticesList.get((int) face.getIndices().y).addNeighbor(a);
-						terrainVerticesList.get(a).addNeighbor((int) face.getIndices().y);
-						terrainVerticesList.get((int) face.getIndices().y).addNeighbor(b);
-						terrainVerticesList.get(b).addNeighbor((int) face.getIndices().y);
-
-						terrainVerticesList.get((int) face.getIndices().z).addNeighbor(b);
-						terrainVerticesList.get(b).addNeighbor((int) face.getIndices().z);
-						terrainVerticesList.get((int) face.getIndices().z).addNeighbor(c);
-						terrainVerticesList.get(c).addNeighbor((int) face.getIndices().z);
-						*/
 					}
 
 					TerrainFace triangle1 = new TerrainFace(new Vector3f(face.getIndices().x, a, c), face, isFinal);
@@ -357,30 +182,27 @@ public class TerrainSphere {
 				}
 			}
 		}
-		
-		
 
 		int verticesCount = terrainVerticesList.size();
 		int facesCount = finalTerrainFaces.size();
-		
-		for (int i=0; i< facesCount; i++){
+
+		for (int i = 0; i < facesCount; i++) {
 			TerrainFace currentFace = finalTerrainFaces.get(i);
 			Vector3f currentIndices = currentFace.getIndices();
-			TerrainVertex vertex1 = terrainVerticesList.get((int)currentIndices.x);
-			TerrainVertex vertex2 = terrainVerticesList.get((int)currentIndices.y);
-			TerrainVertex vertex3 = terrainVerticesList.get((int)currentIndices.z);
-			
+			TerrainVertex vertex1 = terrainVerticesList.get((int) currentIndices.x);
+			TerrainVertex vertex2 = terrainVerticesList.get((int) currentIndices.y);
+			TerrainVertex vertex3 = terrainVerticesList.get((int) currentIndices.z);
+
 			currentFace.addVertex(vertex1);
 			currentFace.addVertex(vertex2);
 			currentFace.addVertex(vertex3);
-			
-			//currentFace.updateLines();
-			
+
+			// currentFace.updateLines();
+
 			vertex1.addNeighborFaces(currentFace);
 			vertex2.addNeighborFaces(currentFace);
 			vertex3.addNeighborFaces(currentFace);
-			
-			
+
 		}
 
 		colourFinal = new float[verticesCount * 3];
@@ -403,9 +225,6 @@ public class TerrainSphere {
 		// needs to do extra check since arc sin gives -pi/2 to pi/2 result
 		for (int i = 0; i < verticesCount; i++) {
 			verticesPolerCoords[i] = new Vector3f(0, 0, 0);
-			// float xVal = verticesList.get(i).x;
-			// float yVal = verticesList.get(i).y;
-			// float zVal = verticesList.get(i).z;
 			float xVal = terrainVerticesList.get(i).getPosition().x;
 			float yVal = terrainVerticesList.get(i).getPosition().y;
 			float zVal = terrainVerticesList.get(i).getPosition().z;
@@ -429,10 +248,7 @@ public class TerrainSphere {
 			if (xVal < 0) {
 				verticesPolerCoords[i].z = (float) (Math.PI - verticesPolerCoords[i].z);
 			}
-			// else if(xVal < 0 && zVal > 0){
-			// verticesPolerCoords[i].z = (float) (Math.PI -
-			// verticesPolerCoords[i].z);
-			// }
+			
 			polarFinal[i * 3] = verticesPolerCoords[i].x;
 			polarFinal[i * 3 + 1] = verticesPolerCoords[i].y;
 			polarFinal[i * 3 + 2] = verticesPolerCoords[i].z;
@@ -443,11 +259,10 @@ public class TerrainSphere {
 			float radius = verticesPolerCoords[i].x;
 			float theta1 = verticesPolerCoords[i].y;
 			float theta2 = verticesPolerCoords[i].z;
-			// radius += heightGeneratorSphere.getNoise(theta1, theta2)/50;
-			// radius += random.nextFloat()/100;
-			float heightToCheck = accessHeightMap(theta1, theta2);
+	
+			float heightToCheck = heightMapController.accessHeightMap(theta1, theta2);
 
-			radius += heightToCheck / HEIGHT_SCALE;
+			radius += heightToCheck / HeightMapController.HEIGHT_SCALE;
 			float rOnXZ = (float) (radius * Math.cos(theta1));
 			verticesFinal[i * 3] = (float) (rOnXZ * Math.cos(theta2));
 			polarFinal[i * 3] = radius;
@@ -456,80 +271,49 @@ public class TerrainSphere {
 			verticesListWithHeight.add(
 					new Vector4f(verticesFinal[i * 3], verticesFinal[i * 3 + 1], verticesFinal[i * 3 + 2], radius));
 
-			Vector3f colour = accessColour(theta1, theta2);
+			Vector3f colour = heightMapController.accessColourBasedOnHeight(theta1, theta2);
 			terrainVerticesList.get(i).setColour(colour);
-			// colourFinal[i * 3] = colour.x;
-			// colourFinal[i * 3 + 1] = colour.y;
-			// colourFinal[i * 3 + 2] = colour.z;
+			
 		}
 
 		for (int i = 0; i < verticesCount; i++) {
 			filterColourDefault(terrainVerticesList.get(i));
 			Vector3f filteredColour = terrainVerticesList.get(i).getFilteredColour();
-			// Vector3f filteredColour = terrainVerticesList.get(i).getColour();
+			
 			colourFinal[i * 3] = filteredColour.x;
 			colourFinal[i * 3 + 1] = filteredColour.y;
 			colourFinal[i * 3 + 2] = filteredColour.z;
 		}
+
 		
-		//System.out.print(terrainVerticesList.get(100).getNeighborVertices().size());
-		/*
-		colourFinal[34368 * 3] = 0;
-		colourFinal[34368 * 3 + 1] = 0;
-		colourFinal[34368 * 3 + 2] = 0;
-		colourFinal[137025 * 3] = 0;
-		colourFinal[137025 * 3 + 1] = 0;
-		colourFinal[137025 * 3 + 2] = 0;
-		colourFinal[137100 * 3] = 0;
-		colourFinal[137100 * 3 + 1] = 0;
-		colourFinal[137100 * 3 + 2] = 0;
-		*/
-		/*
-		for (int i=0; i<36; i++){
-			colourFinal[i] = 0;
-		}
-		
-		for (int i=0; i<48; i++){
-			colourFinal[36 + 3*i] = 1;
-			colourFinal[36 + 3*i + 1] = 0;
-			colourFinal[36 + 3*i + 2] = 0;
-		}
-		*/
-		//colourFinal[34366 * 3 + 3] = 0;
-		
+
 		return loader.loadToVAOPositionAndColour(verticesFinal, colourFinal, indicesFinal, 3);
-		
+
 		// return loader.loadToVAO(verticesInit, indicesInit, 3);
 
 	}
-	
-	
-	
 
 	private int addVertex(Vector3f p) {
 		float length = (float) Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z);
-		// geometry.Positions.Add(new Vector3f(p.x/length, p.y/length,
-		// p.z/length));
-		// verticesList.add(new Vector3f(p.x / length, p.y / length, p.z /
-		// length));
+		
 		TerrainVertex vertex = new TerrainVertex(new Vector3f(p.x / length, p.y / length, p.z / length), index);
 		terrainVerticesList.add(vertex);
 		return index++;
 	}
-	
-	private void updateLines(TerrainFace face){
+
+	private void updateLines(TerrainFace face) {
 		Vector3f p1 = terrainVerticesList.get((int) face.getIndices().x).getPosition();
 		Vector3f p2 = terrainVerticesList.get((int) face.getIndices().y).getPosition();
 		Vector3f p3 = terrainVerticesList.get((int) face.getIndices().z).getPosition();
-		
-		float [] l1 = new float [6];
-		float [] l2 = new float [6];
-		float [] l3 = new float [6];
-		
+
+		float[] l1 = new float[6];
+		float[] l2 = new float[6];
+		float[] l3 = new float[6];
+
 		Maths.generateLines(p1, p2, l1);
 		Maths.generateLines(p2, p3, l2);
 		Maths.generateLines(p3, p1, l3);
-		
+
 		face.setL1(l1);
 		face.setL2(l2);
 		face.setL3(l3);
@@ -597,16 +381,6 @@ public class TerrainSphere {
 		return i;
 	}
 
-	private Vector3f accessColour(float theta1, float theta2) {
-		int width = (int) ((theta2 + Math.PI / 2) * HEIGHT_MAP_WIDTH / (2 * Math.PI));
-		int height = (int) ((theta1 + Math.PI / 2) * HEIGHT_MAP_HEIGHT / (Math.PI));
-		if (width < 0 || width >= HEIGHT_MAP_WIDTH || height < 0 || height >= HEIGHT_MAP_HEIGHT) {
-			return new Vector3f(0, 0, 0);
-		}
-		// return heightGeneratorSphere.generateHeight(width, height);
-		return terrainColourArray[terrainTypes[height][width]];
-	}
-
 	private void filterColourDefault(TerrainVertex vertex) {
 		Vector3f tempColour = new Vector3f(0, 0, 0);
 		tempColour.x = vertex.getColour().x / 2.0f;
@@ -624,111 +398,53 @@ public class TerrainSphere {
 		vertex.setFilteredColour(tempColour);
 	}
 
-	private float accessHeightMap(float theta1, float theta2) {
-
-		int width = (int) ((theta2 + Math.PI / 2) * HEIGHT_MAP_WIDTH / (2 * Math.PI));
-		int height = (int) ((theta1 + Math.PI / 2) * HEIGHT_MAP_HEIGHT / (Math.PI));
-		// if (width < 0 || width >= HEIGHT_MAP_WIDTH || height < 0 || height >=
-		// HEIGHT_MAP_HEIGHT) {
-		// return 0;
-		// }
-		while (width < 0) {
-			width += HEIGHT_MAP_WIDTH;
-		}
-		while (width >= HEIGHT_MAP_WIDTH) {
-			width -= HEIGHT_MAP_WIDTH;
-		}
-		while (height < 0) {
-			height += HEIGHT_MAP_HEIGHT;
-		}
-		while (height >= HEIGHT_MAP_HEIGHT) {
-			height -= HEIGHT_MAP_HEIGHT;
-		}
-		// return heightGeneratorSphere.generateHeight(width, height);
-		return heights[height][width];
-	}
-
-	public float getHeight(float theta1, float theta2) {
-		int width = (int) ((theta2 + Math.PI / 2) * HEIGHT_MAP_WIDTH / (2 * Math.PI));
-		int height = (int) ((theta1 + Math.PI / 2) * HEIGHT_MAP_HEIGHT / (Math.PI));
-		while (width < 0) {
-			width += HEIGHT_MAP_WIDTH;
-		}
-		while (width >= HEIGHT_MAP_WIDTH) {
-			width -= HEIGHT_MAP_WIDTH;
-		}
-		while (height < 0) {
-			height += HEIGHT_MAP_HEIGHT;
-		}
-		while (height >= HEIGHT_MAP_HEIGHT) {
-			height -= HEIGHT_MAP_HEIGHT;
-		}
-		// return heightGeneratorSphere.generateHeight(width, height);
-		float sphereHeight = (heights[height][width] / HEIGHT_SCALE + 1) * scale;
-		return sphereHeight;
-	}
-
 	/*
-	private TerrainFace checkFaces(Vector3f unitVector, List<TerrainFace> facesToCheck) {
-		double maxDot = -100;
-		TerrainFace cloestFace = facesToCheck.get(0);
-		
-		
-		// int i=0;
-		for (TerrainFace face : facesToCheck) {
-			Vector3f faceNormal = face.getNormal();
-			double dotProduct = Vector3f.dot(unitVector, faceNormal);
-			//System.out.println("i is: " + i + " and dot is: " + dotProduct + "\n");
-			if (dotProduct > maxDot) {
-				maxDot = dotProduct;
-				cloestFace = face;
-				// System.out.println("normal is: " + cloestFace.getNormal() +
-				// "\n");
-			}
-			//i++;
-		}
-		
-		
-		
-		if (cloestFace.isBottom()) {
-			return cloestFace;
-		} else {
+	 * private TerrainFace checkFaces(Vector3f unitVector, List<TerrainFace>
+	 * facesToCheck) { double maxDot = -100; TerrainFace cloestFace =
+	 * facesToCheck.get(0);
+	 * 
+	 * 
+	 * // int i=0; for (TerrainFace face : facesToCheck) { Vector3f faceNormal =
+	 * face.getNormal(); double dotProduct = Vector3f.dot(unitVector,
+	 * faceNormal); //System.out.println("i is: " + i + " and dot is: " +
+	 * dotProduct + "\n"); if (dotProduct > maxDot) { maxDot = dotProduct;
+	 * cloestFace = face; // System.out.println("normal is: " +
+	 * cloestFace.getNormal() + // "\n"); } //i++; }
+	 * 
+	 * 
+	 * 
+	 * if (cloestFace.isBottom()) { return cloestFace; } else {
+	 * 
+	 * return checkFaces(unitVector, cloestFace.getChildren()); } }
+	 * 
+	 */
 
-			return checkFaces(unitVector, cloestFace.getChildren());
-		}
-	}
-	
-	*/
-	
 	private TerrainFace checkFacesPlucker(Vector3f unitVector, List<TerrainFace> facesToCheck) {
-		float[] unitLine = new float [6];
+		float[] unitLine = new float[6];
 		Maths.generateLines(unitVector, new Vector3f(0, 0, 0), unitLine);
 		TerrainFace cloestFace = facesToCheck.get(0);
-		
-		
+
 		// int i=0;
 		for (TerrainFace face : facesToCheck) {
-			//System.out.print(".....");
-			//System.out.print(unitLine[0]);
-			//System.out.print(face.getL1()[0]);
+			// System.out.print(".....");
+			// System.out.print(unitLine[0]);
+			// System.out.print(face.getL1()[0]);
 			Vector3f faceNormal = face.getNormal();
 			double dotProduct = Vector3f.dot(unitVector, faceNormal);
 			float s1 = Maths.sideOperations(unitLine, face.getL1());
 			float s2 = Maths.sideOperations(unitLine, face.getL2());
 			float s3 = Maths.sideOperations(unitLine, face.getL3());
 			if (dotProduct >= 0) {
-				
-			if ((s1 <= 0 && s2 <= 0 && s3 <= 0 )||(s1 >= 0 && s2 >= 0 && s3 >= 0 )) {
-				
-				cloestFace = face;
-				
+
+				if ((s1 <= 0 && s2 <= 0 && s3 <= 0) || (s1 >= 0 && s2 >= 0 && s3 >= 0)) {
+
+					cloestFace = face;
+
+				}
 			}
-			}
-			//i++;
+			// i++;
 		}
-		
-		
-		
+
 		if (cloestFace.isBottom()) {
 			return cloestFace;
 		} else {
@@ -736,40 +452,33 @@ public class TerrainSphere {
 			return checkFacesPlucker(unitVector, cloestFace.getChildren());
 		}
 	}
-	
-	
-	
-	
-	/*
-	public TerrainFace getTargetFace(float theta1, float theta2) {
-		Vector3f unitVector = Maths.convertBackToCart(new Vector3f(1, theta1, theta2));
-		
-		TerrainFace targetFace = checkFaces(unitVector, initTerrainFaces);
 
-		return targetFace;
-	}
-	*/
-	
+	/*
+	 * public TerrainFace getTargetFace(float theta1, float theta2) { Vector3f
+	 * unitVector = Maths.convertBackToCart(new Vector3f(1, theta1, theta2));
+	 * 
+	 * TerrainFace targetFace = checkFaces(unitVector, initTerrainFaces);
+	 * 
+	 * return targetFace; }
+	 */
+
 	public TerrainFace getTargetFacePlucker(float theta1, float theta2) {
 		Vector3f unitVector = Maths.convertBackToCart(new Vector3f(1, theta1, theta2));
-		
+
 		TerrainFace targetFace = checkFacesPlucker(unitVector, initTerrainFaces);
 
 		return targetFace;
 	}
-	
-	
-	
+
 	public TerrainFace getTargetFacePlucker(Vector3f position) {
-		//Vector3f unitVector = Maths.convertBackToCart(new Vector3f(1, theta1, theta2));
-		float length =  (float) Math.sqrt(position.x * position.x + position.y * position.y + position.z * position.z);
-		Vector3f unitVector = new Vector3f(position.x/length, position.y/length, position.z/length);
+		// Vector3f unitVector = Maths.convertBackToCart(new Vector3f(1, theta1,
+		// theta2));
+		float length = (float) Math.sqrt(position.x * position.x + position.y * position.y + position.z * position.z);
+		Vector3f unitVector = new Vector3f(position.x / length, position.y / length, position.z / length);
 		TerrainFace targetFace = checkFacesPlucker(unitVector, initTerrainFaces);
 
 		return targetFace;
 	}
-
-	
 
 	public float getHeightAdvanced(float theta1, float theta2) {
 		Vector3f unitVector = Maths.convertBackToCart(new Vector3f(1, theta1, theta2));
@@ -835,21 +544,16 @@ public class TerrainSphere {
 		return polarFinal;
 	}
 
-
 	public float[] getVerticesFinal() {
 		return verticesFinal;
 	}
-
 
 	public List<Vector4f> getVerticesListWithHeight() {
 		return verticesListWithHeight;
 	}
 
-
 	public float[] getColourFinal() {
 		return colourFinal;
 	}
-	
-	
 
 }

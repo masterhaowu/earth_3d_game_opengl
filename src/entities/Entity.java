@@ -16,6 +16,9 @@ public class Entity {
 	private int textureIndex = 0;
 	private boolean test = true;
 	
+	private int colourID;
+	private boolean highlighted = false;
+	
 	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.model = model;
@@ -141,6 +144,28 @@ public class Entity {
 		this.position = Maths.convertBackToCart(polar);
 		updateRotation();
 	}
+
+
+	public int getColourID() {
+		return colourID;
+	}
+
+
+	public void setColourID(int colourID) {
+		this.colourID = colourID;
+	}
+
+
+	public boolean isHighlighted() {
+		return highlighted;
+	}
+
+
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
+	}
+	
+	
 	
 	
 	

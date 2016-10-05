@@ -33,6 +33,7 @@ public class StaticShader extends ShaderProgram {
 	private int location_numberOfRows;
 	private int location_offset;
 	private int location_plane;
+	private int location_highlighted;
 	
 	
 
@@ -61,6 +62,7 @@ public class StaticShader extends ShaderProgram {
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
 		location_offset = super.getUniformLocation("offset");
 		location_plane = super.getUniformLocation("plane");
+		location_highlighted = super.getUniformLocation("highlighted");
 		location_lightPosition = new int [MAX_LIGHT];
 		location_lightColour = new int [MAX_LIGHT];
 		location_attenuation = new int [MAX_LIGHT];
@@ -72,6 +74,9 @@ public class StaticShader extends ShaderProgram {
 		
 	}
 	
+	public void loadHighlighted(boolean highlighted){
+		super.loadBoolean(location_highlighted, highlighted);
+	}
 	
 	
 	public void loadClipPlane(Vector4f plane){

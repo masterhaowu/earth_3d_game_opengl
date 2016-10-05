@@ -1,5 +1,7 @@
 package objConverter;
 
+import org.lwjgl.util.vector.Vector3f;
+
 public class ModelData {
 
 	private float[] vertices;
@@ -7,6 +9,8 @@ public class ModelData {
 	private float[] normals;
 	private int[] indices;
 	private float furthestPoint;
+	private Vector3f min;
+	private Vector3f max;
 
 	public ModelData(float[] vertices, float[] textureCoords, float[] normals, int[] indices,
 			float furthestPoint) {
@@ -36,5 +40,23 @@ public class ModelData {
 	public float getFurthestPoint() {
 		return furthestPoint;
 	}
+
+	public Vector3f getMin() {
+		return min;
+	}
+
+	public void setMin(Vector3f min) {
+		this.min = min;
+	}
+
+	public Vector3f getMax() {
+		return max;
+	}
+
+	public void setMax(Vector3f max) {
+		this.max = max;
+	}
+	
+	
 
 }

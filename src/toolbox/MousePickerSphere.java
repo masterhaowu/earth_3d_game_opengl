@@ -1,7 +1,10 @@
 package toolbox;
 
+import java.util.List;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Matrix;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -11,6 +14,7 @@ import terrains.Terrain;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainSphere;
 import entities.Camera;
+import entities.Entity;
 
 public class MousePickerSphere {
 
@@ -22,11 +26,11 @@ public class MousePickerSphere {
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Camera camera;
-	
+
 	private TerrainSphere terrainSphere;
 	private Vector3f currentTerrainPoint;
-	//private TerrainFace currentTerrainFace;
-	
+	// private TerrainFace currentTerrainFace;
+
 	private Vector2f normalizedXY;
 
 	public MousePickerSphere(Camera cam, Matrix4f projection, TerrainSphere terrainSphere) {
@@ -35,24 +39,306 @@ public class MousePickerSphere {
 		viewMatrix = Maths.createViewMatrix(camera);
 		this.terrainSphere = terrainSphere;
 	}
-	
+
 	public Vector3f getCurrentTerrainPoint() {
 		return currentTerrainPoint;
 	}
 
-	public TerrainFace getCurrentTerrainFace(){
+	public TerrainFace getCurrentTerrainFace() {
 		if (currentTerrainPoint == null) {
 			return null;
 		}
+		// System.out.println(currentTerrainPoint);
 		TerrainFace face = terrainSphere.getTargetFacePlucker(currentTerrainPoint);
 		return face;
 	}
+
+	public Entity checkSelectedEntitySimpleMethod(List<Entity> entities) {
+
+		float minDis = 100;
+		Entity targetEntity = null;
+
+		if (currentTerrainPoint == null) {
+			return targetEntity;
+		}
+		for (Entity entity : entities) {
+			Vector3f entityPos = entity.getPosition();
+			entity.setHighlighted(false);
+			float distance = (entityPos.x - currentTerrainPoint.x) * (entityPos.x - currentTerrainPoint.x)
+					+ (entityPos.y - currentTerrainPoint.y) * (entityPos.y - currentTerrainPoint.y)
+					+ (entityPos.z - currentTerrainPoint.z) * (entityPos.z - currentTerrainPoint.z);
+			if (distance < minDis) {
+				minDis = distance;
+				if (distance < 5) {
+					targetEntity = entity;
+					entity.setHighlighted(true);
+				}
+			}
+		}
+		return targetEntity;
+	}
+
+	public Entity checkSelectedEntityCenterDistanceMethod(List<Entity> entities) {
+		Entity targetEntity = null;
+		Vector3f unitCamera = new Vector3f(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+		unitCamera.normalise();
+		if (currentTerrainPoint == null) {
+			// currentTerrainPolar = Maths.convertToPolar(currentTerrainPoint);
+			return targetEntity;
+		}
+		float minDistance = 10000;
+		for (Entity entity : entities) {
+			entity.setHighlighted(false);
+			if (entity.getModel().getRawModel().isHasMinMax() && checkEntityOrientation(entity, unitCamera)) {
+				float tempDistance = calculateRayObjectCenterDistance(entity);
+				if (tempDistance < 10 && tempDistance < minDistance) {
+					minDistance = tempDistance;
+					targetEntity = entity;
+				}
+			}
+		}
+		if (targetEntity != null) {
+			targetEntity.setHighlighted(true);
+		}
+
+		return targetEntity;
+
+	}
+
+	public Entity checkSelectedEntityOBBMethod(List<Entity> entities) {
+		Entity targetEntity = null;
+		if (currentTerrainPoint == null) {
+			return targetEntity;
+		}
+		float minDistance = 10000;
+		float[] tempDistance = new float[1];
+		for (Entity entity : entities) {
+			entity.setHighlighted(false);
+			boolean result;
+			if (entity.getModel().getRawModel().isHasMinMax()) {
+				result = testRayOBBIntersection(entity, tempDistance);
+				// if (result){
+				if (result && tempDistance[0] < minDistance) {
+					minDistance = tempDistance[0];
+					targetEntity = entity;
+					// entity.setHighlighted(true);
+					// System.out.println("AAAAAAAAAA");
+				}
+			}
+
+		}
+		if (targetEntity != null) {
+			targetEntity.setHighlighted(true);
+		}
+
+		return targetEntity;
+	}
 	
+	
+	private boolean checkEntityOrientation(Entity entity, Vector3f cameraUnit){
+		Vector3f unitEntity = new Vector3f(entity.getPosition().x, entity.getPosition().y, entity.getPosition().z);
+		unitEntity.normalise();
+		float theta2diff = Vector3f.dot(unitEntity, cameraUnit);
+		if (theta2diff < -0.1f) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean checkEntityAllMesh(Entity entity, float[] intersection_distance){
+		if (!entity.getModel().getRawModel().getHasModelData()) {
+			return false;
+		}
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
+				entity.getRotY(), entity.getRotZ(), entity.getScale());
+		float[] vertices = entity.getModel().getRawModel().getModelData().getVertices();
+		int[] indices = entity.getModel().getRawModel().getModelData().getIndices();
+		
+		
+		
+		return false;
+	}
+
+	private float calculateRayObjectCenterDistance(Entity entity) {
+		float distance = 0;
+		Vector3f centerPos = Vector3f.add(entity.getModel().getRawModel().getMax(),
+				entity.getModel().getRawModel().getMin(), null);
+		centerPos.x /= 2f;
+		centerPos.y /= 2f;
+		centerPos.z /= 2f;
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
+				entity.getRotY(), entity.getRotZ(), entity.getScale());
+		Vector4f centerWorldPosV4 = Matrix4f.transform(transformationMatrix,
+				new Vector4f(centerPos.x, centerPos.y, centerPos.z, 1.0f), null);
+		Vector3f q1 = new Vector3f(centerWorldPosV4.x, centerWorldPosV4.y, centerWorldPosV4.z);
+
+		Vector3f u = Vector3f.sub(q1, camera.getPosition(), null);
+		Vector3f v = currentRay;
+
+		float vDotU = Vector3f.dot(v, u);
+
+		Vector3f puv = new Vector3f(vDotU * v.x, vDotU * v.y, vDotU * v.z);
+		Vector3f q2 = Vector3f.add(camera.getPosition(), puv, null);
+
+		Vector3f diff = Vector3f.sub(q1, q2, null);
+
+		distance = (float) Math.pow((Math.pow(diff.x, 2) + Math.pow(diff.y, 2) + Math.pow(diff.z, 2)), 0.5);
+
+		return distance;
+	}
+
+	private boolean testRayOBBIntersection(Entity entity, float[] intersection_distance) {
+		boolean intersected = true;
+		Vector3f min = entity.getModel().getRawModel().getMin();
+		Vector3f max = entity.getModel().getRawModel().getMax();
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
+				entity.getRotY(), entity.getRotZ(), entity.getScale());
+
+		float tMin = 0.0f;
+		float tMax = 100000.0f;
+
+		Vector3f obbWorldPos = new Vector3f(transformationMatrix.m30, transformationMatrix.m31,
+				transformationMatrix.m32);
+		// System.out.println(transformationMatrix);
+		// obbWorldPos = entity.getPosition();
+		// System.out.println(obbWorldPos);
+		// System.out.println("----------------");
+		// obbWorldPos = new Vector3f(transformationMatrix.m30,
+		// transformationMatrix.m31, transformationMatrix.m32);
+		Vector3f delta = Vector3f.sub(obbWorldPos, camera.getPosition(), null);
+
+		// Test intersection with the 2 planes perpendicular to the OBB's X axis
+		// Vector3f xAxis = new Vector3f(transformationMatrix.m00,
+		// transformationMatrix.m01, transformationMatrix.m02);
+		Vector4f initXAxis = new Vector4f(1, 0, 0, 1);
+		Matrix4f rotationMatrix = Maths.createRotationMatrix(entity.getRotX(), entity.getRotY(), entity.getRotZ());
+		Vector4f tempX = Matrix4f.transform(rotationMatrix, initXAxis, null);
+		Vector3f xAxis = new Vector3f(tempX.x, tempX.y, tempX.z);
+		// xAxis = new Vector3f(transformationMatrix.m00,
+		// transformationMatrix.m01, transformationMatrix.m02);
+		// System.out.println(xAxis);
+
+		float e = Vector3f.dot(xAxis, delta);
+		float f = Vector3f.dot(currentRay, xAxis);
+		// f = Vector3f.dot(new Vector3f(-currentRay.x, -currentRay.y,
+		// -currentRay.z), xAxis);
+
+		if (f > 0.001f) { // Standard case
+			float t1 = (e + min.x) / f; // Intersection with the "left" plane
+			float t2 = (e + max.x) / f; // Intersection with the "right" plane
+
+			// t1 and t2 now contain distances betwen ray origin and ray-plane
+			// intersections
+
+			// We want t1 to represent the nearest intersection,
+			// so if it's not the case, invert t1 and t2
+			if (t1 > t2) {
+				float w = t1;
+				t1 = t2;
+				t2 = w; // swap t1 and t2
+			}
+
+			// tMax is the nearest "far" intersection (amongst the X,Y and Z
+			// planes pairs)
+			if (t2 < tMax) {
+				tMax = t2;
+			}
+			// tMin is the farthest "near" intersection (amongst the X,Y and Z
+			// planes pairs)
+			if (t1 > tMin) {
+				tMin = t1;
+			}
+
+			// And here's the trick :
+			// If "far" is closer than "near", then there is NO intersection.
+			// See the images in the tutorials for the visual explanation.
+			if (tMax < tMin) {
+				return false;
+			}
+
+		} else { // Rare case : the ray is almost parallel to the planes, so
+					// they don't have any "intersection"
+			if (-e + min.x > 0.0f || -e + max.x < 0.0f)
+				return false;
+		}
+
+		// Test intersection with the 2 planes perpendicular to the OBB's Y axis
+		// Exactly the same thing than above.
+		/*
+		 * Vector3f yAxis = new Vector3f(transformationMatrix.m10,
+		 * transformationMatrix.m11, transformationMatrix.m12); //yAxis = new
+		 * Vector3f(transformationMatrix.m10, transformationMatrix.m11,
+		 * transformationMatrix.m12);
+		 * 
+		 * e = Vector3f.dot(yAxis, delta); f = Vector3f.dot(currentRay, yAxis);
+		 * 
+		 * if ( f > 0.001f ) { // Standard case float t1 = (e+min.y)/f; //
+		 * Intersection with the "left" plane float t2 = (e+max.y)/f; //
+		 * Intersection with the "right" plane
+		 * 
+		 * // t1 and t2 now contain distances betwen ray origin and ray-plane
+		 * intersections
+		 * 
+		 * // We want t1 to represent the nearest intersection, // so if it's
+		 * not the case, invert t1 and t2 if (t1>t2){ float w=t1;t1=t2;t2=w; //
+		 * swap t1 and t2 }
+		 * 
+		 * // tMax is the nearest "far" intersection (amongst the X,Y and Z
+		 * planes pairs) if ( t2 < tMax ){ tMax = t2; } // tMin is the farthest
+		 * "near" intersection (amongst the X,Y and Z planes pairs) if ( t1 >
+		 * tMin ){ tMin = t1; }
+		 * 
+		 * // And here's the trick : // If "far" is closer than "near", then
+		 * there is NO intersection. // See the images in the tutorials for the
+		 * visual explanation. if (tMax < tMin ){ return false; }
+		 * 
+		 * } else { // Rare case : the ray is almost parallel to the planes, so
+		 * they don't have any "intersection" if(-e+min.y > 0.0f || -e+max.y <
+		 * 0.0f) return false; }
+		 * 
+		 * 
+		 * Vector3f zAxis = new Vector3f(transformationMatrix.m20,
+		 * transformationMatrix.m21, transformationMatrix.m22); //zAxis = new
+		 * Vector3f(transformationMatrix.m20, transformationMatrix.m21,
+		 * transformationMatrix.m22);
+		 * 
+		 * e = Vector3f.dot(zAxis, delta); f = Vector3f.dot(currentRay, zAxis);
+		 * 
+		 * if ( f > 0.001f ) { // Standard case float t1 = (e+min.z)/f; //
+		 * Intersection with the "left" plane float t2 = (e+max.z)/f; //
+		 * Intersection with the "right" plane
+		 * 
+		 * // t1 and t2 now contain distances betwen ray origin and ray-plane
+		 * intersections
+		 * 
+		 * // We want t1 to represent the nearest intersection, // so if it's
+		 * not the case, invert t1 and t2 if (t1>t2){ float w=t1;t1=t2;t2=w; //
+		 * swap t1 and t2 }
+		 * 
+		 * // tMax is the nearest "far" intersection (amongst the X,Y and Z
+		 * planes pairs) if ( t2 < tMax ){ tMax = t2; } // tMin is the farthest
+		 * "near" intersection (amongst the X,Y and Z planes pairs) if ( t1 >
+		 * tMin ){ tMin = t1; }
+		 * 
+		 * // And here's the trick : // If "far" is closer than "near", then
+		 * there is NO intersection. // See the images in the tutorials for the
+		 * visual explanation. if (tMax < tMin ){ return false; }
+		 * 
+		 * } else { // Rare case : the ray is almost parallel to the planes, so
+		 * they don't have any "intersection" if(-e+min.z > 0.0f || -e+max.z <
+		 * 0.0f) return false; }
+		 */
+		intersection_distance[0] = tMin;
+
+		return intersected;
+	}
+
 	public Vector3f getCurrentRay() {
 		return currentRay;
 	}
-	
-	public Vector2f getNormalizedXY(){
+
+	public Vector2f getNormalizedXY() {
 		return normalizedXY;
 	}
 
@@ -96,16 +382,16 @@ public class MousePickerSphere {
 		float y = (2.0f * mouseY) / Display.getHeight() - 1f;
 		return new Vector2f(x, y);
 	}
-	
-	//**********************************************************
-	
+
+	// **********************************************************
+
 	private Vector3f getPointOnRay(Vector3f ray, float distance) {
 		Vector3f camPos = camera.getPosition();
 		Vector3f start = new Vector3f(camPos.x, camPos.y, camPos.z);
 		Vector3f scaledRay = new Vector3f(ray.x * distance, ray.y * distance, ray.z * distance);
 		return Vector3f.add(start, scaledRay, null);
 	}
-	
+
 	private Vector3f binarySearch(int count, float start, float finish, Vector3f ray) {
 		float half = start + ((finish - start) / 2f);
 		if (count >= RECURSION_COUNT) {
@@ -143,12 +429,12 @@ public class MousePickerSphere {
 			height = terrain.getHeightAdvanced(testPolar.y, testPolar.z);
 		}
 		if (testPolar.x < height || dot > 0) {
-			//System.out.print("below");
+			// System.out.print("below");
 			return true;
 		} else {
-			//System.out.print("above");
+			// System.out.print("above");
 			return false;
-			
+
 		}
 	}
 

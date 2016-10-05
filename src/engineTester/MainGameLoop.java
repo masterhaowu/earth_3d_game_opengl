@@ -38,6 +38,7 @@ import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 //import renderEngine.OBJLoader;
 import terrains.Terrain;
+import terrainsSphere.ColourController;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainObject;
 import terrainsSphere.TerrainSphere;
@@ -68,18 +69,23 @@ public class MainGameLoop {
 		TextMaster.init(loader);
 
 		FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
-		GUIText text = new GUIText("Game Testing", 3, font, new Vector2f(0.5f, 0.5f), 0.5f, true);
+		GUIText text = new GUIText("Game Testing", 1, font, new Vector2f(0.0f, 0.95f), 0.2f, true);
 
-		text.setColour(1.0f, 0.3f, 0.4f);
+		text.setColour(1.0f, 1.0f, 1.0f);
 
 		ModelData data = OBJFileLoader.loadOBJ("lowPolyTree");
 		RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(),
 				data.getIndices());
+		//System.out.println(data.getMax());
+		//System.out.println(data.getMin());
+		model.setModelData(data);
+		model.setMax(data.getMax());
+		model.setMin(data.getMin());
 		// ModelTexture texture = new ModelTexture(loader.loadTexture("white"));
 		// TexturedModel texturedModel = new TexturedModel(model, texture);
 		// texture.setShineDamper(10);
 		// texture.setReflectivity(1);
-		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("lowPolyTree")));
+		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("LowPolyTree")));
 		// Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -25),
 		// 0, 0, 0, 1);
 
@@ -180,7 +186,8 @@ public class MainGameLoop {
 		 */
 
 		// --------------------------TerrainSphere---------------------------------------------
-		TerrainSphere terrainSphere = new TerrainSphere(loader, 7, 400f);
+		TerrainSphere terrainSphere = new TerrainSphere(loader, 6, 400f);
+		ColourController colourController = new ColourController(terrainSphere);
 
 		// --------------------------Lights----------------------------------------------------
 		List<Light> lights = new ArrayList<Light>();
@@ -236,11 +243,11 @@ public class MainGameLoop {
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 
 		// --------------------------EntitySphere----------------------------------------------------
-		for (int i = 0; i < 300; i++) {
+		for (int i = 0; i < 60; i++) {
 			float theta1 = (float) (random.nextFloat() * Math.PI * 2 - Math.PI);
 			float theta2 = (float) (random.nextFloat() * Math.PI - Math.PI / 2);
-			// theta1 = 0;
-			// theta2 = (float) (Math.PI/2);
+			 //theta1 = 0;
+			 //theta2 = (float) (Math.PI/2 - 0.1 * i);
 			// float y = terrain.getHeightOfTerrain(x, z);
 			// float radius = terrainSphere.getHeight(theta1, theta2);
 
@@ -248,7 +255,7 @@ public class MainGameLoop {
 			Vector3f entityPos = Maths.convertBackToCart(new Vector3f(radius, theta1, theta2));
 			// Vector3f entityPos = terrainSphere.getHeightPosAdvanced(theta1,
 			// theta2);
-			Entity tempEntitiy = new Entity(staticModel, entityPos, 90, 0, 0, 0.2f);
+			Entity tempEntitiy = new Entity(staticModel, entityPos, 90, 0, 0, 1f);
 			tempEntitiy.updateRotation();
 			// entities.add(new Entity(staticModel, new Vector3f(x, y, z), 0, 0,
 			// 0, 1));
@@ -343,7 +350,7 @@ public class MainGameLoop {
 			}
 		}
 		*/
-		terrainSphere.updateColourVBO(loader);
+		
 		
 		while (!Display.isCloseRequested()) {
 			// float newHeight = (float) (water.getHeight() + 0.1 *
@@ -368,6 +375,12 @@ public class MainGameLoop {
 			renderer.renderShadowMap(entitiesWithShadows, sun);
 			// Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 			currentFace = picker.getCurrentTerrainFace();
+			//Entity currentEntity = picker.checkSelectedEntitySimpleMethod(entities);
+			//Entity currentEntity = picker.checkSelectedEntityOBBMethod(entities);
+			Entity currentEntity = picker.checkSelectedEntityCenterDistanceMethod(entities);
+			//System.out.println(currentEntity.getModel().getRawModel().);
+			//System.out.println(currentEntity.getModel().getRawModel().getMax());
+			
 			
 			//currentFace = terrainSphere.getTargetFacePlucker(player.getPolar().y,player.getPolar().z);
 			//terrainSphere.updateColourVBO(loader);
@@ -385,10 +398,10 @@ public class MainGameLoop {
 
 			if (changeFace && currentFace != null && previousFace != null) {
 				
-				terrainSphere.simpleResetColour(previousFace, loader);
-				terrainSphere.addObjectToFace(currentFace, highlightObject, loader);
+				colourController.simpleResetColour(previousFace, loader);
+				colourController.addObjectToFace(currentFace, highlightObject, loader);
 				//currentFace = terrainSphere.getTargetFacePlucker(player.getPolar().y,player.getPolar().z);
-				terrainSphere.updateColourVBO(loader);
+				colourController.updateColourVBO(loader);
 				
 				changeFace = false;
 			}

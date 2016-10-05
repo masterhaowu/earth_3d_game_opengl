@@ -9,8 +9,8 @@ import toolbox.Maths;
 
 public class Camera {
 
-	private static final float MIN_DISTANCE_TO_PLAYER = -50;
-	private static final float MAX_DISTANCE_TO_PLAYER = 900;
+	private static final float MIN_DISTANCE_TO_PLAYER = 50;
+	private static final float MAX_DISTANCE_TO_PLAYER = 500;
 
 	private float distanceFromPlayer = 100;
 	private float angleAroundPlayer = 0;

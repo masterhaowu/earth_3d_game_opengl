@@ -19,6 +19,7 @@ uniform vec3 attenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
+uniform bool highlighted;
 
 const float levels = 3.0;
 
@@ -58,6 +59,10 @@ void main()
     
     out_colour = vec4(totalDiffuse, 1.0) * textureColour + vec4(totalSpecular, 1.0);
     out_colour = mix(vec4(skyColour, 1.0), out_colour, visibility);
+    
+    if (highlighted == true) {
+        out_colour = vec4(1,1,1,1);
+    }
 
 }
 
