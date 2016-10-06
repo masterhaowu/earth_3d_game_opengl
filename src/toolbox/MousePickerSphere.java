@@ -1,5 +1,6 @@
 package toolbox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
@@ -50,8 +51,11 @@ public class MousePickerSphere {
 		}
 		// System.out.println(currentTerrainPoint);
 		TerrainFace face = terrainSphere.getTargetFacePlucker(currentTerrainPoint);
+		//face = terrainSphere.getTerrainFaceWithCameraRay(currentRay, camera.getPosition());
 		return face;
 	}
+	
+	
 
 	public Entity checkSelectedEntitySimpleMethod(List<Entity> entities) {
 
@@ -105,7 +109,47 @@ public class MousePickerSphere {
 
 	}
 
-	public Entity checkSelectedEntityOBBMethod(List<Entity> entities) {
+	public Entity checkSelectedEntityAllMeshMethodWithThreshold(List<Entity> entities, float threshold) {
+		Entity targetEntity = null;
+		Vector3f unitCamera = new Vector3f(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+		unitCamera.normalise();
+		if (currentTerrainPoint == null) {
+			// currentTerrainPolar = Maths.convertToPolar(currentTerrainPoint);
+			return targetEntity;
+		}
+		float minDistance = 10000;
+		List<Entity> entitiesSecondaryCheck = new ArrayList<Entity>();
+		for (Entity entity : entities) {
+			entity.setHighlighted(false);
+			if (entity.getModel().getRawModel().isHasMinMax() && checkEntityOrientation(entity, unitCamera)) {
+				float tempDistance = calculateRayObjectCenterDistance(entity);
+				if (tempDistance < threshold) {
+					// minDistance = tempDistance;
+					// targetEntity = entity;
+					entitiesSecondaryCheck.add(entity);
+				}
+			}
+		}
+		float[] intersection_distance = new float[1];
+		// System.out.println(entitiesSecondaryCheck.size());
+		for (Entity entity : entitiesSecondaryCheck) {
+			if (checkEntityAllMesh(entity, intersection_distance)) {
+				if (intersection_distance[0] < minDistance) {
+					targetEntity = entity;
+					minDistance = intersection_distance[0];
+				}
+				
+			}
+		}
+
+		if (targetEntity != null) {
+			targetEntity.setHighlighted(true);
+		}
+
+		return targetEntity;
+	}
+
+	public Entity checkSelectedEntityOBBMethod(List<Entity> entities) {//not working
 		Entity targetEntity = null;
 		if (currentTerrainPoint == null) {
 			return targetEntity;
@@ -133,20 +177,19 @@ public class MousePickerSphere {
 
 		return targetEntity;
 	}
-	
-	
-	private boolean checkEntityOrientation(Entity entity, Vector3f cameraUnit){
+
+	private boolean checkEntityOrientation(Entity entity, Vector3f cameraUnit) {
 		Vector3f unitEntity = new Vector3f(entity.getPosition().x, entity.getPosition().y, entity.getPosition().z);
 		unitEntity.normalise();
 		float theta2diff = Vector3f.dot(unitEntity, cameraUnit);
-		if (theta2diff < -0.1f) {
+		if (theta2diff < -0.3f) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	private boolean checkEntityAllMesh(Entity entity, float[] intersection_distance){
+
+	private boolean checkEntityAllMesh(Entity entity, float[] intersection_distance) {
 		if (!entity.getModel().getRawModel().getHasModelData()) {
 			return false;
 		}
@@ -154,9 +197,56 @@ public class MousePickerSphere {
 				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		float[] vertices = entity.getModel().getRawModel().getModelData().getVertices();
 		int[] indices = entity.getModel().getRawModel().getModelData().getIndices();
-		
-		
-		
+
+		int indicesNum = Math.floorDiv(indices.length, 3);
+		// System.out.println(indicesNum);
+		for (int i = 0; i < indicesNum; i++) {
+			int index1 = indices[i * 3];
+			int index2 = indices[i * 3 + 1];
+			int index3 = indices[i * 3 + 2];
+			Vector4f init1 = new Vector4f(vertices[index1 * 3], vertices[index1 * 3 + 1], vertices[index1 * 3 + 2],
+					1.0f);
+			Vector4f init2 = new Vector4f(vertices[index2 * 3], vertices[index2 * 3 + 1], vertices[index2 * 3 + 2],
+					1.0f);
+			Vector4f init3 = new Vector4f(vertices[index3 * 3], vertices[index3 * 3 + 1], vertices[index3 * 3 + 2],
+					1.0f);
+			Matrix4f.transform(transformationMatrix, init1, init1);
+			Matrix4f.transform(transformationMatrix, init2, init2);
+			Matrix4f.transform(transformationMatrix, init3, init3);
+			Vector3f p1 = new Vector3f(init1.x, init1.y, init1.z);
+			Vector3f p2 = new Vector3f(init2.x, init2.y, init2.z);
+			Vector3f p3 = new Vector3f(init3.x, init3.y, init3.z);
+			if (checkSingleTriangle(p1, p2, p3)) {
+				intersection_distance[0] = (float) Math.pow((Math.pow(p1.x - camera.getPosition().x, 2)
+						+ Math.pow(p1.y - camera.getPosition().y, 2) + Math.pow(p1.z - camera.getPosition().z, 2)),
+						0.5);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean checkSingleTriangle(Vector3f p1, Vector3f p2, Vector3f p3) {
+		float[] l1 = new float[6];
+		float[] l2 = new float[6];
+		float[] l3 = new float[6];
+		Maths.generateLines(p1, p2, l1);
+		Maths.generateLines(p2, p3, l2);
+		Maths.generateLines(p3, p1, l3);
+
+		float[] unitLine = new float[6];
+		Vector3f rayEnd = Vector3f.add(camera.getPosition(), currentRay, null);
+		Maths.generateLines(getPointOnRay(currentRay, 10000), camera.getPosition(), unitLine);
+
+		float s1 = Maths.sideOperations(unitLine, l1);
+		float s2 = Maths.sideOperations(unitLine, l2);
+		float s3 = Maths.sideOperations(unitLine, l3);
+
+		if ((s1 <= 0 && s2 <= 0 && s3 <= 0) || (s1 >= 0 && s2 >= 0 && s3 >= 0)) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -351,6 +441,16 @@ public class MousePickerSphere {
 			currentTerrainPoint = null;
 		}
 	}
+	
+	public void update2() {
+		viewMatrix = Maths.createViewMatrix(camera);
+		currentRay = calculateMouseRay();
+		//currentTerrainPoint = terrainSphere.getTerrainPointWithCameraRay(currentRay, camera.getPosition());
+		currentTerrainPoint = terrainSphere.getTerrainRayIntersectionPointNoHeight(currentRay, camera.getPosition());
+		//System.out.println(currentTerrainPoint);
+	}
+	
+	
 
 	private Vector3f calculateMouseRay() {
 		float mouseX = Mouse.getX();

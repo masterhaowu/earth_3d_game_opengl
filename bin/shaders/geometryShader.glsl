@@ -4,16 +4,16 @@ layout ( triangles ) in;
 layout ( triangle_strip, max_vertices = 3 ) out;
 
 //in vec2 tc;
-//in vec2 pass_textureCoords[3];
-in vec3 pass_terrainColour[3];
+in vec2 pass_textureCoords[3];
 in vec3 toLightVector[3][4];
 in vec3 toCameraVector[3];
+//in vec3 surfaceNormal[3];
 
 in vec4 worldPosition[3];
 
 out vec4 finalColour;
 
-uniform sampler2D shadowMap;
+uniform sampler2D textureSampler;
 
 
 
@@ -43,7 +43,7 @@ vec3 calculateTriangleNormal(){
 
 
 vec4 calculateDiffuseAndSpecular(vec3 toCameraVector, vec3 unitNormal, int number, vec4 averageColour){
-    bool isNight = false;
+    
     vec3 unitCameraVector = normalize(toCameraVector.xyz);
     vec3 totalSpecular = vec3(0.0);
     vec3 totalDiffuse = vec3(0.0);
@@ -53,9 +53,6 @@ vec4 calculateDiffuseAndSpecular(vec3 toCameraVector, vec3 unitNormal, int numbe
         vec3 unitLightVector = normalize(toLightVector[number][i]);
         float nDotl = dot(unitNormal, unitLightVector);
         float brightness = max(nDotl, 0.0);
-        if (brightness < 0.05 && i == 0) {
-            isNight = true;
-        }
         
         
         vec3 lightDirection = -unitLightVector;
@@ -70,10 +67,7 @@ vec4 calculateDiffuseAndSpecular(vec3 toCameraVector, vec3 unitNormal, int numbe
     totalDiffuse = max(totalDiffuse, terrainGlobalOffset);
     
     vec4 tempFinalColour = vec4(totalDiffuse, 1.0) * averageColour + vec4(totalSpecular, 1.0);
-    tempFinalColour = mix(tempFinalColour, averageColour, 0.5);
-    //if (isNight == false) {
-     //   tempFinalColour = tempFinalColour + vec4(0.1, 0.1, 0.1, 0);
-    //}
+    tempFinalColour = mix(tempFinalColour, averageColour, 0.3);
     return tempFinalColour;
     
 }
@@ -83,7 +77,7 @@ vec4 calculateAverageTextureColour(){
    
     for (int i=0; i<3; i++) {
 
-        totalColour += vec4(pass_terrainColour[i],1.0);
+        totalColour += texture(textureSampler, pass_textureCoords[i]);
     }
     totalColour /= 3;
     return totalColour;
@@ -94,6 +88,7 @@ void main()
    
     
     vec3 unitNormal = calculateTriangleNormal();
+    //vec3 unitNormal = normalize()
     
     
     vec4 averageColour = calculateAverageTextureColour();

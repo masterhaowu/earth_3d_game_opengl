@@ -10,10 +10,12 @@ in vec3 normal;
 //uniform mat4 projectionMatrix;
 
 out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
+//out vec3 surfaceNormal;
 out vec3 toLightVector[4];
 out vec3 toCameraVector;
-out float visibility;
+
+out vec4 worldPosition;
+//out float visibility;
 
 
 
@@ -34,7 +36,7 @@ uniform vec4 plane;
 
 void main()
 {
-    vec4 worldPosition =  transformationMatrix * vec4(position.x, position.y, position.z, 1.0);
+    worldPosition =  transformationMatrix * vec4(position.x, position.y, position.z, 1.0);
     
     gl_ClipDistance[0] = dot(worldPosition, plane);
     
@@ -43,20 +45,20 @@ void main()
     
     pass_textureCoords = (textureCoords/numberOfRows) + offset;
     
-    vec3 actualNormal = normal;
-    if (useFakeLighting > 0.5) {
-        actualNormal = vec3(0.0, 1.0, 0.0);
-    }
+    //vec3 actualNormal = normal;
+    //if (useFakeLighting > 0.5) {
+     //   actualNormal = vec3(0.0, 1.0, 0.0);
+    //}
     
-    surfaceNormal = (transformationMatrix * vec4(actualNormal,0.0)).xyz;
+   // surfaceNormal = (transformationMatrix * vec4(actualNormal,0.0)).xyz;
     for (int i=0; i<4; i++) {
         toLightVector[i] = lightPosition[i] - worldPosition.xyz;
     }
     
     toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
     
-    float distance = length(positionRelativeToCam.xyz);
-    visibility = exp(-pow((distance * density), gradient));
-    visibility = clamp(visibility, 0.0, 1.0);
+    //float distance = length(positionRelativeToCam.xyz);
+    //visibility = exp(-pow((distance * density), gradient));
+    //visibility = clamp(visibility, 0.0, 1.0);
 }
 

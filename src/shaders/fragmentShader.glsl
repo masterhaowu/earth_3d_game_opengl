@@ -1,10 +1,30 @@
 #version 400 core
 
 
-
-
-
 //in vec2 tc;
+
+in vec4 finalColour;
+
+uniform bool highlighted;
+
+out vec4 out_Colour;
+
+void main(void){
+    
+    out_Colour = finalColour;
+    //out_Colour = vec4(1, 1, 1, 1);
+    if (highlighted == true) {
+        out_Colour = vec4(1,1,1,1);
+    }
+    
+}
+
+
+
+
+/*
+ 
+ //in vec2 tc;
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec3 toLightVector[4];
@@ -13,7 +33,7 @@ in float visibility;
 
 out vec4 out_colour;
 
-uniform sampler2D textureSampler;
+
 uniform vec3 lightColour[4];
 uniform vec3 attenuation[4];
 uniform float shineDamper;
@@ -65,4 +85,5 @@ void main()
     }
 
 }
+ */
 

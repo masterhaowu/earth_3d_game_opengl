@@ -48,7 +48,7 @@ public class TerrainSphereRenderer {
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
-		shader.loadShineVariables(5, 0.5f);
+		shader.loadShineVariables(0, 0.0f);
 
 	}
 	

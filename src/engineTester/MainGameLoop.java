@@ -86,6 +86,8 @@ public class MainGameLoop {
 		// texture.setShineDamper(10);
 		// texture.setReflectivity(1);
 		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("LowPolyTree")));
+		//staticModel.getTexture().setReflectivity(0.2f);
+		//staticModel.getTexture().setShineDamper(2.0f);
 		// Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -25),
 		// 0, 0, 0, 1);
 
@@ -251,11 +253,10 @@ public class MainGameLoop {
 			// float y = terrain.getHeightOfTerrain(x, z);
 			// float radius = terrainSphere.getHeight(theta1, theta2);
 
-			float radius = terrainSphere.getHeightAdvanced(theta1, theta2);
-			Vector3f entityPos = Maths.convertBackToCart(new Vector3f(radius, theta1, theta2));
-			// Vector3f entityPos = terrainSphere.getHeightPosAdvanced(theta1,
-			// theta2);
-			Entity tempEntitiy = new Entity(staticModel, entityPos, 90, 0, 0, 1f);
+			//float radius = terrainSphere.getHeightAdvanced(theta1, theta2);
+			//Vector3f entityPos = Maths.convertBackToCart(new Vector3f(radius, theta1, theta2));
+			Vector3f entityPos = terrainSphere.getPositionAdvanced(theta1, theta2);
+			Entity tempEntitiy = new Entity(staticModel, entityPos, 90, 0, 0, 0.8f);
 			tempEntitiy.updateRotation();
 			// entities.add(new Entity(staticModel, new Vector3f(x, y, z), 0, 0,
 			// 0, 1));
@@ -362,7 +363,7 @@ public class MainGameLoop {
 			// DisplayManager.getFrameTimeSeconds());
 			barrel.increaseRotation(0, 1, 0);
 			crate.increaseRotation(0, 1, 0);
-			picker.update();
+			picker.update2();
 			// player.move(terrains, picker);
 			player.move(terrainSphere);
 			camera.move();
@@ -377,7 +378,8 @@ public class MainGameLoop {
 			currentFace = picker.getCurrentTerrainFace();
 			//Entity currentEntity = picker.checkSelectedEntitySimpleMethod(entities);
 			//Entity currentEntity = picker.checkSelectedEntityOBBMethod(entities);
-			Entity currentEntity = picker.checkSelectedEntityCenterDistanceMethod(entities);
+			//Entity currentEntity = picker.checkSelectedEntityCenterDistanceMethod(entities);
+			Entity currentEntity = picker.checkSelectedEntityAllMeshMethodWithThreshold(entities, 10);
 			//System.out.println(currentEntity.getModel().getRawModel().);
 			//System.out.println(currentEntity.getModel().getRawModel().getMax());
 			

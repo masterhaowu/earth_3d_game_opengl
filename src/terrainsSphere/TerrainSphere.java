@@ -11,6 +11,7 @@ import java.util.List;
 //import java.io.IOException;
 //import java.io.InputStreamReader;
 //import java.util.Random;
+import java.util.Vector;
 
 //import javax.imageio.ImageIO;
 
@@ -452,6 +453,9 @@ public class TerrainSphere {
 			return checkFacesPlucker(unitVector, cloestFace.getChildren());
 		}
 	}
+	
+	
+	
 
 	/*
 	 * public TerrainFace getTargetFace(float theta1, float theta2) { Vector3f
@@ -489,27 +493,195 @@ public class TerrainSphere {
 		Vector4f point1 = verticesListWithHeight.get((int) targetFace.getIndices().x);
 		Vector4f point2 = verticesListWithHeight.get((int) targetFace.getIndices().y);
 		Vector4f point3 = verticesListWithHeight.get((int) targetFace.getIndices().z);
+		
+		Vector3f v0 = new Vector3f(point1.x, point1.y, point1.z);
+		Vector3f v1 = new Vector3f(point2.x, point2.y, point2.z);
+		Vector3f v2 = new Vector3f(point3.x, point3.y, point3.z);
+		
+		Vector3f finalPos = getPreciseRayTriangleIntersectionPoint(new Vector3f(0,0,0), unitVector, v0, v1, v2);
+		if (finalPos == null) {
+			//System.out.println("bad one");
+			finalPos = getAverageRayTriangleIntersectionPoint(v0, v1, v2);
+		}
+		
+		
 
-		finalHeight = (point1.w + point2.w + point3.w) / 3 * scale;
+		finalHeight = Maths.convertToPolar(finalPos).x * scale;
 
 		return finalHeight;
 	}
 
-	public Vector3f getHeightPosAdvanced(float theta1, float theta2) {
+	public Vector3f getPositionAdvanced(float theta1, float theta2) {
 		Vector3f unitVector = Maths.convertBackToCart(new Vector3f(1, theta1, theta2));
 		// List<TerrainFace> facesToCheck = initTerrainFaces;
-		Vector3f finalHeight = new Vector3f(0, 0, 0);
+		Vector3f finalPos = new Vector3f(0, 0, 0);
 		TerrainFace targetFace = checkFacesPlucker(unitVector, initTerrainFaces);
 
 		Vector4f point1 = verticesListWithHeight.get((int) targetFace.getIndices().x);
 		Vector4f point2 = verticesListWithHeight.get((int) targetFace.getIndices().y);
 		Vector4f point3 = verticesListWithHeight.get((int) targetFace.getIndices().z);
-
+		Vector3f v0 = new Vector3f(point1.x, point1.y, point1.z);
+		Vector3f v1 = new Vector3f(point2.x, point2.y, point2.z);
+		Vector3f v2 = new Vector3f(point3.x, point3.y, point3.z);
+		/*
 		finalHeight.x = (point1.x + point2.x + point3.x) / 3 * scale;
 		finalHeight.y = (point1.y + point2.y + point3.y) / 3 * scale;
 		finalHeight.z = (point1.z + point2.z + point3.z) / 3 * scale;
+		*/
+		finalPos = getPreciseRayTriangleIntersectionPoint(new Vector3f(0,0,0), unitVector, v0, v1, v2);
+		if (finalPos == null) {
+			//System.out.println("bad one");
+			finalPos = getAverageRayTriangleIntersectionPoint(v0, v1, v2);
+		}
+		
+		finalPos.x *= scale;
+		finalPos.y *= scale;
+		finalPos.z *= scale;
+		
 
-		return finalHeight;
+		return finalPos;
+	}
+	
+	
+	public Vector3f getAverageRayTriangleIntersectionPoint(Vector3f v0, Vector3f v1, Vector3f v2){
+		Vector3f finalPos = new Vector3f(0, 0, 0);
+		finalPos.x = (v0.x + v1.x + v2.x) / 3;
+		finalPos.y = (v0.y + v1.y + v2.y) / 3;
+		finalPos.z = (v0.z + v1.z + v2.z) / 3;
+		return finalPos;
+	}
+	
+	
+	
+	public Vector3f getPreciseRayTriangleIntersectionPoint(Vector3f p, Vector3f d, Vector3f v0, Vector3f v1, Vector3f v2){
+		//p is rayOrigin
+		//d is rayDirection
+		Vector3f finalPos = new Vector3f(0, 0, 0);
+		
+		Vector3f e1 = Vector3f.sub(v1, v0, null);
+		Vector3f e2 = Vector3f.sub(v2, v0, null);
+		float f;
+		Vector3f h = Vector3f.cross(d, e2, null);
+		float a = Vector3f.dot(e1, h);
+		if (a > -0.00001 && a < 0.00001){
+			System.out.println("return because a failed");
+			return null;
+		}
+		f = 1/a;
+		
+		Vector3f s = Vector3f.sub(p, v0, null);
+		float u = f * Vector3f.dot(s, h);
+		if (u < -0.00001 || u > 1.00001){
+			System.out.println("return because u failed");
+			System.out.println(u);
+			return null;
+		}
+		
+		Vector3f q = Vector3f.cross(s, e1, null);
+		float v = f * Vector3f.dot(d, q);
+		
+		if (v < -0.00001 || u + v > 1.00001){
+			System.out.println("return because v and u+v failed");
+			return null;
+		}
+		
+		float t = f * Vector3f.dot(e2,q);
+		
+		finalPos = new Vector3f(d.x * t, d.y * t, d.z * t);
+		
+		return finalPos;
+	}
+	
+	
+	
+	private TerrainFace checkFacesPluckerCameraRay(Vector3f currentRay, Vector3f cameraPos, List<TerrainFace> facesToCheck) {
+		//System.out.println(currentRay);
+		float[] unitLine = new float[6];
+		//Vector3f extendedRayPoint = new Vector3f(cameraPos.x + currentRay.x * 5000, cameraPos.y + currentRay.y * 5000, cameraPos.z + currentRay.z * 5000);
+		Maths.generateLines(getPointOnRay(currentRay, 1000, cameraPos), cameraPos, unitLine);
+		TerrainFace cloestFace = facesToCheck.get(0);
+
+		// int i=0;
+		for (TerrainFace face : facesToCheck) {
+			// System.out.print(".....");
+			// System.out.print(unitLine[0]);
+			// System.out.print(face.getL1()[0]);
+			Vector3f faceNormal = face.getNormal();
+			double dotProduct = Vector3f.dot(currentRay, faceNormal);
+			float s1 = Maths.sideOperations(unitLine, face.getL1());
+			float s2 = Maths.sideOperations(unitLine, face.getL2());
+			float s3 = Maths.sideOperations(unitLine, face.getL3());
+			//System.out.println("s1" + s1 + "s2" + s2 + "s3" + s3);
+			if (dotProduct <= 0) {
+
+				if ((s1 <= 0 && s2 <= 0 && s3 <= 0) || (s1 >= 0 && s2 >= 0 && s3 >= 0)) {
+
+					cloestFace = face;
+					//System.out.println("here");
+				}
+			}
+			// i++;
+		}
+
+		if (cloestFace.isBottom()) {
+			return cloestFace;
+		} else {
+
+			return checkFacesPluckerCameraRay(currentRay, cameraPos, cloestFace.getChildren());
+		}
+	}
+	
+	
+	public Vector3f getTerrainRayIntersectionPointNoHeight(Vector3f currentRay, Vector3f cameraPos){
+		Vector3f finalPos = new Vector3f(0, 0, 0);
+		Vector3f c = new Vector3f(0, 0, 0);
+		Vector3f p = cameraPos;
+		Vector3f pToC = Vector3f.sub(c, p, null);
+		float pToPcLen = Vector3f.dot(pToC, currentRay);
+		Vector3f pc = getPointOnRay(currentRay, pToPcLen, cameraPos);
+		//distance from pc to i1
+		Vector3f cToPc = Vector3f.sub(pc, c, null);
+		float cToPcLen = cToPc.length();
+		if (cToPcLen > scale) {
+			return null;
+		}
+		float dist = (float) Math.pow((Math.pow(scale, 2) - Math.pow(cToPcLen, 2)), 0.5);
+		//distance from p to i1
+		float di1 = pToPcLen - dist;
+		finalPos = getPointOnRay(currentRay, di1, cameraPos);
+		
+		
+		
+		return finalPos;
+	}
+	
+	public Vector3f getTerrainPointWithCameraRay(Vector3f currentRay, Vector3f cameraPos){ //bad method
+		currentRay = new Vector3f(currentRay.x/scale, currentRay.y/scale, currentRay.z/scale);
+		cameraPos = new Vector3f(cameraPos.x/scale, cameraPos.y/scale, cameraPos.z/scale);
+		TerrainFace targetFace = checkFacesPluckerCameraRay(currentRay, cameraPos, initTerrainFaces);
+		Vector4f point1 = verticesListWithHeight.get((int) targetFace.getIndices().x);
+		Vector4f point2 = verticesListWithHeight.get((int) targetFace.getIndices().y);
+		Vector4f point3 = verticesListWithHeight.get((int) targetFace.getIndices().z);
+		Vector3f finalPos = new Vector3f(0, 0, 0);
+		finalPos.x = (point1.x + point2.x + point3.x) / 3 * scale;
+		finalPos.y = (point1.y + point2.y + point3.y) / 3 * scale;
+		finalPos.z = (point1.z + point2.z + point3.z) / 3 * scale;
+		return finalPos;
+	}
+	
+	public TerrainFace getTerrainFaceWithCameraRay(Vector3f currentRay, Vector3f cameraPos){ //bad method
+		currentRay = new Vector3f(currentRay.x/scale, currentRay.y/scale, currentRay.z/scale);
+		cameraPos = new Vector3f(cameraPos.x/scale, cameraPos.y/scale, cameraPos.z/scale);
+		TerrainFace targetFace = checkFacesPluckerCameraRay(currentRay, cameraPos, initTerrainFaces);
+		
+		return targetFace;
+	}
+	
+	private Vector3f getPointOnRay(Vector3f ray, float distance, Vector3f camPos) {
+		//Vector3f camPos = camera.getPosition();
+		Vector3f start = new Vector3f(camPos.x, camPos.y, camPos.z);
+		Vector3f scaledRay = new Vector3f(ray.x * distance, ray.y * distance, ray.z * distance);
+		return Vector3f.add(start, scaledRay, null);
 	}
 
 	public RawModel getModel() {
