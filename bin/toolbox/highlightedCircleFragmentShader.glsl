@@ -1,19 +1,17 @@
 #version 400 core
 
 
-//in vec2 tc;
 
-in vec4 finalColour;
 
-uniform bool highlighted;
+
+uniform vec3 circleColour;
 
 out vec4 out_Colour;
 
 void main(void){
     
-    out_Colour = finalColour;
-    //out_Colour = vec4(1, 1, 1, 1);
-    
+    //out_Colour = vec4(circleColour.x, circleColour.y, circleColour.z, 1.0);
+    out_Colour = vec4(1, 1, 1, 1);
     
 }
 

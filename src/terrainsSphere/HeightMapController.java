@@ -9,14 +9,16 @@ import javax.imageio.ImageIO;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.util.ResourceLoader;
 
+import entityObjects.ObjectData;
+import entityObjects.ObjectsController;
+
 public class HeightMapController {
-	public static final int SNOW_TERRAIN = 0;
-	public static final int MOUNTAIN_TERRAIN = 1;
-	public static final int GRASS_TERRAIN = 2;
-	public static final int CLIFF_TERRAIN = 3;
-	public static final int SHALLOW_WATER_TERRAIN = 4;
-	public static final int DEEP_WATER_TERRAIN = 5;
-	public static final int PLAIN_TERRAIN = 6;
+	public static final int SNOW_TERRAIN = 20;
+	public static final int MOUNTAIN_TERRAIN = 21;
+	public static final int CLIFF_TERRAIN = 22;
+	public static final int PLAIN_TERRAIN = 23;
+	public static final int SHALLOW_WATER_TERRAIN = -21;
+	public static final int DEEP_WATER_TERRAIN = -22;
 
 	public static final Vector3f SNOW_COLOUR = new Vector3f(1, 1, 1);
 	public static final Vector3f MOUNTAIN_COLOUR = new Vector3f((float) 90 / 255, (float) 90 / 255, (float) 90 / 255);
@@ -28,8 +30,8 @@ public class HeightMapController {
 			(float) 178 / 255);
 	public static final Vector3f PLAIN_COLOUR = new Vector3f((float) 158 / 255, (float) 149 / 255, (float) 100 / 255);
 
-	public static final Vector3f[] terrainColourArray = { SNOW_COLOUR, MOUNTAIN_COLOUR, GRASS_COLOUR, CLIFF_COLOUR,
-			SHALLOW_WATER_COLOUR, DEEEP_WATER_COLOUR, PLAIN_COLOUR };
+	//public static final Vector3f[] terrainColourArray = { SNOW_COLOUR, MOUNTAIN_COLOUR, GRASS_COLOUR, CLIFF_COLOUR,
+		//	SHALLOW_WATER_COLOUR, DEEEP_WATER_COLOUR, PLAIN_COLOUR };
 
 	public static final int HEIGHT_MAP_WIDTH = 720;
 	public static final int HEIGHT_MAP_HEIGHT = 360;
@@ -169,7 +171,22 @@ public class HeightMapController {
 	 * (heights[height][width] / HEIGHT_SCALE + 1) * scale; return sphereHeight;
 	 * }
 	 */
-
+	
+	public void loadColourBasedOnHeight(float theta1, float theta2, TerrainVertex vertex){
+		int width = (int) ((theta2 + Math.PI / 2) * HEIGHT_MAP_WIDTH / (2 * Math.PI));
+		int height = (int) ((theta1 + Math.PI / 2) * HEIGHT_MAP_HEIGHT / (Math.PI));
+		if (width < 0 || width >= HEIGHT_MAP_WIDTH || height < 0 || height >= HEIGHT_MAP_HEIGHT) {
+			return;
+		}
+		ObjectData objectToLoad = ObjectsController.getObjectDataBasedOnType(terrainTypes[height][width]);
+		if (objectToLoad != null) {
+			//System.out.println(objectToLoad.getObjectType());
+			//vertex.addObjectDirectlyToVertex(ObjectsController.snowTerrain, 10, true);
+			vertex.addObjectDirectlyToVertex(objectToLoad, 10, true);
+		}		
+	}
+	
+	/*
 	public Vector3f accessColourBasedOnHeight(float theta1, float theta2) {
 		int width = (int) ((theta2 + Math.PI / 2) * HEIGHT_MAP_WIDTH / (2 * Math.PI));
 		int height = (int) ((theta1 + Math.PI / 2) * HEIGHT_MAP_HEIGHT / (Math.PI));
@@ -179,5 +196,6 @@ public class HeightMapController {
 		// return heightGeneratorSphere.generateHeight(width, height);
 		return terrainColourArray[terrainTypes[height][width]];
 	}
+	*/
 
 }

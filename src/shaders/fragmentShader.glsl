@@ -13,9 +13,7 @@ void main(void){
     
     out_Colour = finalColour;
     //out_Colour = vec4(1, 1, 1, 1);
-    if (highlighted == true) {
-        out_Colour = vec4(1,1,1,1);
-    }
+    
     
 }
 

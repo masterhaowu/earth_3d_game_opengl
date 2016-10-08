@@ -24,6 +24,9 @@ import terrains.Terrain;
 import terrainsSphere.TerrainSphere;
 import terrainsSphere.TerrainSphereRenderer;
 import terrainsSphere.TerrainSphereShader;
+import toolbox.HighlightedCircleRenderer;
+import toolbox.HighlightedCircleShader;
+import toolbox.HighlightedCircle;
 
 public class MasterRenderer {
 
@@ -55,6 +58,9 @@ public class MasterRenderer {
 	private NormalMappingRenderer normalMappingRenderer;
 	
 	private ShadowMapMasterRenderer shadowMapRenderer;
+	
+	private HighlightedCircleShader highlightedCircleShader = new HighlightedCircleShader();
+	private HighlightedCircleRenderer highlightedCircleRenderer;
 
 	public MasterRenderer(Loader loader, Camera camera) {
 		enableCulling();
@@ -65,6 +71,7 @@ public class MasterRenderer {
 		skyboxRednerer = new SkyboxRednerer(loader, projectionMatrix);
 		normalMappingRenderer = new NormalMappingRenderer(projectionMatrix);
 		shadowMapRenderer = new ShadowMapMasterRenderer(camera);
+		highlightedCircleRenderer = new HighlightedCircleRenderer(highlightedCircleShader, projectionMatrix);
 	}
 
 	public void renderScene(List<Entity> entities, List<Entity> normalMapEntities,
@@ -111,6 +118,15 @@ public class MasterRenderer {
 		//terrains.clear();
 		normalMapEntities.clear();
 	}
+	
+	public void renderHightlightedCircle(HighlightedCircle hightlightedCircle, Camera camera){
+		disableCulling();
+		highlightedCircleShader.start();
+		highlightedCircleShader.loadViewMatrix(camera);
+		highlightedCircleRenderer.render(hightlightedCircle);
+		highlightedCircleShader.stop();
+		enableCulling();
+	}
 
 	//public void processTerrain(Terrain terrain) {
 	//	terrains.add(terrain);
@@ -146,6 +162,7 @@ public class MasterRenderer {
 		terrainSphereShader.cleanUp();
 		normalMappingRenderer.cleanUp();
 		shadowMapRenderer.cleanUp();
+		highlightedCircleShader.cleanUp();
 	}
 
 	public void prepare() {

@@ -19,6 +19,7 @@ import java.util.Vector;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import entityObjects.ObjectsController;
 import models.RawModel;
 import objConverter.Vertex;
 import renderEngine.Loader;
@@ -272,8 +273,11 @@ public class TerrainSphere {
 			verticesListWithHeight.add(
 					new Vector4f(verticesFinal[i * 3], verticesFinal[i * 3 + 1], verticesFinal[i * 3 + 2], radius));
 
-			Vector3f colour = heightMapController.accessColourBasedOnHeight(theta1, theta2);
-			terrainVerticesList.get(i).setColour(colour);
+			//Vector3f colour = heightMapController.accessColourBasedOnHeight(theta1, theta2);
+			//terrainVerticesList.get(i).setColour(colour);
+			//terrainVerticesList.get(i).setColourBasedOnHeight(colour);
+			//terrainVerticesList.get(i).addObjectDirectlyToVertex(ObjectsController.snowTerrain, 10, true);
+			heightMapController.loadColourBasedOnHeight(theta1, theta2, terrainVerticesList.get(i));
 			
 		}
 

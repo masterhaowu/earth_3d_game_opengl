@@ -17,6 +17,8 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import entityObjects.EntityObject;
+import entityObjects.ObjectsController;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
@@ -45,6 +47,7 @@ import terrainsSphere.TerrainSphere;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.HighlightedCircle;
 import toolbox.Maths;
 import toolbox.MousePicker;
 import toolbox.MousePickerSphere;
@@ -64,6 +67,9 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 
 		Loader loader = new Loader();
+		
+		//--------------------------Objects Controller -------------------------------------
+		ObjectsController.fillObjectsController();
 
 		// --------------------------Font----------------------------------------------------
 		TextMaster.init(loader);
@@ -76,8 +82,8 @@ public class MainGameLoop {
 		ModelData data = OBJFileLoader.loadOBJ("lowPolyTree");
 		RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(),
 				data.getIndices());
-		//System.out.println(data.getMax());
-		//System.out.println(data.getMin());
+		// System.out.println(data.getMax());
+		// System.out.println(data.getMin());
 		model.setModelData(data);
 		model.setMax(data.getMax());
 		model.setMin(data.getMin());
@@ -86,8 +92,8 @@ public class MainGameLoop {
 		// texture.setShineDamper(10);
 		// texture.setReflectivity(1);
 		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("LowPolyTree")));
-		//staticModel.getTexture().setReflectivity(0.2f);
-		//staticModel.getTexture().setShineDamper(2.0f);
+		// staticModel.getTexture().setReflectivity(0.2f);
+		// staticModel.getTexture().setShineDamper(2.0f);
 		// Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -25),
 		// 0, 0, 0, 1);
 
@@ -230,8 +236,7 @@ public class MainGameLoop {
 
 		// Player player = new Player(texturedModelBunny, new Vector3f(8400, 0,
 		// 7600), 0, 180, 0, 1);
-		Player player = new Player(texturedModelBunny, new Vector3f(0, 0, terrainSphere.getScale() + 10), 0, 0, 0,
-				1f);
+		Player player = new Player(texturedModelBunny, new Vector3f(0, 0, terrainSphere.getScale() + 10), 0, 0, 0, 1f);
 		// Player player = new Player(texturedModelBunny, new Vector3f(0, 0, 0),
 		// 90, 180, 0, 1);
 		// Player player = new Player(texturedModelBunny, new Vector3f(0, 0, 0),
@@ -248,19 +253,24 @@ public class MainGameLoop {
 		for (int i = 0; i < 60; i++) {
 			float theta1 = (float) (random.nextFloat() * Math.PI * 2 - Math.PI);
 			float theta2 = (float) (random.nextFloat() * Math.PI - Math.PI / 2);
-			 //theta1 = 0;
-			 //theta2 = (float) (Math.PI/2 - 0.1 * i);
+			// theta1 = 0;
+			// theta2 = (float) (Math.PI/2 - 0.1 * i);
 			// float y = terrain.getHeightOfTerrain(x, z);
 			// float radius = terrainSphere.getHeight(theta1, theta2);
 
-			//float radius = terrainSphere.getHeightAdvanced(theta1, theta2);
-			//Vector3f entityPos = Maths.convertBackToCart(new Vector3f(radius, theta1, theta2));
+			// float radius = terrainSphere.getHeightAdvanced(theta1, theta2);
+			// Vector3f entityPos = Maths.convertBackToCart(new Vector3f(radius,
+			// theta1, theta2));
 			Vector3f entityPos = terrainSphere.getPositionAdvanced(theta1, theta2);
 			Entity tempEntitiy = new Entity(staticModel, entityPos, 90, 0, 0, 0.8f);
 			tempEntitiy.updateRotation();
 			// entities.add(new Entity(staticModel, new Vector3f(x, y, z), 0, 0,
 			// 0, 1));
-			entities.add(tempEntitiy);
+			EntityObject tempEntityObject = new EntityObject(tempEntitiy, ObjectsController.simpleTree);
+			if (tempEntityObject.checkObjectCanExistOnTerrain(terrainSphere)) {
+				entities.add(tempEntitiy);
+			}
+			
 			// entitiesWithShadows.add(tempEntitiy);
 
 		}
@@ -332,27 +342,38 @@ public class MainGameLoop {
 		// terrainSphere.getTargetFace(player.getPolar().y,
 		// player.getPolar().z);
 		// terrainSphere.setFaceColour(testFace, new Vector3f(0, 0, 0), loader);
-		TerrainObject highlightObject = new TerrainObject(0, 2, new Vector3f(1, 1, 1));
+		
 		// TerrainFace testFace =
 		// terrainSphere.getTargetFace(player.getPolar().y,
 		// player.getPolar().z);
 		// terrainSphere.addObjectToFace(testFace, highlightObject, loader);
-		boolean changeFace = true;
+		
 		boolean test = true;
-		TerrainFace currentFace = picker.getCurrentTerrainFace();
-		TerrainFace previousFace = picker.getCurrentTerrainFace();
 		
-		//currentFace = terrainSphere.getTargetFacePlucker(player.getPolar().y, player.getPolar().z);
+
+		// currentFace = terrainSphere.getTargetFacePlucker(player.getPolar().y,
+		// player.getPolar().z);
 		/*
-		for (int i=-180; i<180; i++){
-			for(int j=-180; j<540; j++){
-				currentFace = terrainSphere.getTargetFacePlucker((float)Math.toRadians((float)i/2f), (float)Math.toRadians((float)j/2));
-				terrainSphere.addObjectToFace(currentFace, highlightObject, loader);
-			}
-		}
-		*/
+		 * for (int i=-180; i<180; i++){ for(int j=-180; j<540; j++){
+		 * currentFace =
+		 * terrainSphere.getTargetFacePlucker((float)Math.toRadians((float)i/2f)
+		 * , (float)Math.toRadians((float)j/2));
+		 * terrainSphere.addObjectToFace(currentFace, highlightObject, loader);
+		 * } }
+		 */
+
+		// ----------------highlightedCircle----------------------
+		HighlightedCircle highlightedCircle = new HighlightedCircle(loader, 4, 5, 36);
+		highlightedCircle.setPosition(new Vector3f(0, 0, 450));
+		highlightedCircle.setScale(1);
+		highlightedCircle.calculateCirclePositionOnSphere(terrainSphere);
+		highlightedCircle.updatePositionVBO(loader);
 		
 		
+		//-------------------mouseHighlightController---------------------
+		MouseHighlightController mouseHighlightController = new MouseHighlightController(picker, colourController, loader, highlightedCircle, terrainSphere);
+		
+
 		while (!Display.isCloseRequested()) {
 			// float newHeight = (float) (water.getHeight() + 0.1 *
 			// DisplayManager.getFrameTimeSeconds());
@@ -361,9 +382,9 @@ public class MainGameLoop {
 			// entity.increaseRotation(0, 1, 0);
 			// barrel.setRotY(barrel.getRotY() + 2f *
 			// DisplayManager.getFrameTimeSeconds());
-			barrel.increaseRotation(0, 1, 0);
-			crate.increaseRotation(0, 1, 0);
-			picker.update2();
+			// barrel.increaseRotation(0, 1, 0);
+			// crate.increaseRotation(0, 1, 0);
+			//picker.update2();
 			// player.move(terrains, picker);
 			player.move(terrainSphere);
 			camera.move();
@@ -375,41 +396,9 @@ public class MainGameLoop {
 
 			renderer.renderShadowMap(entitiesWithShadows, sun);
 			// Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-			currentFace = picker.getCurrentTerrainFace();
-			//Entity currentEntity = picker.checkSelectedEntitySimpleMethod(entities);
-			//Entity currentEntity = picker.checkSelectedEntityOBBMethod(entities);
-			//Entity currentEntity = picker.checkSelectedEntityCenterDistanceMethod(entities);
-			Entity currentEntity = picker.checkSelectedEntityAllMeshMethodWithThreshold(entities, 10);
-			//System.out.println(currentEntity.getModel().getRawModel().);
-			//System.out.println(currentEntity.getModel().getRawModel().getMax());
-			
-			
-			//currentFace = terrainSphere.getTargetFacePlucker(player.getPolar().y,player.getPolar().z);
-			//terrainSphere.updateColourVBO(loader);
 
-			// currentFace.getNeighorVerticesDefault().get(0).setColour(new
-			// Vector3f(0, 0, 0));
-			// terrainSphere.setVertexColour(currentFace.getNeighorVerticesDefault().get(0),
-			// new Vector3f(0, 0, 0));
-			// terrainSphere.updateColourVBO(loader);
-			
-			if (currentFace != previousFace) {
-				changeFace = true;
+			mouseHighlightController.checkMousePicking(entities);
 
-			}
-
-			if (changeFace && currentFace != null && previousFace != null) {
-				
-				colourController.simpleResetColour(previousFace, loader);
-				colourController.addObjectToFace(currentFace, highlightObject, loader);
-				//currentFace = terrainSphere.getTargetFacePlucker(player.getPolar().y,player.getPolar().z);
-				colourController.updateColourVBO(loader);
-				
-				changeFace = false;
-			}
-		
-			previousFace = currentFace;
-			
 			// System.out.println(terrainPoint);
 
 			// if (terrainPoint != null) {
@@ -443,9 +432,15 @@ public class MainGameLoop {
 			renderer.processEntity(player);
 
 			// fbo.bindFrameBuffer();
+			
 			renderer.renderScene(entities, normalMapEntities, lights, camera, new Vector4f(0, 1, 0, 50), terrainSphere);
 			// waterRenderer.render(waters, camera, sun);
+			if (mouseHighlightController.isShowCircle()) {
+				renderer.renderHightlightedCircle(highlightedCircle, camera);
+			}
+			
 			waterSphereRenderer.render(waters, camera, sun);
+
 			// fbo.unbindFrameBuffer();
 			// GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			// ParticleMaster.renderParticles(camera);

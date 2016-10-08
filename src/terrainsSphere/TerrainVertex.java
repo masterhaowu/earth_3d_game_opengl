@@ -2,12 +2,14 @@ package terrainsSphere;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 //import java.util.HashSet;
 import java.util.List;
 //import java.util.Set;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import entityObjects.ObjectData;
 import toolbox.Maths;
 
 public class TerrainVertex {
@@ -18,6 +20,7 @@ public class TerrainVertex {
 	private Vector3f positionWithHeight;
 	private Vector3f polar;
 	private Vector3f colour;
+	private Vector3f colourBasedOnHeight;
 	private Vector3f filteredColour;
 	private int terrainType;
 	private float totalColourObjectAmount;
@@ -43,10 +46,53 @@ public class TerrainVertex {
 		this.neighborIndices = new ArrayList<Integer>();
 		this.neighborVertices = new ArrayList<TerrainVertex>();
 		this.neighborFaces = new ArrayList<TerrainFace>();
+		this.colour = new Vector3f(0, 0, 0);
 		// this.terrainSecondaryTypes = new ArrayList<Integer>();
 		this.objects = new HashMap<Integer, TerrainObject>();
-		this.totalColourObjectAmount = 1;
+		this.totalColourObjectAmount = 0;
 	}
+	
+	
+	//this method directly add object to vertex instead of through face and then spread to vertex. 
+	//one usage of it is when I first give the vertex colour based on their heights
+	public void addObjectDirectlyToVertex(ObjectData objectData, float amount, boolean computeColour){
+		int type = objectData.getObjectType();
+		if (objects.containsKey(type)) {
+			objects.get(type).setObjectAmount(objects.get(type).getObjectAmount() + amount);
+		}
+		else {
+			TerrainObject objectToAdd;
+			if (objectData.isAffectTerrainColour()) {
+				objectToAdd = new TerrainObject(type, amount, objectData.getColour());
+				this.totalColourObjectAmount += amount;
+				
+			} else {
+				objectToAdd = new TerrainObject(type, amount);
+			}
+			objects.put(type, objectToAdd);
+		}
+		if (computeColour) {
+			calculateVertexColour();
+		}
+	}
+	
+	private void calculateVertexColour(){
+		Vector3f tempColour = new Vector3f(0, 0, 0);
+		for (TerrainObject terrainObject : objects.values()){
+			tempColour.x += terrainObject.getColour().x * terrainObject.getObjectAmount();
+			tempColour.y += terrainObject.getColour().y * terrainObject.getObjectAmount();
+			tempColour.z += terrainObject.getColour().z * terrainObject.getObjectAmount();
+		}
+		
+		this.colour.x = tempColour.x / totalColourObjectAmount;
+		this.colour.y = tempColour.y / totalColourObjectAmount;
+		this.colour.z = tempColour.z / totalColourObjectAmount;
+		
+		
+		
+	}
+	
+	
 
 	public void addObject(TerrainObject object) {
 		int type = object.getObjectType();
@@ -168,6 +214,16 @@ public class TerrainVertex {
 	public List<TerrainFace> getNeighborFaces() {
 		return neighborFaces;
 	}
+
+	public Vector3f getColourBasedOnHeight() {
+		return colourBasedOnHeight;
+	}
+
+	public void setColourBasedOnHeight(Vector3f colourBasedOnHeight) {
+		this.colourBasedOnHeight = colourBasedOnHeight;
+	}
+	
+	
 	
 	
 

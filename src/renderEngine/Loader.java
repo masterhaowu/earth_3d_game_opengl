@@ -100,6 +100,15 @@ public class Loader {
 		return new RawModel(vaoID, indices.length);
 	}
 	
+	public RawModel loadToVAOPosition(float[] positions, int dimensions) {
+		int vaoID = createVAO();
+		int vboPositionID =  this.storeDataInAttributeListReturnVBO(0, dimensions, positions);
+		unbindVAO();
+		RawModel tempRawModel = new RawModel(vaoID, positions.length / dimensions);
+		tempRawModel.setVboPositionID(vboPositionID);
+		return tempRawModel;
+	}
+	
 	
 	public RawModel loadToVAOPositionAndColour(float[] positions, float[] colours, int[] indices, int dimensions) {
 		int vaoID = createVAO();
@@ -116,6 +125,14 @@ public class Loader {
 	public void updateColourData(int vbo, float[] colours){
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 		FloatBuffer buffer = storeDataInFloatBuffer(colours);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+	
+	public void updatePositionData(int vbo, float[] positions){
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		FloatBuffer buffer = storeDataInFloatBuffer(positions);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
 		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
