@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import renderEngine.DisplayManager;
-import renderEngine.MasterRenderer;
+import renderEngine.RendererController;
 
 /**
  * Represents the 3D cuboidal area of the world in which objects will cast
@@ -69,7 +69,7 @@ public class ShadowBox {
 		Vector3f toFar = new Vector3f(forwardVector);
 		toFar.scale(SHADOW_DISTANCE);
 		Vector3f toNear = new Vector3f(forwardVector);
-		toNear.scale(MasterRenderer.NEAR_PLANE);
+		toNear.scale(RendererController.NEAR_PLANE);
 		Vector3f centerNear = Vector3f.add(toNear, cam.getPosition(), null);
 		Vector3f centerFar = Vector3f.add(toFar, cam.getPosition(), null);
 
@@ -226,9 +226,9 @@ public class ShadowBox {
 	 * but means that distant objects wouldn't cast shadows.
 	 */
 	private void calculateWidthsAndHeights() {
-		farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(MasterRenderer.FOV)));
-		nearWidth = (float) (MasterRenderer.NEAR_PLANE
-				* Math.tan(Math.toRadians(MasterRenderer.FOV)));
+		farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(RendererController.FOV)));
+		nearWidth = (float) (RendererController.NEAR_PLANE
+				* Math.tan(Math.toRadians(RendererController.FOV)));
 		farHeight = farWidth / getAspectRatio();
 		nearHeight = nearWidth / getAspectRatio();
 	}

@@ -29,6 +29,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 import models.RawModel;
+import objConverter.ModelData;
 import textures.TextureData;
 
 public class Loader {
@@ -45,6 +46,20 @@ public class Loader {
 		storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
+	}
+	
+	public RawModel loadToVAOwithData(float[] positions, float[] textureCoords, float[] normals, int[] indices, ModelData data) {
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0, 3, positions);
+		storeDataInAttributeList(1, 2, textureCoords);
+		storeDataInAttributeList(2, 3, normals);
+		unbindVAO();
+		RawModel tempModel = new RawModel(vaoID, indices.length);
+		tempModel.setModelData(data);
+		tempModel.setMax(data.getMax());
+		tempModel.setMin(data.getMin());
+		return tempModel;
 	}
 	/*
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] colors, float[] normals, int[] indices) {

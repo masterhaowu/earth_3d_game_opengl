@@ -1,15 +1,16 @@
-package toolbox;
+package mouse;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import shaders.ShaderProgram;
+import toolbox.Maths;
 
 public class HighlightedCircleShader extends ShaderProgram {
 	
-	private static final String VERTEX_FILE = "/toolbox/highlightedCircleVertexShader.glsl";
-	private static final String FRAGMENT_FILE = "/toolbox/highlightedCircleFragmentShader.glsl";
+	private static final String VERTEX_FILE = "/mouse/highlightedCircleVertexShader.glsl";
+	private static final String FRAGMENT_FILE = "/mouse/highlightedCircleFragmentShader.glsl";
 	
 	public HighlightedCircleShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);

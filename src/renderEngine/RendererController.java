@@ -14,7 +14,11 @@ import org.lwjgl.util.vector.Vector4f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entityObjects.EntityObject;
 import models.TexturedModel;
+import mouse.HighlightedCircle;
+import mouse.HighlightedCircleRenderer;
+import mouse.HighlightedCircleShader;
 import normalMappingRenderer.NormalMappingRenderer;
 import shaders.StaticShader;
 import shaders.TerrainShader;
@@ -24,11 +28,8 @@ import terrains.Terrain;
 import terrainsSphere.TerrainSphere;
 import terrainsSphere.TerrainSphereRenderer;
 import terrainsSphere.TerrainSphereShader;
-import toolbox.HighlightedCircleRenderer;
-import toolbox.HighlightedCircleShader;
-import toolbox.HighlightedCircle;
 
-public class MasterRenderer {
+public class RendererController {
 
 	public static final float FOV = 50;
 	public static final float NEAR_PLANE = 0.1f;
@@ -62,7 +63,7 @@ public class MasterRenderer {
 	private HighlightedCircleShader highlightedCircleShader = new HighlightedCircleShader();
 	private HighlightedCircleRenderer highlightedCircleRenderer;
 
-	public MasterRenderer(Loader loader, Camera camera) {
+	public RendererController(Loader loader, Camera camera) {
 		enableCulling();
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
@@ -74,10 +75,11 @@ public class MasterRenderer {
 		highlightedCircleRenderer = new HighlightedCircleRenderer(highlightedCircleShader, projectionMatrix);
 	}
 
-	public void renderScene(List<Entity> entities, List<Entity> normalMapEntities,
+	public void renderScene(List<EntityObject> entityObjects, List<Entity> normalMapEntities,
 			List<Light> lights, Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere) {
 
-		for (Entity entity : entities) {
+		for (EntityObject entityObject : entityObjects) {
+			Entity entity = entityObject.getEntity();
 			processEntity(entity);
 		}
 		for (Entity entity : normalMapEntities) {

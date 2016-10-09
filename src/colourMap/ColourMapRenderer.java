@@ -12,7 +12,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
-import renderEngine.MasterRenderer;
+import renderEngine.RendererController;
 import shadows.ShadowShader;
 import toolbox.Maths;
 
@@ -38,7 +38,7 @@ public class ColourMapRenderer {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 			if (model.getTexture().isHasTransparency()) {
-				MasterRenderer.disableCulling();
+				RendererController.disableCulling();
 			}
 			for (Entity entity : entities.get(model)) {
 				prepareInstance(entity);
@@ -46,7 +46,7 @@ public class ColourMapRenderer {
 						GL11.GL_UNSIGNED_INT, 0);
 			}
 			if (model.getTexture().isHasTransparency()) {
-				MasterRenderer.enableCulling();
+				RendererController.enableCulling();
 			}
 		}
 		GL20.glDisableVertexAttribArray(0);

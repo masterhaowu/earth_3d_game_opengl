@@ -15,7 +15,7 @@ import entities.Entity;
 import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
-import renderEngine.MasterRenderer;
+import renderEngine.RendererController;
 import textures.ModelTexture;
 import toolbox.Maths;
 
@@ -60,7 +60,7 @@ public class NormalMappingRenderer {
 		ModelTexture texture = model.getTexture();
 		shader.loadNumberOfRows(texture.getNumberOfRows());
 		if (texture.isHasTransparency()) {
-			MasterRenderer.disableCulling();
+			RendererController.disableCulling();
 		}
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -70,7 +70,7 @@ public class NormalMappingRenderer {
 	}
 
 	private void unbindTexturedModel() {
-		MasterRenderer.enableCulling();
+		RendererController.enableCulling();
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(2);
@@ -88,7 +88,7 @@ public class NormalMappingRenderer {
 	private void prepare(Vector4f clipPlane, List<Light> lights, Camera camera) {
 		shader.loadClipPlane(clipPlane);
 		//need to be public variables in MasterRenderer
-		shader.loadSkyColour(MasterRenderer.RED, MasterRenderer.GREEN, MasterRenderer.BLUE);
+		shader.loadSkyColour(RendererController.RED, RendererController.GREEN, RendererController.BLUE);
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		
 		shader.loadLights(lights, viewMatrix);

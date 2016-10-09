@@ -1,4 +1,4 @@
-package toolbox;
+package mouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,10 @@ import org.lwjgl.util.vector.Vector4f;
 import terrains.Terrain;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainSphere;
+import toolbox.Maths;
 import entities.Camera;
 import entities.Entity;
+import entityObjects.EntityObject;
 
 public class MousePickerSphere {
 
@@ -108,8 +110,50 @@ public class MousePickerSphere {
 		return targetEntity;
 
 	}
+	
+	public EntityObject checkSelectedEntityAllMeshMethodWithThreshold(List<EntityObject> entityObjects, float threshold) {
+		EntityObject targetEntityObject = null;
+		Vector3f unitCamera = new Vector3f(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+		unitCamera.normalise();
+		if (currentTerrainPoint == null) {
+			// currentTerrainPolar = Maths.convertToPolar(currentTerrainPoint);
+			return targetEntityObject;
+		}
+		float minDistance = 10000;
+		List<EntityObject> entityObjectsSecondaryCheck = new ArrayList<EntityObject>();
+		for (EntityObject entityObject : entityObjects) {
+			Entity entity = entityObject.getEntity();
+			entity.setHighlighted(false);
+			if (entity.getModel().getRawModel().isHasMinMax() && checkEntityOrientation(entity, unitCamera)) {
+				float tempDistance = calculateRayObjectCenterDistance(entity);
+				if (tempDistance < threshold) {
+					// minDistance = tempDistance;
+					// targetEntity = entity;
+					entityObjectsSecondaryCheck.add(entityObject);
+				}
+			}
+		}
+		float[] intersection_distance = new float[1];
+		// System.out.println(entitiesSecondaryCheck.size());
+		for (EntityObject entityObject : entityObjectsSecondaryCheck) {
+			Entity entity = entityObject.getEntity();
+			if (checkEntityAllMesh(entity, intersection_distance)) {
+				if (intersection_distance[0] < minDistance) {
+					targetEntityObject = entityObject;
+					minDistance = intersection_distance[0];
+				}
+				
+			}
+		}
 
-	public Entity checkSelectedEntityAllMeshMethodWithThreshold(List<Entity> entities, float threshold) {
+		if (targetEntityObject != null) {
+			targetEntityObject.getEntity().setHighlighted(true);
+		}
+
+		return targetEntityObject;
+	}
+	/*
+	public Entity checkSelectedEntityAllMeshMethodWithThresholdOld(List<Entity> entities, float threshold) {
 		Entity targetEntity = null;
 		Vector3f unitCamera = new Vector3f(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 		unitCamera.normalise();
@@ -148,7 +192,7 @@ public class MousePickerSphere {
 
 		return targetEntity;
 	}
-
+	*/
 	public Entity checkSelectedEntityOBBMethod(List<Entity> entities) {//not working
 		Entity targetEntity = null;
 		if (currentTerrainPoint == null) {

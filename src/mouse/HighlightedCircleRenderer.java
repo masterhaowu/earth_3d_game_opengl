@@ -1,4 +1,4 @@
-package toolbox;
+package mouse;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import models.RawModel;
 import shaders.StaticShader;
+import toolbox.Maths;
 
 public class HighlightedCircleRenderer {
 

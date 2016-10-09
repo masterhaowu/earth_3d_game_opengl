@@ -1,17 +1,16 @@
-package mainGame;
+package mouse;
 
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Entity;
+import entityObjects.EntityObject;
 import renderEngine.Loader;
 import terrainsSphere.ColourController;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainObject;
 import terrainsSphere.TerrainSphere;
-import toolbox.HighlightedCircle;
-import toolbox.MousePickerSphere;
 
 public class MouseHighlightController {
 	
@@ -28,6 +27,10 @@ public class MouseHighlightController {
 	private boolean showCircle;
 	private HighlightedCircle highlightedCircle;
 	
+	private EntityObject currentEntityObject;
+	
+
+	
 	
 	public MouseHighlightController(MousePickerSphere picker, ColourController colourController, Loader loader, HighlightedCircle highlightedCircle, TerrainSphere terrainSphere){
 		this.picker = picker;
@@ -43,8 +46,8 @@ public class MouseHighlightController {
 	}
 	
 
-	public void checkMousePicking(List<Entity> entities) {
-		picker.updateOptimized();
+	public void checkMousePicking(List<EntityObject> entityObjects) {
+		
 		//System.out.println("here");
 		currentFace = picker.getCurrentTerrainFace();
 		// Entity currentEntity =
@@ -52,9 +55,12 @@ public class MouseHighlightController {
 		// Entity currentEntity = picker.checkSelectedEntityOBBMethod(entities);
 		// Entity currentEntity =
 		// picker.checkSelectedEntityCenterDistanceMethod(entities);
-		Entity currentEntity = picker.checkSelectedEntityAllMeshMethodWithThreshold(entities, 10);
+		currentEntityObject = picker.checkSelectedEntityAllMeshMethodWithThreshold(entityObjects, 10);
+		
+		
 
-		if (currentEntity != null) {
+		if (currentEntityObject != null) {
+			Entity currentEntity = currentEntityObject.getEntity();
 			highlightedCircle.setPosition(currentEntity.getPosition());
 			highlightedCircle.setRotX(currentEntity.getRotX());
 			highlightedCircle.setRotY(currentEntity.getRotY());
@@ -102,6 +108,15 @@ public class MouseHighlightController {
 	public boolean isShowCircle() {
 		return showCircle;
 	}
+
+
+	public EntityObject getCurrentEntityObject() {
+		return currentEntityObject;
+	}
+
+
+	
+	
 	
 	
 

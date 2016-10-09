@@ -1,5 +1,6 @@
 package entityObjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import entities.Entity;
@@ -41,6 +42,69 @@ public class EntityObject {
 		}
 		return true;
 	}
+	
+	public void addEntity(Entity entity){
+		if (multipleEntities) {
+			this.entityList.add(entity);
+		}
+		else{
+			this.entityList = new ArrayList<Entity>();
+			this.entityList.add(entity);
+			this.multipleEntities = true;
+		}
+	}
+
+
+	public Entity getEntity() {
+		return entity;
+	}
+
+
+	public void setEntity(Entity entity) {
+		this.entity = entity;
+	}
+
+
+	public List<Entity> getEntityList() {
+		return entityList;
+	}
+
+
+	public void setEntityList(List<Entity> entityList) {
+		this.entityList = entityList;
+	}
+
+
+	public boolean isMultipleEntities() {
+		return multipleEntities;
+	}
+
+
+	public void setMultipleEntities(boolean multipleEntities) {
+		this.multipleEntities = multipleEntities;
+	}
+
+
+	public TerrainFace getFace() {
+		return face;
+	}
+
+
+	public void setFace(TerrainFace face) {
+		this.face = face;
+	}
+
+
+	public ObjectData getObjectData() {
+		return objectData;
+	}
+
+
+	public void setObjectData(ObjectData objectData) {
+		this.objectData = objectData;
+	}
+	
+	
 	
 	
 	

@@ -1,4 +1,4 @@
-package toolbox;
+package mouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import entities.Entity;
 import models.RawModel;
 import renderEngine.Loader;
 import terrainsSphere.TerrainSphere;
+import toolbox.Maths;
 
 public class HighlightedCircle {
 	private List<Vector3f> verticesListInVector = new ArrayList<Vector3f>();
