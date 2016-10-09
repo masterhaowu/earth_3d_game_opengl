@@ -1,4 +1,4 @@
-package engineTester;
+package mainGame;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class MouseHighlightController {
 	
 
 	public void checkMousePicking(List<Entity> entities) {
-		picker.update2();
+		picker.updateOptimized();
 		//System.out.println("here");
 		currentFace = picker.getCurrentTerrainFace();
 		// Entity currentEntity =

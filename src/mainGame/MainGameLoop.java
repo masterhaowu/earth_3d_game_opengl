@@ -1,4 +1,4 @@
-package engineTester;
+package mainGame;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class MainGameLoop {
 
 		text.setColour(1.0f, 1.0f, 1.0f);
 
-		ModelData data = OBJFileLoader.loadOBJ("lowPolyTree");
+		ModelData data = OBJFileLoader.loadOBJ("tree2");
 		RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(),
 				data.getIndices());
 		// System.out.println(data.getMax());
@@ -87,15 +87,26 @@ public class MainGameLoop {
 		model.setModelData(data);
 		model.setMax(data.getMax());
 		model.setMin(data.getMin());
+		
+		
+		
+		
 		// ModelTexture texture = new ModelTexture(loader.loadTexture("white"));
 		// TexturedModel texturedModel = new TexturedModel(model, texture);
 		// texture.setShineDamper(10);
 		// texture.setReflectivity(1);
-		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("LowPolyTree")));
+		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("simpleTree")));
 		// staticModel.getTexture().setReflectivity(0.2f);
 		// staticModel.getTexture().setShineDamper(2.0f);
 		// Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -25),
 		// 0, 0, 0, 1);
+		ModelData deerData = OBJFileLoader.loadOBJ("deer");
+		RawModel deerRawModel = loader.loadToVAO(deerData.getVertices(), deerData.getTextureCoords(), deerData.getNormals(), deerData.getIndices());
+		deerRawModel.setModelData(deerData);
+		deerRawModel.setMax(deerData.getMax());
+		deerRawModel.setMin(deerData.getMin());
+		TexturedModel deerTexturedModel = new TexturedModel(deerRawModel, new ModelTexture(loader.loadTexture("deerFlipped")));
+		
 
 		ModelData dataPlant = OBJFileLoader.loadOBJ("grassModel");
 		RawModel modelPlant = loader.loadToVAO(dataPlant.getVertices(), dataPlant.getTextureCoords(),
@@ -248,6 +259,9 @@ public class MainGameLoop {
 		MasterRenderer renderer = new MasterRenderer(loader, camera);
 
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
+		
+		Entity deerEntity = new Entity(deerTexturedModel,  new Vector3f(0, 0, terrainSphere.getScale()), 90, 0, 0, 5);
+		entities.add(deerEntity);
 
 		// --------------------------EntitySphere----------------------------------------------------
 		for (int i = 0; i < 60; i++) {
@@ -262,7 +276,7 @@ public class MainGameLoop {
 			// Vector3f entityPos = Maths.convertBackToCart(new Vector3f(radius,
 			// theta1, theta2));
 			Vector3f entityPos = terrainSphere.getPositionAdvanced(theta1, theta2);
-			Entity tempEntitiy = new Entity(staticModel, entityPos, 90, 0, 0, 0.8f);
+			Entity tempEntitiy = new Entity(staticModel, entityPos, 90, 0, 0, 4f);
 			tempEntitiy.updateRotation();
 			// entities.add(new Entity(staticModel, new Vector3f(x, y, z), 0, 0,
 			// 0, 1));
@@ -270,6 +284,8 @@ public class MainGameLoop {
 			if (tempEntityObject.checkObjectCanExistOnTerrain(terrainSphere)) {
 				entities.add(tempEntitiy);
 			}
+			
+			
 			
 			// entitiesWithShadows.add(tempEntitiy);
 

@@ -442,11 +442,20 @@ public class MousePickerSphere {
 		}
 	}
 	
-	public void update2() {
+	public void updateOptimized() {
 		viewMatrix = Maths.createViewMatrix(camera);
 		currentRay = calculateMouseRay();
 		//currentTerrainPoint = terrainSphere.getTerrainPointWithCameraRay(currentRay, camera.getPosition());
-		currentTerrainPoint = terrainSphere.getTerrainRayIntersectionPointNoHeight(currentRay, camera.getPosition());
+		currentTerrainPoint = terrainSphere.getTerrainRayIntersectionPointCheckingNeighborFaces(currentRay, camera.getPosition(), 4);
+		if (currentTerrainPoint == null) {
+			if (intersectionInRange(0, RAY_RANGE, currentRay)) {
+				currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
+			} else {
+				currentTerrainPoint = null;
+			}
+		}
+		//System.out.println(currentTerrainPoint);
+		//currentTerrainPoint = terrainSphere.getTerrainRayIntersectionPointNoHeight(currentRay, camera.getPosition());
 		//System.out.println(currentTerrainPoint);
 	}
 	

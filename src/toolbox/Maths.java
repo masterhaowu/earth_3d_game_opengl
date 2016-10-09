@@ -28,6 +28,45 @@ public class Maths {
 		l[5] = q.y - p.y;
 	}
 	
+	public Vector3f getPreciseRayTriangleIntersectionPoint(Vector3f p, Vector3f d, Vector3f v0, Vector3f v1, Vector3f v2){
+		//p is rayOrigin
+		//d is rayDirection
+		Vector3f finalPos = new Vector3f(0, 0, 0);
+		
+		Vector3f e1 = Vector3f.sub(v1, v0, null);
+		Vector3f e2 = Vector3f.sub(v2, v0, null);
+		float f;
+		Vector3f h = Vector3f.cross(d, e2, null);
+		float a = Vector3f.dot(e1, h);
+		if (a > -0.00001 && a < 0.00001){
+			//System.out.println("return because a failed");
+			return null;
+		}
+		f = 1/a;
+		
+		Vector3f s = Vector3f.sub(p, v0, null);
+		float u = f * Vector3f.dot(s, h);
+		if (u < -0.00001 || u > 1.00001){
+			//System.out.println("return because u failed");
+			//System.out.println(u);
+			return null;
+		}
+		
+		Vector3f q = Vector3f.cross(s, e1, null);
+		float v = f * Vector3f.dot(d, q);
+		
+		if (v < -0.00001 || u + v > 1.00001){
+			//System.out.println("return because v and u+v failed");
+			return null;
+		}
+		
+		float t = f * Vector3f.dot(e2,q);
+		
+		finalPos = new Vector3f(d.x * t, d.y * t, d.z * t);
+		
+		return finalPos;
+	}
+	
 
 	public static Vector3f convertToPolar(Vector3f position) {
 		Vector3f polarCoords = new Vector3f(0, 0, 0);

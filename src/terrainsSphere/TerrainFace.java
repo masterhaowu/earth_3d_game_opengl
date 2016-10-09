@@ -1,7 +1,10 @@
 package terrainsSphere;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -72,6 +75,33 @@ public class TerrainFace {
 	}
 	
 	
+	public Set<TerrainFace> getNeighborFaces(int range){
+		Set<TerrainFace> neighborFaces = new HashSet<TerrainFace>();
+		neighborFaces.add(this);
+		for (int i=0; i<range; i++){
+			//create another set in case iterator keeps going due to the fact i am adding more faces to the end
+			//also i dont have to modify the original set this way
+			Set<TerrainFace> incresedFaces = new HashSet<TerrainFace>();
+			for (TerrainFace currentFace : neighborFaces){
+				//first copy itself to the increased set
+				if (!incresedFaces.contains(currentFace)) {
+					incresedFaces.add(currentFace);
+				}
+				//then copy neighbors
+				for (TerrainVertex vertex: vertices){
+					List<TerrainFace> vertexNeighborFaces = vertex.getNeighborFaces();
+					for (TerrainFace currentNeighborFace : vertexNeighborFaces){
+						if (!incresedFaces.contains(currentNeighborFace)) {
+							incresedFaces.add(currentNeighborFace);
+						}
+					}
+				}
+			}
+			//give increasedFaces to neighborFaces
+			neighborFaces = incresedFaces;
+		}
+		return neighborFaces;
+	}
 	
 	
 	
