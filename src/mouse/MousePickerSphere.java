@@ -53,11 +53,10 @@ public class MousePickerSphere {
 		}
 		// System.out.println(currentTerrainPoint);
 		TerrainFace face = terrainSphere.getTargetFacePlucker(currentTerrainPoint);
-		//face = terrainSphere.getTerrainFaceWithCameraRay(currentRay, camera.getPosition());
+		// face = terrainSphere.getTerrainFaceWithCameraRay(currentRay,
+		// camera.getPosition());
 		return face;
 	}
-	
-	
 
 	public Entity checkSelectedEntitySimpleMethod(List<Entity> entities) {
 
@@ -110,8 +109,9 @@ public class MousePickerSphere {
 		return targetEntity;
 
 	}
-	
-	public EntityObject checkSelectedEntityAllMeshMethodWithThreshold(List<EntityObject> entityObjects, float threshold) {
+
+	public EntityObject checkSelectedEntityAllMeshMethodWithThreshold(List<EntityObject> entityObjects,
+			float threshold) {
 		EntityObject targetEntityObject = null;
 		Vector3f unitCamera = new Vector3f(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 		unitCamera.normalise();
@@ -122,27 +122,53 @@ public class MousePickerSphere {
 		float minDistance = 10000;
 		List<EntityObject> entityObjectsSecondaryCheck = new ArrayList<EntityObject>();
 		for (EntityObject entityObject : entityObjects) {
-			Entity entity = entityObject.getEntity();
-			entity.setHighlighted(false);
-			if (entity.getModel().getRawModel().isHasMinMax() && checkEntityOrientation(entity, unitCamera)) {
-				float tempDistance = calculateRayObjectCenterDistance(entity);
-				if (tempDistance < threshold) {
-					// minDistance = tempDistance;
-					// targetEntity = entity;
-					entityObjectsSecondaryCheck.add(entityObject);
+			entityObject.setHighlighted(false);
+			if (entityObject.isMultipleEntities()) {
+				if (entityObject.isHasMinMax()
+						&& checkEntityOrientation(entityObject.getEntityList().get(0), unitCamera)) {
+					float tempDistance = calculateRayObjectListCenterDistance(entityObject);
+					if (tempDistance < threshold) {
+						// minDistance = tempDistance;
+						// targetEntity = entity;
+						entityObjectsSecondaryCheck.add(entityObject);
+					}
+				}
+			} else {
+				Entity entity = entityObject.getEntity();
+				// entity.setHighlighted(false);
+				if (entity.getModel().getRawModel().isHasMinMax() && checkEntityOrientation(entity, unitCamera)) {
+					float tempDistance = calculateRayObjectCenterDistance(entity);
+					if (tempDistance < threshold) {
+						// minDistance = tempDistance;
+						// targetEntity = entity;
+						entityObjectsSecondaryCheck.add(entityObject);
+					}
 				}
 			}
 		}
 		float[] intersection_distance = new float[1];
 		// System.out.println(entitiesSecondaryCheck.size());
 		for (EntityObject entityObject : entityObjectsSecondaryCheck) {
-			Entity entity = entityObject.getEntity();
-			if (checkEntityAllMesh(entity, intersection_distance)) {
-				if (intersection_distance[0] < minDistance) {
-					targetEntityObject = entityObject;
-					minDistance = intersection_distance[0];
+			if (entityObject.isMultipleEntities()) {
+				for (Entity entity:entityObject.getEntityList()){
+					if (checkEntityAllMesh(entity, intersection_distance)) {
+						if (intersection_distance[0] < minDistance) {
+							targetEntityObject = entityObject;
+							minDistance = intersection_distance[0];
+						}
+
+					}
 				}
-				
+			} 
+			else {
+				Entity entity = entityObject.getEntity();
+				if (checkEntityAllMesh(entity, intersection_distance)) {
+					if (intersection_distance[0] < minDistance) {
+						targetEntityObject = entityObject;
+						minDistance = intersection_distance[0];
+					}
+
+				}
 			}
 		}
 
@@ -152,48 +178,36 @@ public class MousePickerSphere {
 
 		return targetEntityObject;
 	}
+
 	/*
-	public Entity checkSelectedEntityAllMeshMethodWithThresholdOld(List<Entity> entities, float threshold) {
-		Entity targetEntity = null;
-		Vector3f unitCamera = new Vector3f(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
-		unitCamera.normalise();
-		if (currentTerrainPoint == null) {
-			// currentTerrainPolar = Maths.convertToPolar(currentTerrainPoint);
-			return targetEntity;
-		}
-		float minDistance = 10000;
-		List<Entity> entitiesSecondaryCheck = new ArrayList<Entity>();
-		for (Entity entity : entities) {
-			entity.setHighlighted(false);
-			if (entity.getModel().getRawModel().isHasMinMax() && checkEntityOrientation(entity, unitCamera)) {
-				float tempDistance = calculateRayObjectCenterDistance(entity);
-				if (tempDistance < threshold) {
-					// minDistance = tempDistance;
-					// targetEntity = entity;
-					entitiesSecondaryCheck.add(entity);
-				}
-			}
-		}
-		float[] intersection_distance = new float[1];
-		// System.out.println(entitiesSecondaryCheck.size());
-		for (Entity entity : entitiesSecondaryCheck) {
-			if (checkEntityAllMesh(entity, intersection_distance)) {
-				if (intersection_distance[0] < minDistance) {
-					targetEntity = entity;
-					minDistance = intersection_distance[0];
-				}
-				
-			}
-		}
-
-		if (targetEntity != null) {
-			targetEntity.setHighlighted(true);
-		}
-
-		return targetEntity;
-	}
-	*/
-	public Entity checkSelectedEntityOBBMethod(List<Entity> entities) {//not working
+	 * public Entity
+	 * checkSelectedEntityAllMeshMethodWithThresholdOld(List<Entity> entities,
+	 * float threshold) { Entity targetEntity = null; Vector3f unitCamera = new
+	 * Vector3f(camera.getPosition().x, camera.getPosition().y,
+	 * camera.getPosition().z); unitCamera.normalise(); if (currentTerrainPoint
+	 * == null) { // currentTerrainPolar =
+	 * Maths.convertToPolar(currentTerrainPoint); return targetEntity; } float
+	 * minDistance = 10000; List<Entity> entitiesSecondaryCheck = new
+	 * ArrayList<Entity>(); for (Entity entity : entities) {
+	 * entity.setHighlighted(false); if
+	 * (entity.getModel().getRawModel().isHasMinMax() &&
+	 * checkEntityOrientation(entity, unitCamera)) { float tempDistance =
+	 * calculateRayObjectCenterDistance(entity); if (tempDistance < threshold) {
+	 * // minDistance = tempDistance; // targetEntity = entity;
+	 * entitiesSecondaryCheck.add(entity); } } } float[] intersection_distance =
+	 * new float[1]; // System.out.println(entitiesSecondaryCheck.size()); for
+	 * (Entity entity : entitiesSecondaryCheck) { if (checkEntityAllMesh(entity,
+	 * intersection_distance)) { if (intersection_distance[0] < minDistance) {
+	 * targetEntity = entity; minDistance = intersection_distance[0]; }
+	 * 
+	 * } }
+	 * 
+	 * if (targetEntity != null) { targetEntity.setHighlighted(true); }
+	 * 
+	 * return targetEntity; }
+	 */
+	public Entity checkSelectedEntityOBBMethod(List<Entity> entities) {// not
+																		// working
 		Entity targetEntity = null;
 		if (currentTerrainPoint == null) {
 			return targetEntity;
@@ -305,6 +319,42 @@ public class MousePickerSphere {
 				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		Vector4f centerWorldPosV4 = Matrix4f.transform(transformationMatrix,
 				new Vector4f(centerPos.x, centerPos.y, centerPos.z, 1.0f), null);
+		Vector3f q1 = new Vector3f(centerWorldPosV4.x, centerWorldPosV4.y, centerWorldPosV4.z);
+
+		Vector3f u = Vector3f.sub(q1, camera.getPosition(), null);
+		Vector3f v = currentRay;
+
+		float vDotU = Vector3f.dot(v, u);
+
+		Vector3f puv = new Vector3f(vDotU * v.x, vDotU * v.y, vDotU * v.z);
+		Vector3f q2 = Vector3f.add(camera.getPosition(), puv, null);
+
+		Vector3f diff = Vector3f.sub(q1, q2, null);
+
+		distance = (float) Math.pow((Math.pow(diff.x, 2) + Math.pow(diff.y, 2) + Math.pow(diff.z, 2)), 0.5);
+
+		return distance;
+	}
+
+	private float calculateRayObjectListCenterDistance(EntityObject entityObject) {
+		float distance = 0;
+		Vector3f averageCenterPos = new Vector3f(0, 0, 0);
+		for (Entity entity : entityObject.getEntityList()) {
+			Vector3f centerPos = Vector3f.add(entity.getModel().getRawModel().getMax(),
+					entity.getModel().getRawModel().getMin(), null);
+			centerPos.x /= 2f;
+			centerPos.y /= 2f;
+			centerPos.z /= 2f;
+			averageCenterPos = Vector3f.add(averageCenterPos, centerPos, null);
+		}
+		int count = entityObject.getEntityList().size();
+		averageCenterPos.x /= count;
+		averageCenterPos.y /= count;
+		averageCenterPos.z /= count;
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entityObject.getPosition(),
+				entityObject.getRotX(), entityObject.getRotY(), entityObject.getRotZ(), entityObject.getScale());
+		Vector4f centerWorldPosV4 = Matrix4f.transform(transformationMatrix,
+				new Vector4f(averageCenterPos.x, averageCenterPos.y, averageCenterPos.z, 1.0f), null);
 		Vector3f q1 = new Vector3f(centerWorldPosV4.x, centerWorldPosV4.y, centerWorldPosV4.z);
 
 		Vector3f u = Vector3f.sub(q1, camera.getPosition(), null);
@@ -485,12 +535,15 @@ public class MousePickerSphere {
 			currentTerrainPoint = null;
 		}
 	}
-	
+
 	public void updateOptimized() {
 		viewMatrix = Maths.createViewMatrix(camera);
 		currentRay = calculateMouseRay();
-		//currentTerrainPoint = terrainSphere.getTerrainPointWithCameraRay(currentRay, camera.getPosition());
-		currentTerrainPoint = terrainSphere.getTerrainRayIntersectionPointCheckingNeighborFaces(currentRay, camera.getPosition(), 4);
+		// currentTerrainPoint =
+		// terrainSphere.getTerrainPointWithCameraRay(currentRay,
+		// camera.getPosition());
+		currentTerrainPoint = terrainSphere.getTerrainRayIntersectionPointCheckingNeighborFaces(currentRay,
+				camera.getPosition(), 4);
 		if (currentTerrainPoint == null) {
 			if (intersectionInRange(0, RAY_RANGE, currentRay)) {
 				currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
@@ -498,12 +551,12 @@ public class MousePickerSphere {
 				currentTerrainPoint = null;
 			}
 		}
-		//System.out.println(currentTerrainPoint);
-		//currentTerrainPoint = terrainSphere.getTerrainRayIntersectionPointNoHeight(currentRay, camera.getPosition());
-		//System.out.println(currentTerrainPoint);
+		// System.out.println(currentTerrainPoint);
+		// currentTerrainPoint =
+		// terrainSphere.getTerrainRayIntersectionPointNoHeight(currentRay,
+		// camera.getPosition());
+		// System.out.println(currentTerrainPoint);
 	}
-	
-	
 
 	private Vector3f calculateMouseRay() {
 		float mouseX = Mouse.getX();

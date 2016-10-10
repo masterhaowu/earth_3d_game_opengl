@@ -19,6 +19,7 @@ import toolbox.Maths;
 
 public class EntityRenderer {
 	
+	
 
 	
 	private StaticShader shader;

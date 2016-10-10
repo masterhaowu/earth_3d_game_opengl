@@ -91,11 +91,11 @@ public class MouseHighlightController {
 
 		if (changeFace && currentFace != null && previousFace != null) {
 			//System.out.println("here");
-			colourController.simpleResetColour(previousFace, loader);
-			colourController.addObjectToFace(currentFace, highlightObject, loader);
+			//colourController.simpleResetColour(previousFace, loader);
+			//colourController.addObjectToFace(currentFace, highlightObject, loader);
 			// currentFace =
 			// terrainSphere.getTargetFacePlucker(player.getPolar().y,player.getPolar().z);
-			colourController.updateColourVBO(loader);
+			//colourController.updateColourVBO(loader);
 
 			changeFace = false;
 		}

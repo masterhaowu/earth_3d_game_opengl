@@ -20,7 +20,7 @@ import java.util.Vector;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import entityObjects.ObjectsController;
+import entityObjects.ObjectsNetwork;
 import models.RawModel;
 import objConverter.Vertex;
 import renderEngine.Loader;

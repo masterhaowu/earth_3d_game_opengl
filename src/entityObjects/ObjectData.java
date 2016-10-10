@@ -28,6 +28,8 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	
 	private HashSet<Integer> terrainTypes;
 	
+	private float initScale;
+	
 	public ObjectData(int objectType){
 		this.objectType = objectType;
 		foodSource1 = new HashSet<Integer>();
@@ -150,6 +152,13 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 		return objectType;
 	}
 	
+	public float getInitScale() {
+		return initScale;
+	}
+
+	public void setInitScale(float initScale) {
+		this.initScale = initScale;
+	}
 	
 	
 	

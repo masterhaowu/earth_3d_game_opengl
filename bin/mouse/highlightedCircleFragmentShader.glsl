@@ -10,8 +10,8 @@ out vec4 out_Colour;
 
 void main(void){
     
-    //out_Colour = vec4(circleColour.x, circleColour.y, circleColour.z, 1.0);
-    out_Colour = vec4(1, 1, 1, 1);
+    out_Colour = vec4(circleColour.x, circleColour.y, circleColour.z, 1.0);
+    //out_Colour = vec4(1, 1, 1, 1);
     
 }
 

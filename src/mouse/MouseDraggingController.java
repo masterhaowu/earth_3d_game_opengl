@@ -45,7 +45,7 @@ public class MouseDraggingController {
 	public void drag(EntityObject entityObject){
 		Entity entity = entityObject.getEntity();
 		Vector3f dragPos = picker.getCurrentTerrainPoint();
-		System.out.println(dragPos);
+		//System.out.println(dragPos);
 		if (dragPos!=null) {
 			entity.setPosition(dragPos);
 			entity.updateRotation();
@@ -54,6 +54,15 @@ public class MouseDraggingController {
 			highlightedCircle.setRotY(entity.getRotY());
 			highlightedCircle.calculateCirclePositionOnSphere(terrainSphere);
 			highlightedCircle.updatePositionVBO(loader);
+			if (!entityObject.checkObjectCanExistOnTerrain(terrainSphere)) {
+				highlightedCircle.setColour(highlightedCircle.HIGHLIGHT_FAIL);
+			}
+			else if (entityObject.checkObjectHasFoodAround(terrainSphere)){
+				highlightedCircle.setColour(highlightedCircle.HIGHLIGHT_GOOD);
+			}
+			else {
+				highlightedCircle.setColour(highlightedCircle.HIGHLIGHT_WARNING);
+			}
 			//showCircle = true;
 		}
 		

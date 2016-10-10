@@ -10,7 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.util.ResourceLoader;
 
 import entityObjects.ObjectData;
-import entityObjects.ObjectsController;
+import entityObjects.ObjectsNetwork;
 
 public class HeightMapController {
 	public static final int SNOW_TERRAIN = 20;
@@ -178,7 +178,7 @@ public class HeightMapController {
 		if (width < 0 || width >= HEIGHT_MAP_WIDTH || height < 0 || height >= HEIGHT_MAP_HEIGHT) {
 			return;
 		}
-		ObjectData objectToLoad = ObjectsController.getObjectDataBasedOnType(terrainTypes[height][width]);
+		ObjectData objectToLoad = ObjectsNetwork.getObjectDataBasedOnType(terrainTypes[height][width]);
 		if (objectToLoad != null) {
 			//System.out.println(objectToLoad.getObjectType());
 			//vertex.addObjectDirectlyToVertex(ObjectsController.snowTerrain, 10, true);

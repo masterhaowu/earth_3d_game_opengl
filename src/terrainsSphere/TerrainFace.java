@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import entityObjects.ObjectData;
 import toolbox.Maths;
 
 public class TerrainFace {
@@ -25,6 +26,7 @@ public class TerrainFace {
 	private int level;
 	private boolean isBottom;
 	private boolean isTop;
+	
 
 	public TerrainFace(Vector3f indices) {
 		this.indices = indices;
@@ -55,6 +57,9 @@ public class TerrainFace {
 		parent.addChild(this);
 		
 	}
+	
+	
+	
 	
 	public void setNormal(Vector3f normal){
 		this.normal = normal;

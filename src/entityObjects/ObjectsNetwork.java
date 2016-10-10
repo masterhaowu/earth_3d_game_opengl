@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class ObjectsController {
+public class ObjectsNetwork {
 	//basic terrain objects that only has colour
 	public static final int SNOW_TERRAIN = 20;
 	public static final int MOUNTAIN_TERRAIN = 21;
@@ -19,6 +19,7 @@ public class ObjectsController {
 	
 	//objects that affects terrain colour
 	public static final int SHORT_GRASS = 500;
+	public static final int LOW_GRASS1 = 501;
 	
 	//objects
 	public static final int SIMPLE_TREE = 1000;
@@ -37,6 +38,7 @@ public class ObjectsController {
 	
 	//objects that affects terrain colour
 	public static final Vector3f GRASS_OBJECT_COLOUR = new Vector3f((float) 181 / 255, (float) 215 / 255, (float) 101 / 255);
+	public static final Vector3f LOW_GRASS1_OBJECT_COLOUR = new Vector3f((float) 181 / 255, (float) 215 / 255, (float) 101 / 255);
 	
 	
 	
@@ -48,6 +50,7 @@ public class ObjectsController {
 	public static ObjectData deepWaterTerrain;
 	
 	
+	public static ObjectData lowGrass1;
 	
 	public static ObjectData simpleTree;
 	
@@ -109,9 +112,21 @@ public class ObjectsController {
 		ObjectsMap.put(DEEP_WATER_TERRAIN, deepWaterTerrain);
 		
 		
+		//lowGrass1
+		lowGrass1 = new ObjectData(LOW_GRASS1);
+		lowGrass1.setColour(LOW_GRASS1_OBJECT_COLOUR);
+		lowGrass1.setAffectTerrainColour(true);
+		lowGrass1.setObjectInitAmount(1000);
+		lowGrass1.setInitScale(0.2f);
+		lowGrass1.addTerrainType(PLAIN_TERRAIN);
+		lowGrass1.addTerrainType(MOUNTAIN_TERRAIN);
+		ObjectsMap.put(LOW_GRASS1, lowGrass1);
+		
+		
 		simpleTree = new ObjectData(SIMPLE_TREE);
 		simpleTree.setAffectTerrainColour(false);
 		simpleTree.setObjectInitAmount(1000);
+		simpleTree.setInitScale(2f);
 		simpleTree.addTerrainType(SNOW_TERRAIN);
 		simpleTree.addTerrainType(MOUNTAIN_TERRAIN);
 		simpleTree.addTerrainType(PLAIN_TERRAIN);

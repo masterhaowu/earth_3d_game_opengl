@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import models.RawModel;
 import shaders.StaticShader;
@@ -34,7 +35,9 @@ public class HighlightedCircleRenderer {
 		//System.out.println(rawModel.getVaoID());
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
-		shader.loadColour(0.92f, 0.87f, 0.2f);
+		//shader.loadColour(0.92f, 0.87f, 0.2f);
+		Vector3f colour = hightlightedCircle.getColour();
+		shader.loadColour(colour.x, colour.y, colour.z);
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(hightlightedCircle.getPosition(),
 				hightlightedCircle.getRotX(), hightlightedCircle.getRotY(), hightlightedCircle.getRotZ(),
 				hightlightedCircle.getScale());

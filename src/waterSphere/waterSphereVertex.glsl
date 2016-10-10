@@ -20,14 +20,14 @@ uniform vec3 lightPosition;
 uniform float time;
 
 const float PI = 3.1415926535897932384626433832795;
-const float amplitude = 0.0008;
+const float amplitude = 0.0014;
 
 const float tilling = 6.0;
 
 
 float generateHeight(){
-    float component1 = sin(2.0 * PI * time + (polar.x * 160.0)) * amplitude;
-    float component2 = sin(2.0 * PI * time + (polar.y * polar.z * 80.0)) * amplitude;
+    float component1 = sin(2.0 * PI * time + (polar.x * 1600.0)) * amplitude;
+    float component2 = sin(2.0 * PI * time + (polar.y * polar.z * 800.0)) * amplitude;
     return component1 + component2;
 }
 

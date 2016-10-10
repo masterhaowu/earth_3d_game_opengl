@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import entityObjects.ObjectData;
 import renderEngine.Loader;
+import terrains.Terrain;
 
 public class ColourController {
 	
@@ -47,6 +49,17 @@ public class ColourController {
 		}
 		//updateColourVBO(loader);
 	}
+	
+	public void addObjectToFace(TerrainFace face, ObjectData objectData, float amount, boolean computeColour, int range){
+		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
+		for (int i=0; i<neighborVertices.size(); i++){
+			//for (int i=0; i<1; i++){
+				TerrainVertex vertex = neighborVertices.get(i);
+				vertex.addObjectDirectlyToVertex(objectData, amount, computeColour);
+				updateVertexColour(vertex);
+			}
+	}
+	
 	
 	public void updateVertexColour(TerrainVertex vertex){
 		//store the vertex colour into colourFinal

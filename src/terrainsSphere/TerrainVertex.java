@@ -53,8 +53,7 @@ public class TerrainVertex {
 	}
 	
 	
-	//this method directly add object to vertex instead of through face and then spread to vertex. 
-	//one usage of it is when I first give the vertex colour based on their heights
+
 	public void addObjectDirectlyToVertex(ObjectData objectData, float amount, boolean computeColour){
 		int type = objectData.getObjectType();
 		if (objects.containsKey(type)) {

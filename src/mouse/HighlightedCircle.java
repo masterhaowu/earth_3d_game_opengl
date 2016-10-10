@@ -15,6 +15,14 @@ import terrainsSphere.TerrainSphere;
 import toolbox.Maths;
 
 public class HighlightedCircle {
+	
+	public final Vector3f HIGHLIGHT_DEFAULT = new Vector3f(0.26f, 0.52f, 0.95f);
+	public final Vector3f HIGHLIGHT_GOOD = new Vector3f(0.35f, 0.98f, 0.33f);
+	public final Vector3f HIGHLIGHT_WARNING = new Vector3f(0.78f,0.89f, 0.12f);
+	public final Vector3f HIGHLIGHT_FAIL = new Vector3f(0.99f, 0.12f, 0.23f);
+	
+	
+	
 	private List<Vector3f> verticesListInVector = new ArrayList<Vector3f>();
 	private float[] vertices;
 	private RawModel model;
@@ -25,7 +33,10 @@ public class HighlightedCircle {
 	private float rotZ;
 	private float scale;
 	private float Yoffset;
+	private Vector3f colour;
 	
+	
+
 	
 	public void updatePositionVBO(Loader loader){
 		int vbo = model.getVboPositionID();
@@ -40,6 +51,7 @@ public class HighlightedCircle {
 		applyTransformationMatrixAndClampToSphere(transformationMatrix, terrainSphere);
 
 	}
+	
 	
 	private void applyTransformationMatrix(Matrix4f transformationMatrix){
 		int verticesPointer = 0;
@@ -83,6 +95,7 @@ public class HighlightedCircle {
 		this.rotY = 0;
 		this.rotZ = 0;
 		this.Yoffset = 2;
+		this.colour = HIGHLIGHT_DEFAULT;
 		
 		float intervalAngel = (float) Math.PI * 2 / segements;
 		//int vertexPointer = 0;
@@ -202,6 +215,16 @@ public class HighlightedCircle {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
+
+	public Vector3f getColour() {
+		return colour;
+	}
+
+	public void setColour(Vector3f colour) {
+		this.colour = colour;
+	}
+	
+	
 	
 	
 	
