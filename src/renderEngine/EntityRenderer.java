@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Entity;
 import models.RawModel;
@@ -16,6 +17,7 @@ import models.TexturedModel;
 import shaders.StaticShader;
 import textures.ModelTexture;
 import toolbox.Maths;
+import waterSphere.WaterSphereRenderer;
 
 public class EntityRenderer {
 	
@@ -23,6 +25,7 @@ public class EntityRenderer {
 
 	
 	private StaticShader shader;
+	private float time;
 	
 	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix){
 		this.shader = shader;
@@ -35,6 +38,7 @@ public class EntityRenderer {
 	
 	
 	public void render(Map<TexturedModel, List<Entity>> entities){
+		updateTime();
 		for(TexturedModel model:entities.keySet()){
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
@@ -76,6 +80,24 @@ public class EntityRenderer {
 		shader.loadTransformationMatrix(transformationMatrix);
 		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
 		shader.loadHighlighted(entity.isHighlighted());
+		if (entity.isEnableShaderAnimation()) {
+			Vector3f centerPos = Vector3f.sub(entity.getModel().getRawModel().getMax(), entity.getModel().getRawModel().getMin(), null);
+			shader.loadCenterPos(centerPos);
+			shader.loadEnableShaderAnimation(true);
+			//shader.loadTime();
+		}
+		else{
+			shader.loadCenterPos(new Vector3f(0, 0, 0));
+			shader.loadEnableShaderAnimation(false);
+			//shader.loadTime(0);
+		}
+	}
+	
+	private void updateTime(){
+		time+=DisplayManager.getFrameTimeSeconds() * 0.3f;
+		time %= 1;
+		//System.out.println(time);
+		shader.loadTime(time);
 	}
 	
 	

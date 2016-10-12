@@ -79,6 +79,8 @@ public class MouseController {
 			// testing
 			if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
 				entityObjectToDrag = gameEntityObjectsController.createEntityObjectAndAddToList(EntityObjectModelData.lowGrass1Model, ObjectsNetwork.lowGrass1);
+				entityObjectToDrag.getEntity().randomRotZ();
+				//System.out.println(entityObjectToDrag.getEntity().getRotZ());
 				this.showCircle = true;
 				GameStateController.setCurrentState(GameStateController.DRAGGING_ENTITY_OBJECT);
 			}
@@ -91,6 +93,7 @@ public class MouseController {
 
 				if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
 					GameStateController.setCurrentState(GameStateController.IDEL_TESTING);
+					//System.out.println(entityObjectToDrag.getRotZ());
 					this.showCircle = false;
 					TerrainFace currentFace = entityObjectToDrag.getFace(terrainSphere);
 					colourController.addObjectToFace(currentFace, entityObjectToDrag.getObjectData(),

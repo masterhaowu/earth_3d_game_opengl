@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import animations.AnimationController;
 import entities.Entity;
 import entityObjects.EntityObject;
 import entityObjects.ObjectData;
@@ -18,12 +19,15 @@ public class GameEntityObjectsController {
 	private List<Entity> normalMapEntities;
 	private List<Entity> entitiesWithShadows;
 	
+	private AnimationController animationController;
 	
 	
-	public GameEntityObjectsController(){
+	
+	public GameEntityObjectsController(AnimationController animationController){
 		entityObjects = new ArrayList<EntityObject>();
 		normalMapEntities = new ArrayList<Entity>();
 		entitiesWithShadows = new ArrayList<Entity>();
+		this.animationController = animationController;
 	}
 	
 	

@@ -25,19 +25,45 @@ uniform mat4 viewMatrix;
 uniform vec3 lightPosition[4];
 uniform float useFakeLighting;
 
+uniform vec3 centerPosition;
+uniform bool enableShaderAnimation;
+uniform float time;
+
 uniform float numberOfRows;
 uniform vec2 offset;
 
 const float density = 0.0;
 const float gradient = 4.0;
 
+const float PI = 3.1415926535897932384626433832795;
+const float animationAmplitude = 0.02;
+
 uniform vec4 plane;
 
+/*
+vec4 updatePosition(vec3 inputPosition){
+    
+    vec4 updatedPosition = vec4(0, 0, 0, 1.0);
+    updatedPosition.x = (inputPosition.x - centerPosition.x) * (1 + sin(2.0 * PI * time) * animationAmplitude) + centerPosition.x;
+    updatedPosition.y = (inputPosition.y - centerPosition.y) * (1 + sin(2.0 * PI * time) * animationAmplitude) + centerPosition.y;
+    updatedPosition.z = (inputPosition.z - centerPosition.z) * (1 + sin(2.0 * PI * time) * animationAmplitude) + centerPosition.z;
+    
+    return updatedPosition;
+}
 
+*/
 void main()
 {
+    /*
+    if (enableShaderAnimation == true) {
+        vec4 newPosition = updatePosition(position);
+        worldPosition = transformationMatrix * newPosition;
+    }
+    else{
+        worldPosition =  transformationMatrix * vec4(position.x, position.y, position.z, 1.0);
+    }
+     */
     worldPosition =  transformationMatrix * vec4(position.x, position.y, position.z, 1.0);
-    
     gl_ClipDistance[0] = dot(worldPosition, plane);
     
     vec4 positionRelativeToCam = viewMatrix * worldPosition;

@@ -35,6 +35,9 @@ public class StaticShader extends ShaderProgram {
 	private int location_offset;
 	private int location_plane;
 	private int location_highlighted;
+	private int location_centerPosition;
+	private int location_enableShaderAnimation;
+	private int location_time;
 	
 	
 
@@ -64,6 +67,9 @@ public class StaticShader extends ShaderProgram {
 		location_offset = super.getUniformLocation("offset");
 		location_plane = super.getUniformLocation("plane");
 		location_highlighted = super.getUniformLocation("highlighted");
+		location_centerPosition = super.getUniformLocation("centerPosition");
+		location_enableShaderAnimation = super.getUniformLocation("enableShaderAnimation");
+		location_time = super.getUniformLocation("time");
 		location_lightPosition = new int [MAX_LIGHT];
 		location_lightColour = new int [MAX_LIGHT];
 		location_attenuation = new int [MAX_LIGHT];
@@ -73,6 +79,18 @@ public class StaticShader extends ShaderProgram {
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
 		
+	}
+	
+	public void loadEnableShaderAnimation(boolean animation){
+		super.loadBoolean(location_enableShaderAnimation, animation);
+	}
+	
+	public void loadCenterPos(Vector3f centerPos){
+		super.loadVector(location_centerPosition, centerPos);
+	}
+	
+	public void loadTime(float time){
+		super.loadFloat(location_time, time);
 	}
 	
 	public void loadHighlighted(boolean highlighted){

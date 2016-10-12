@@ -56,6 +56,7 @@ public class TerrainVertex {
 
 	public void addObjectDirectlyToVertex(ObjectData objectData, float amount, boolean computeColour){
 		int type = objectData.getObjectType();
+		this.totalColourObjectAmount += amount;
 		if (objects.containsKey(type)) {
 			objects.get(type).setObjectAmount(objects.get(type).getObjectAmount() + amount);
 		}
@@ -63,7 +64,7 @@ public class TerrainVertex {
 			TerrainObject objectToAdd;
 			if (objectData.isAffectTerrainColour()) {
 				objectToAdd = new TerrainObject(type, amount, objectData.getColour());
-				this.totalColourObjectAmount += amount;
+				//this.totalColourObjectAmount += amount;
 				
 			} else {
 				objectToAdd = new TerrainObject(type, amount);

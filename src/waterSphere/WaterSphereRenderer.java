@@ -31,7 +31,7 @@ public class WaterSphereRenderer {
 	private int normalTexture;
 	
 	private float moveFactor = 0;
-	private float time = 0;
+	public float time = 0;
 
 	public WaterSphereRenderer(Loader loader, WaterSphereShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;

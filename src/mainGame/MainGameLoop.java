@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import animations.AnimationController;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -78,8 +79,13 @@ public class MainGameLoop {
 		//-------------------------EntityObjectModel Data-----------------------------------
 		EntityObjectModelData.loadAllObjects(loader);
 		
+		//--------------------------Animation Controller ---------------------
+				AnimationController animationController = new AnimationController();
+		
 		//--------------------------Game Entity Object Controller --------------------------
-		GameEntityObjectsController gameEntityObjectsController = new GameEntityObjectsController();
+		GameEntityObjectsController gameEntityObjectsController = new GameEntityObjectsController(animationController);
+		
+		
 		
 
 		// --------------------------Font----------------------------------------------------
@@ -200,10 +206,12 @@ public class MainGameLoop {
 		// --------------------------Lights----------------------------------------------------
 		List<Light> lights = new ArrayList<Light>();
 
-		Light sun = new Light(new Vector3f(184000, 170000, 176000), new Vector3f(1.6f, 1.6f, 1.6f));
-		// Light sun2 = new Light(new Vector3f(-30000, 70000, 30000), new
-		// Vector3f(1.6f, 1.6f, 1.6f));
+		Light sun = new Light(new Vector3f(1840, -1700, 1760), new Vector3f(1.6f, 1.6f, 1.6f));
+		Light sun2 = new Light(new Vector3f(1840, 1700, 1760),new Vector3f(1.2f, 1.2f, 1.2f));
+	
+		
 		lights.add(sun);
+		lights.add(sun2);
 		// lights.add(sun2);
 		// lights.add(new Light(new Vector3f(8410,
 		// terrain.getHeightOfTerrain(8410, 7610) + 10f, 7610), new Vector3f(2,
@@ -274,6 +282,9 @@ public class MainGameLoop {
 			//EntityObject tempEntityObject = new EntityObject(tempEntitiy, ObjectsNetwork.simpleTree);
 			tempEntityObject.getEntity().setPosition(entityPos);
 			tempEntityObject.getEntity().updateRotation();
+			//tempEntityObject.getEntity().setEnableShaderAnimation(false);
+			tempEntityObject.getEntity().setupScaleAnimation(0.02f, 1f);
+			animationController.addEntityWithScaleAnimation(tempEntityObject.getEntity(), 0.02f, 1f);
 			if (tempEntityObject.checkObjectCanExistOnTerrain(terrainSphere)) {
 				//entities.add(tempEntitiy);
 				//entityObjects.add(tempEntityObject);
@@ -394,6 +405,7 @@ public class MainGameLoop {
 		MouseController mouseController = new MouseController(picker, colourController, loader, highlightedCircle, terrainSphere, gameEntityObjectsController);
 		//mouseController.setObjectToAdd(tempEntityObject);
 		
+		
 
 		while (!Display.isCloseRequested()) {
 			// float newHeight = (float) (water.getHeight() + 0.1 *
@@ -419,6 +431,9 @@ public class MainGameLoop {
 			// Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 			//System.out.println(entities.size());
 			//mouseHighlightController.checkMousePicking(entityObjects);
+			
+			animationController.update();
+			
 			mouseController.updateMouse(gameEntityObjectsController.getEntityObjects());
 
 			// System.out.println(terrainPoint);

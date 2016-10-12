@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Random;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
@@ -19,6 +21,10 @@ public class Entity {
 	private int colourID;
 	private boolean highlighted = false;
 	
+	private boolean enableShaderAnimation = false;
+	private boolean scaleAnimation;
+	private float scaleAnimationAmplitude;
+	private float scaleAnimationSpeed;
 	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.model = model;
@@ -30,7 +36,8 @@ public class Entity {
 		this.scale = scale;
 		this.polar = Maths.convertToPolar(position);
 		this.test = true;
-		//System.out.print(this.polar.z*360);
+		this.enableShaderAnimation = false;
+		this.scaleAnimation = false;
 	}
 	
 	
@@ -42,6 +49,7 @@ public class Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		
 		
 	}
 	
@@ -76,11 +84,13 @@ public class Entity {
 		this.rotX = - (float) (this.polar.y * 180 / Math.PI) + rotXOffset;
 		this.rotY = - (float) ((this.polar.z * 180) / Math.PI - 90);
 		//System.out.print(this.polar.z*260);
-		if (test) {
-			test = false;
-			//System.out.print(this.rotY);
-		}
+		
 		//System.out.print("rotation x is: " + rotX + " and rotation y is: " + rotY + "\n");
+	}
+	
+	public void randomRotZ(){
+		Random random = new Random();
+		this.rotZ =  (float) (random.nextFloat() * 360);
 	}
 	
 	public void increasePolar(float dr, float dt1, float dt2){
@@ -163,6 +173,23 @@ public class Entity {
 
 	public void setHighlighted(boolean highlighted) {
 		this.highlighted = highlighted;
+	}
+
+
+	public boolean isEnableShaderAnimation() {
+		return enableShaderAnimation;
+	}
+
+
+	public void setEnableShaderAnimation(boolean enableShaderAnimation) {
+		this.enableShaderAnimation = enableShaderAnimation;
+	}
+	
+	
+	public void setupScaleAnimation(float amplitude, float speed){
+		this.scaleAnimation = true;
+		this.scaleAnimationAmplitude = amplitude;
+		this.scaleAnimationSpeed = speed;
 	}
 	
 	
