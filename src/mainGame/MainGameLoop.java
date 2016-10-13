@@ -23,12 +23,12 @@ import entityObjects.ObjectsNetwork;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
+import guis.GuiController;
 import guis.GuiRenderer;
 import guis.GuiTexture;
 import models.RawModel;
 import models.TexturedModel;
 import mouse.HighlightedCircle;
-import mouse.MouseController;
 import mouse.MouseHighlightController;
 import mouse.MousePickerSphere;
 import normalMappingObjConverter.NormalMappedObjLoader;
@@ -70,22 +70,24 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 
 		Loader loader = new Loader();
-		//--------------------------Game State--------------------
+		// --------------------------Game State--------------------
 		GameStateController.setCurrentState(GameStateController.IDEL_TESTING);
-		
-		//--------------------------Objects Controller -------------------------------------
+
+		// --------------------------Objects Controller
+		// -------------------------------------
 		ObjectsNetwork.fillObjectsController();
-		
-		//-------------------------EntityObjectModel Data-----------------------------------
+
+		// -------------------------EntityObjectModel
+		// Data-----------------------------------
 		EntityObjectModelData.loadAllObjects(loader);
-		
-		//--------------------------Animation Controller ---------------------
-				AnimationController animationController = new AnimationController();
-		
-		//--------------------------Game Entity Object Controller --------------------------
+
+		// --------------------------Animation Controller ---------------------
+		AnimationController animationController = new AnimationController();
+
+		// --------------------------Game Entity Object Controller
+		// --------------------------
 		GameEntityObjectsController gameEntityObjectsController = new GameEntityObjectsController(animationController);
-		
-		
+
 		
 
 		// --------------------------Font----------------------------------------------------
@@ -96,13 +98,10 @@ public class MainGameLoop {
 
 		text.setColour(1.0f, 1.0f, 1.0f);
 
-		
 		// staticModel.getTexture().setReflectivity(0.2f);
 		// staticModel.getTexture().setShineDamper(2.0f);
 		// Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -25),
 		// 0, 0, 0, 1);
-		
-		
 
 		ModelData dataPlant = OBJFileLoader.loadOBJ("grassModel");
 		RawModel modelPlant = loader.loadToVAO(dataPlant.getVertices(), dataPlant.getTextureCoords(),
@@ -170,13 +169,14 @@ public class MainGameLoop {
 		// "lake");
 		// terrains.add(terrain2);
 
-		//List<Entity> entities = new ArrayList<Entity>();
-		
+		// List<Entity> entities = new ArrayList<Entity>();
 
-		//Entity barrel = new Entity(barrelModel, new Vector3f(8400, 15, 7550), 0, 0, 0, 1);
-		//normalMapEntities.add(barrel);
-		//Entity crate = new Entity(crateModel, new Vector3f(130, 15, -50), 0, 0, 0, 0.1f);
-		//normalMapEntities.add(crate);
+		// Entity barrel = new Entity(barrelModel, new Vector3f(8400, 15, 7550),
+		// 0, 0, 0, 1);
+		// normalMapEntities.add(barrel);
+		// Entity crate = new Entity(crateModel, new Vector3f(130, 15, -50), 0,
+		// 0, 0, 0.1f);
+		// normalMapEntities.add(crate);
 
 		Random random = new Random();
 		/*
@@ -207,9 +207,8 @@ public class MainGameLoop {
 		List<Light> lights = new ArrayList<Light>();
 
 		Light sun = new Light(new Vector3f(1840, -1700, 1760), new Vector3f(1.6f, 1.6f, 1.6f));
-		Light sun2 = new Light(new Vector3f(1840, 1700, 1760),new Vector3f(1.2f, 1.2f, 1.2f));
-	
-		
+		Light sun2 = new Light(new Vector3f(1840, 1700, 1760), new Vector3f(1.2f, 1.2f, 1.2f));
+
 		lights.add(sun);
 		lights.add(sun2);
 		// lights.add(sun2);
@@ -249,17 +248,18 @@ public class MainGameLoop {
 		// 90, 180, 0, 1);
 		// Player player = new Player(texturedModelBunny, new Vector3f(0, 0, 0),
 		// 0, 180, 0, 1);
-		//entitiesWithShadows.add(player);
+		// entitiesWithShadows.add(player);
 		Camera camera = new Camera(player);
 		camera.move();
 
 		RendererController renderer = new RendererController(loader, camera);
 
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
-		
-		Entity deer1Entity = new Entity(EntityObjectModelData.deer1Model,  new Vector3f(0, 0, terrainSphere.getScale()), 90, 0, 0, 5);
-		//entities.add(deerEntity);
-		//System.out.println(deerEntity.getModel().getRawModel().getVaoID());
+
+		Entity deer1Entity = new Entity(EntityObjectModelData.deer1Model, new Vector3f(0, 0, terrainSphere.getScale()),
+				90, 0, 0, 5);
+				// entities.add(deerEntity);
+				// System.out.println(deerEntity.getModel().getRawModel().getVaoID());
 
 		// --------------------------EntitySphere----------------------------------------------------
 		for (int i = 0; i < 60; i++) {
@@ -274,39 +274,41 @@ public class MainGameLoop {
 			// Vector3f entityPos = Maths.convertBackToCart(new Vector3f(radius,
 			// theta1, theta2));
 			Vector3f entityPos = terrainSphere.getPositionAdvanced(theta1, theta2);
-			//Entity tempEntitiy = new Entity(EntityObjectModelData.testingTreeModel, entityPos, 90, 0, 0, 2f);
-			EntityObject tempEntityObject = gameEntityObjectsController.createEntityObject(EntityObjectModelData.testingTreeModel, ObjectsNetwork.simpleTree);
-			//tempEntitiy.updateRotation();
+			// Entity tempEntitiy = new
+			// Entity(EntityObjectModelData.testingTreeModel, entityPos, 90, 0,
+			// 0, 2f);
+			EntityObject tempEntityObject = gameEntityObjectsController
+					.createEntityObject(EntityObjectModelData.testingTreeModel, ObjectsNetwork.simpleTree);
+			// tempEntitiy.updateRotation();
 			// entities.add(new Entity(staticModel, new Vector3f(x, y, z), 0, 0,
 			// 0, 1));
-			//EntityObject tempEntityObject = new EntityObject(tempEntitiy, ObjectsNetwork.simpleTree);
+			// EntityObject tempEntityObject = new EntityObject(tempEntitiy,
+			// ObjectsNetwork.simpleTree);
 			tempEntityObject.getEntity().setPosition(entityPos);
 			tempEntityObject.getEntity().updateRotation();
-			//tempEntityObject.getEntity().setEnableShaderAnimation(false);
+			// tempEntityObject.getEntity().setEnableShaderAnimation(false);
 			tempEntityObject.getEntity().setupScaleAnimation(0.02f, 1f);
 			animationController.addEntityWithScaleAnimation(tempEntityObject.getEntity(), 0.02f, 1f);
 			if (tempEntityObject.checkObjectCanExistOnTerrain(terrainSphere)) {
-				//entities.add(tempEntitiy);
-				//entityObjects.add(tempEntityObject);
-				//System.out.println("here");
+				// entities.add(tempEntitiy);
+				// entityObjects.add(tempEntityObject);
+				// System.out.println("here");
 				gameEntityObjectsController.addEntityObject(tempEntityObject);
 			}
-			
-			
-			
+
 			// entitiesWithShadows.add(tempEntitiy);
 
 		}
-		//Entity tempEntitiy = new Entity(EntityObjectModelData.lowGrass1Model, new Vector3f(0, 0, -5), 90, 0, 0, 0.2f);
-		//EntityObject tempEntityObject = new EntityObject(tempEntitiy, ObjectsNetwork.lowGrass1);
-		//entityObjects.add(tempEntityObject);
-		
-		
+		// Entity tempEntitiy = new Entity(EntityObjectModelData.lowGrass1Model,
+		// new Vector3f(0, 0, -5), 90, 0, 0, 0.2f);
+		// EntityObject tempEntityObject = new EntityObject(tempEntitiy,
+		// ObjectsNetwork.lowGrass1);
+		// entityObjects.add(tempEntityObject);
 
 		// --------------------------GUI----------------------------------------------------
-		List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		// GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new
-		// Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		// List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		// GuiTexture gui = new GuiTexture(loader.loadTexture("greyLowPoly"),
+		// new Vector2f(0f, 0f), new Vector2f(0.75f, 0.75f));
 		// guis.add(gui);
 		// GuiTexture shadowMap = new GuiTexture(renderer.getShadowMapTexture(),
 		// new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
@@ -323,9 +325,9 @@ public class MainGameLoop {
 		// Light thirdLight = new Light(new Vector3f(293, 7, -305), new
 		// Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f));
 
-		//entities.add(thirdLamp);
-		//entities.add(secondLamp);
-		//entities.add(firstLamp);
+		// entities.add(thirdLamp);
+		// entities.add(secondLamp);
+		// entities.add(firstLamp);
 		// lights.add(thirdLight);
 		MousePickerSphere picker = new MousePickerSphere(camera, renderer.getProjectionMatrix(), terrainSphere);
 
@@ -370,14 +372,13 @@ public class MainGameLoop {
 		// terrainSphere.getTargetFace(player.getPolar().y,
 		// player.getPolar().z);
 		// terrainSphere.setFaceColour(testFace, new Vector3f(0, 0, 0), loader);
-		
+
 		// TerrainFace testFace =
 		// terrainSphere.getTargetFace(player.getPolar().y,
 		// player.getPolar().z);
 		// terrainSphere.addObjectToFace(testFace, highlightObject, loader);
-		
+
 		boolean test = true;
-		
 
 		// currentFace = terrainSphere.getTargetFacePlucker(player.getPolar().y,
 		// player.getPolar().z);
@@ -391,20 +392,23 @@ public class MainGameLoop {
 		 */
 
 		// ----------------highlightedCircle----------------------
-		HighlightedCircle highlightedCircle = new HighlightedCircle(loader, 4, 5, 36);
+		HighlightedCircle highlightedCircle = new HighlightedCircle(loader, 2, 3, 36);
 		highlightedCircle.setPosition(new Vector3f(0, 0, 450));
 		highlightedCircle.setScale(1);
 		highlightedCircle.calculateCirclePositionOnSphere(terrainSphere);
 		highlightedCircle.updatePositionVBO(loader);
+
+		// -------------------mouseHighlightController---------------------
+		// MouseHighlightController mouseHighlightController = new
+		// MouseHighlightController(picker, colourController, loader,
+		// highlightedCircle, terrainSphere);
+
+		// -------------------Event Controller ----------------------------
+		GameEventController eventController = new GameEventController(picker, colourController, loader, highlightedCircle,
+				terrainSphere, gameEntityObjectsController);
+		// mouseController.setObjectToAdd(tempEntityObject);
 		
-		
-		//-------------------mouseHighlightController---------------------
-		//MouseHighlightController mouseHighlightController = new MouseHighlightController(picker, colourController, loader, highlightedCircle, terrainSphere);
-		
-		//-------------------Mouse Controller ----------------------------
-		MouseController mouseController = new MouseController(picker, colourController, loader, highlightedCircle, terrainSphere, gameEntityObjectsController);
-		//mouseController.setObjectToAdd(tempEntityObject);
-		
+		// -------------------GUI Controller-------------------------------
 		
 
 		while (!Display.isCloseRequested()) {
@@ -417,7 +421,7 @@ public class MainGameLoop {
 			// DisplayManager.getFrameTimeSeconds());
 			// barrel.increaseRotation(0, 1, 0);
 			// crate.increaseRotation(0, 1, 0);
-			//picker.update2();
+			// picker.update2();
 			// player.move(terrains, picker);
 			player.move(terrainSphere);
 			camera.move();
@@ -429,13 +433,13 @@ public class MainGameLoop {
 
 			renderer.renderShadowMap(gameEntityObjectsController.getEntitiesWithShadows(), sun);
 			// Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-			//System.out.println(entities.size());
-			//mouseHighlightController.checkMousePicking(entityObjects);
-			
-			animationController.update();
-			
-			mouseController.updateMouse(gameEntityObjectsController.getEntityObjects());
+			// System.out.println(entities.size());
+			// mouseHighlightController.checkMousePicking(entityObjects);
 
+			animationController.update();
+
+			eventController.updateMouse(gameEntityObjectsController.getEntityObjects());
+			
 			// System.out.println(terrainPoint);
 
 			// if (terrainPoint != null) {
@@ -466,16 +470,18 @@ public class MainGameLoop {
 			 * GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			 */
 			// GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
-			//renderer.processEntity(player);
+			// renderer.processEntity(player);
 
 			// fbo.bindFrameBuffer();
-			
-			renderer.renderScene(gameEntityObjectsController.getEntityObjects(), gameEntityObjectsController.getNormalMapEntities(), lights, camera, new Vector4f(0, 1, 0, 50), terrainSphere);
+
+			renderer.renderScene(gameEntityObjectsController.getEntityObjects(),
+					gameEntityObjectsController.getNormalMapEntities(), lights, camera, new Vector4f(0, 1, 0, 50),
+					terrainSphere);
 			// waterRenderer.render(waters, camera, sun);
-			if (mouseController.isShowCircle()) {
+			if (eventController.isShowCircle()) {
 				renderer.renderHightlightedCircle(highlightedCircle, camera);
 			}
-			
+
 			waterSphereRenderer.render(waters, camera, sun);
 
 			// fbo.unbindFrameBuffer();
@@ -483,7 +489,7 @@ public class MainGameLoop {
 			// ParticleMaster.renderParticles(camera);
 			// PostProcessing.doPostProcessing(fbo.getColourTexture());
 
-			guiRenderer.render(guis);
+			guiRenderer.render(eventController.getGuisToDisplay());
 
 			TextMaster.render();
 

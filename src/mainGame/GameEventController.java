@@ -1,4 +1,4 @@
-package mouse;
+package mainGame;
 
 import java.util.List;
 
@@ -8,16 +8,20 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Entity;
 import entityObjects.EntityObject;
 import entityObjects.ObjectsNetwork;
-import mainGame.EntityObjectModelData;
-import mainGame.GameEntityObjectsController;
-import mainGame.GameStateController;
+import guis.GuiController;
+import guis.GuiTexture;
+import mouse.HighlightedCircle;
+import mouse.MouseDraggingController;
+import mouse.MouseHighlightController;
+import mouse.MousePickerSphere;
 import renderEngine.Loader;
 import terrainsSphere.ColourController;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainSphere;
 
-public class MouseController {
+public class GameEventController {
 
+	private GuiController guiController;
 	private MousePickerSphere picker;
 	private ColourController colourController;
 	private Loader loader;
@@ -36,9 +40,9 @@ public class MouseController {
 	
 	private GameEntityObjectsController gameEntityObjectsController;
 
-	public MouseController(MousePickerSphere picker, ColourController colourController, Loader loader,
+	public GameEventController(MousePickerSphere picker, ColourController colourController, Loader loader,
 			HighlightedCircle highlightedCircle, TerrainSphere terrainSphere, GameEntityObjectsController gameEntityObjectsController) {
-
+		this.guiController = new GuiController(loader, picker);
 		this.picker = picker;
 		this.colourController = colourController;
 		this.loader = loader;
@@ -63,6 +67,7 @@ public class MouseController {
 
 	public void updateMouse(List<EntityObject> entityObjects) {
 		picker.updateOptimized();
+		guiController.update();
 		if (GameStateController.currentState == GameStateController.IDEL_TESTING) {
 
 			mouseHighlightController.checkMousePicking(entityObjects);
@@ -103,6 +108,10 @@ public class MouseController {
 				}
 			}
 		}
+	}
+	
+	public List<GuiTexture> getGuisToDisplay(){
+		return guiController.getGuisToDisplay();
 	}
 
 	public boolean isShowCircle() {

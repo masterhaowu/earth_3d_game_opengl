@@ -5,7 +5,7 @@ public class ModelTexture {
 	private int textureID;
 	private int normalMap;
 	
-	private float shineDamper = 1;
+	private float shineDamper = 0;
 	private float reflectivity = 0;
 	
 	private boolean hasTransparency = false;

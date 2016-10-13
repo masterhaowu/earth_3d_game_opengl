@@ -35,6 +35,10 @@ public class GuiRenderer {
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTexture());
 			Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
 			shader.loadTransformation(matrix);
+			shader.loadTransparency(gui.getTransparency());
+			shader.loadColourInfo(gui.isUseSolidColour(), gui.getColour());
+			shader.loadHighlightedColourInfo(gui.isUseHighlightedColour(), gui.getHighlightedColour());
+			shader.loadHighlighted(gui.isHighlighted());
 			GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVerticesCount());
 		}
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

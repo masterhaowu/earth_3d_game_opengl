@@ -13,8 +13,9 @@ import org.lwjgl.opengl.PixelFormat;
 
 public class DisplayManager {
 	
-	private static final int WIDTH = 1280;
-	private static final int HEIGHT = 720;
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
+	//public static float ratio = WIDTH/HEIGHT;
 	private static final int FPS_CAP = 120;
 	
 	private static long lastFrameTime;
@@ -29,7 +30,7 @@ public class DisplayManager {
 			Display.create(new PixelFormat().withSamples(4).withDepthBits(24), attribs);
 			//Display.create(new PixelFormat().withDepthBits(24), attribs);
 			Display.setTitle("First Display");
-			//GL11.glEnable(GL13.GL_MULTISAMPLE);
+			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

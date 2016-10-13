@@ -123,7 +123,7 @@ public class RendererController {
 		terrainSphereShader.loadTerrainGlobalOffset(0.5f);
 		terrainSphereRenderer.render(terrainSphere, shadowMapRenderer.getToShadowMapSpaceMatrix());
 		terrainSphereShader.stop();
-		// skyboxRednerer.render(camera, RED, GREEN, BLUE);
+		skyboxRednerer.render(camera, RED, GREEN, BLUE);
 		entities.clear();
 		// terrains.clear();
 		normalMapEntities.clear();

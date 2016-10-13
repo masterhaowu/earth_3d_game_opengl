@@ -40,7 +40,7 @@ const float animationAmplitude = 0.02;
 
 uniform vec4 plane;
 
-
+/*
 vec4 updatePosition(vec3 inputPosition){
     
     vec4 updatedPosition = vec4(0, 0, 0, 1.0);
@@ -51,9 +51,10 @@ vec4 updatePosition(vec3 inputPosition){
     return updatedPosition;
 }
 
-
+*/
 void main()
 {
+    /*
     if (enableShaderAnimation == true) {
         vec4 newPosition = updatePosition(position);
         worldPosition = transformationMatrix * newPosition;
@@ -61,6 +62,8 @@ void main()
     else{
         worldPosition =  transformationMatrix * vec4(position.x, position.y, position.z, 1.0);
     }
+     */
+    worldPosition =  transformationMatrix * vec4(position.x, position.y, position.z, 1.0);
     gl_ClipDistance[0] = dot(worldPosition, plane);
     
     vec4 positionRelativeToCam = viewMatrix * worldPosition;

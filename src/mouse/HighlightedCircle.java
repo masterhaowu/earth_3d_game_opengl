@@ -94,7 +94,7 @@ public class HighlightedCircle {
 		this.rotX = 90;
 		this.rotY = 0;
 		this.rotZ = 0;
-		this.Yoffset = 2;
+		this.Yoffset = 0.2f;
 		this.colour = HIGHLIGHT_DEFAULT;
 		
 		float intervalAngel = (float) Math.PI * 2 / segements;
