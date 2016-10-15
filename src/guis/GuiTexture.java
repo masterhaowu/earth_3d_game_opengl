@@ -3,6 +3,7 @@ package guis;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import models.RawModel;
 import renderEngine.DisplayManager;
 
 public class GuiTexture {
@@ -19,6 +20,9 @@ public class GuiTexture {
 	private Vector3f highlightedColour;
 	
 	private boolean highlighted;
+	
+	private boolean contain3DModel;
+	private RawModel model;
 	
 	public GuiTexture(int texture, Vector2f position, Vector2f scale) {
 		this.texture = texture;

@@ -23,7 +23,9 @@ import entityObjects.ObjectsNetwork;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
+import guis.Gui3DRenderer;
 import guis.GuiController;
+import guis.GuiData;
 import guis.GuiRenderer;
 import guis.GuiTexture;
 import models.RawModel;
@@ -71,7 +73,7 @@ public class MainGameLoop {
 
 		Loader loader = new Loader();
 		// --------------------------Game State--------------------
-		GameStateController.setCurrentState(GameStateController.IDEL_TESTING);
+		GameStateController.setCurrentState(GameStateController.CREATION_MODE_IDLE);
 
 		// --------------------------Objects Controller
 		// -------------------------------------
@@ -94,7 +96,7 @@ public class MainGameLoop {
 		TextMaster.init(loader);
 
 		FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
-		GUIText text = new GUIText("Game Testing", 1, font, new Vector2f(0.0f, 0.95f), 0.2f, true);
+		GUIText text = new GUIText("Game Testing", 1, font, new Vector2f(0.8f, 0.95f), 0.2f, true);
 
 		text.setColour(1.0f, 1.0f, 1.0f);
 
@@ -314,6 +316,7 @@ public class MainGameLoop {
 		// new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 		// guis.add(shadowMap);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
+		Gui3DRenderer gui3dRenderer = new Gui3DRenderer(loader, renderer.getProjectionMatrix());
 
 		// --------------------------MousePicker----------------------------------------------------
 		// MousePicker picker = new MousePicker(camera,
@@ -409,7 +412,9 @@ public class MainGameLoop {
 		// mouseController.setObjectToAdd(tempEntityObject);
 		
 		// -------------------GUI Controller-------------------------------
-		
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		GuiTexture gui3dTesting = new GuiTexture(loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f), 0.2f);
+		guis.add(gui3dTesting);
 
 		while (!Display.isCloseRequested()) {
 			// float newHeight = (float) (water.getHeight() + 0.1 *
@@ -489,7 +494,8 @@ public class MainGameLoop {
 			// ParticleMaster.renderParticles(camera);
 			// PostProcessing.doPostProcessing(fbo.getColourTexture());
 
-			guiRenderer.render(eventController.getGuisToDisplay());
+			//guiRenderer.render(eventController.getGuisToDisplay());
+			gui3dRenderer.render(guis, camera);
 
 			TextMaster.render();
 

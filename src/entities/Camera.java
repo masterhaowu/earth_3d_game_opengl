@@ -204,6 +204,12 @@ public class Camera {
 			float pitchChange = Mouse.getDY() * 0.1f;
 			pitchOffset -= pitchChange;
 			// pitch -= pitchChange;
+			if (pitchOffset>0) {
+				pitchOffset = 0;
+			}
+			if (pitchOffset < -80) {
+				pitchOffset = -80;
+			}
 		}
 		// pitch = -player.getRotX() + pitchOffset;
 		// pitch = -player.getPitchForCamera() + pitchOffset;

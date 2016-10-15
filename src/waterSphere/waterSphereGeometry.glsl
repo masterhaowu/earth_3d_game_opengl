@@ -35,7 +35,7 @@ const float reflectivity = 0.3;
 
 const float levels = 5.0;
 
-const vec3 waterColour = vec3(0.6, 0.95, 1);
+const vec3 waterColour = vec3(0.4, 0.75, 1);
 const float ambientLighting = 0.3;
 
 vec3 calculateTriangleNormal(){
