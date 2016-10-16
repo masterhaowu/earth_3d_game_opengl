@@ -73,7 +73,7 @@ public class GuiSphereObject {
 		}
 		int verticesCount = vertices.size();
 		int facesCount = faces.size();
-		System.out.println(facesCount);
+		//System.out.println(facesCount);
 		verticesFinal = new float[verticesCount * 3];
 		indicesFinal = new int[facesCount * 3];
 		

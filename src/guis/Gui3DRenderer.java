@@ -12,6 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import models.RawModel;
 import renderEngine.Loader;
+import renderEngine.RendererController;
 import toolbox.Maths;
 
 public class Gui3DRenderer {
@@ -37,10 +38,14 @@ public class Gui3DRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		shader.connectTextureUnits();
+		//RendererController.enableCulling();
 		//Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		//shader.loadViewMatrix(viewMatrix);
 		for(GuiTexture gui:guis){
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getBackgroundTexture());
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTexture());
 			Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
 			//Matrix4f matrix = Maths.createTransformationMatrix(new Vector3f(0, 0, 450), 0, 0, 0, 50);

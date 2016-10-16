@@ -46,7 +46,7 @@ public class GuiData {
 	public GuiData(Loader loader) {
 		this.loader = loader;
 		
-		gui3dTesting = new GuiTexture(loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f), 0.2f);
+		gui3dTesting = new GuiTexture(loader.loadTexture("blueCircle1"), new Vector2f(-0.85f, -0.76f), 0.2f);
 		
 		
 		

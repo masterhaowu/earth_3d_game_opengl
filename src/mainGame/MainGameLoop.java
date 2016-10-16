@@ -413,7 +413,8 @@ public class MainGameLoop {
 		
 		// -------------------GUI Controller-------------------------------
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		GuiTexture gui3dTesting = new GuiTexture(loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f), 0.2f);
+		GuiTexture gui3dTesting = new GuiTexture(loader.loadTexture("planet"), loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f), 0.2f);
+		//System.out.println(gui3dTesting.getPosition());
 		guis.add(gui3dTesting);
 
 		while (!Display.isCloseRequested()) {

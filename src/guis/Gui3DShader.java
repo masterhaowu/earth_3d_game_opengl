@@ -11,8 +11,10 @@ public class Gui3DShader extends ShaderProgram {
     private static final String FRAGMENT_FILE = "/guis/gui3DFShader.glsl";
     
     private int location_transformationMatrix;
-    private int location_projectionMatrix;
-    private int location_viewMatrix;
+    //private int location_projectionMatrix;
+    //private int location_viewMatrix;
+    private int location_backgroundTexture;
+    private int location_iconTexture;
 
 	public Gui3DShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE, GEOMETRY_FILE);
@@ -22,6 +24,11 @@ public class Gui3DShader extends ShaderProgram {
         super.loadMatrix(location_transformationMatrix, matrix);
  
     }
+	
+	public void connectTextureUnits(){
+		super.loadInt(location_backgroundTexture, 0);
+		super.loadInt(location_iconTexture, 1);
+	}
 	/*
 	public void loadProjectionMatrix(Matrix4f projection){
 		super.loadMatrix(location_projectionMatrix, projection);
@@ -36,6 +43,8 @@ public class Gui3DShader extends ShaderProgram {
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		//location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		//location_viewMatrix = super.getUniformLocation("viewMatrix");
+		location_backgroundTexture = super.getUniformLocation("backgroundTexture");
+		location_iconTexture = super.getUniformLocation("iconTexture");
 	}
 
 	@Override

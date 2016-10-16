@@ -24,6 +24,39 @@ public class GuiTexture {
 	private boolean contain3DModel;
 	private RawModel model;
 	
+	private int backgroundTexture;
+	
+	public GuiTexture(int texture, int backgroundTexture, Vector2f position, Vector2f scale) {
+		this.texture = texture;
+		this.backgroundTexture = backgroundTexture;
+		this.position = position;
+		this.scale = scale;
+		this.transparency = 1.0f;
+		this.useSolidColour = false;
+		this.colour = new Vector3f(0, 0, 0);
+		this.useHighlightedColour = false;
+		this.highlightedColour = new Vector3f(0, 0, 0);
+		this.highlighted = false;
+		this.contain3DModel = true;
+		
+	}
+	
+	public GuiTexture(int texture, int backgroundTexture, Vector2f position, float scaleHeight) {
+		this.texture = texture;
+		this.backgroundTexture = backgroundTexture;
+		this.position = position;
+		//System.out.println(DisplayManager.HEIGHT/DisplayManager.WIDTH);
+		this.scale = new Vector2f(scaleHeight*DisplayManager.HEIGHT/DisplayManager.WIDTH, scaleHeight);
+		this.transparency = 1.0f;
+		this.useSolidColour = false;
+		this.colour = new Vector3f(0, 0, 0);
+		this.useHighlightedColour = false;
+		this.highlightedColour = new Vector3f(0, 0, 0);
+		this.highlighted = false;
+		this.contain3DModel = true;
+	}
+	
+	
 	public GuiTexture(int texture, Vector2f position, Vector2f scale) {
 		this.texture = texture;
 		this.position = position;
@@ -98,6 +131,20 @@ public class GuiTexture {
 	public Vector3f getHighlightedColour() {
 		return highlightedColour;
 	}
+
+	public boolean isContain3DModel() {
+		return contain3DModel;
+	}
+
+	public void setContain3DModel(boolean contain3dModel) {
+		contain3DModel = contain3dModel;
+	}
+
+	public int getBackgroundTexture() {
+		return backgroundTexture;
+	}
+	
+	
 	
 	
 	
