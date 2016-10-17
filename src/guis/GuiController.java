@@ -16,11 +16,13 @@ public class GuiController {
 	private MousePickerSphere picker;
 	//private List<GuiTexture> guis;
 	private List<GuiTexture> guisToDisplay;
+	private List<GuiTexture> guisSphere3D;
 	
 	public GuiController(Loader loader, MousePickerSphere picker){
 		//this.guis = new ArrayList<GuiTexture>();
 		this.picker = picker;
 		this.guisToDisplay = new ArrayList<GuiTexture>();
+		this.guisSphere3D = new ArrayList<GuiTexture>();
 		guiData = new GuiData(loader);
 		
 		//guisToDisplay.add(guiData.blackHexTrayBot);
@@ -57,11 +59,18 @@ public class GuiController {
 	
 	
 	public void update(){
+		guisSphere3D.clear();
 		guisToDisplay.clear();
-		guisToDisplay.add(guiData.planetCircle);
-		guisToDisplay.add(guiData.planetIcon);
+		//guisToDisplay.add(guiData.planetCircle);
+		//guisToDisplay.add(guiData.planetIcon);
 		
 		switch (GameStateController.currentState) {
+		case GameStateController.PLAY_MODE_IDLE:
+			guisSphere3D.add(guiData.playMode3D);
+			//guisSphere3D.add(guiData.createMode3D);
+			//guisSphere3D.add(guiData.objectMode3D);
+			guiData.playMode3D.setNextState(1);
+			break;
 		case GameStateController.CREATION_MODE_IDLE:
 			guisToDisplay.add(guiData.addObjectGuiCircle);
 			guisToDisplay.add(guiData.addObjectGuiIcon);
@@ -105,6 +114,13 @@ public class GuiController {
 	public List<GuiTexture> getGuisToDisplay() {
 		return guisToDisplay;
 	}
+
+
+	public List<GuiTexture> getGuisSphere3D() {
+		return guisSphere3D;
+	}
+	
+	
 	
 	
 	

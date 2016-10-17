@@ -10,6 +10,7 @@ in vec4 worldPosition[3];
 out vec2 pass_textureCoords;
 //out vec3 pass_colour;
 out float pass_brightness;
+out float pass_averageX;
 //out float scaleOffset; // this is to create water dome effect
 //out float pass_z;
 
@@ -40,11 +41,14 @@ void main(void) {
     vec4 tempPosition = gl_in[0].gl_Position;
     float temoValueX = -tempPosition.x/10;
     float tempValueY = -tempPosition.y/10;
+    float tempAverageX = (textureCoords[0].x + textureCoords[1].x + textureCoords[2].x)/3;
+    
     gl_Position = tempPosition;
     //pass_textureCoords = vec2(textureCoords[0].x + temoValueX, textureCoords[0].y + tempValueY);
     pass_textureCoords = textureCoords[0];
     //pass_brightness = tempValue;
     pass_brightness = averageCos;
+    pass_averageX = tempAverageX;
     //pass_z = averageZ;
     EmitVertex();
     
@@ -54,6 +58,7 @@ void main(void) {
     //pass_brightness = tempValue;
     pass_textureCoords = textureCoords[1];
     pass_brightness = averageCos;
+    pass_averageX = tempAverageX;
     //pass_z = averageZ;
     EmitVertex();
     
@@ -63,6 +68,7 @@ void main(void) {
     //pass_brightness = tempValue;
     pass_textureCoords = textureCoords[2];
     pass_brightness = averageCos;
+    pass_averageX = tempAverageX;
     //pass_z = averageZ;
     EmitVertex();
     

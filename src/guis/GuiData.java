@@ -17,7 +17,13 @@ public class GuiData {
 	public static final Vector3f BROWN_CIRCLE = new Vector3f(149 / 255f, 75 / 255f, 16 / 255f);
 
 	private Loader loader;
-
+	
+	
+	public GuiTexture playMode3D;
+	public GuiTexture createMode3D;
+	
+	public GuiTexture objectMode3D;
+	
 	public GuiTexture terrainGuiBackground;
 	public GuiTexture terrainGuiCircle;
 	public GuiTexture terrainGuiIcon;
@@ -45,6 +51,19 @@ public class GuiData {
 
 	public GuiData(Loader loader) {
 		this.loader = loader;
+		
+		
+		playMode3D = new GuiTexture(loader.loadTexture("planet"), loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f), 0.22f);
+		playMode3D.setTextureSet2(loader.loadTexture("eye"), loader.loadTexture("redCircle"));
+		createMode3D = new GuiTexture(loader.loadTexture("eye"), loader.loadTexture("redCircle"), new Vector2f(-0.85f, -0.16f), 0.22f);
+		
+		
+		objectMode3D = new GuiTexture(loader.loadTexture("leaf"), loader.loadTexture("greyCircle"), new Vector2f(0f, -0.76f), 0.20f);
+		objectMode3D.useSoildColour(GREEN_CIRCLE);
+		objectMode3D.addColour(GREEN_CIRCLE);
+		objectMode3D.addColour(BROWN_CIRCLE);
+		
+		
 		
 		gui3dTesting = new GuiTexture(loader.loadTexture("blueCircle1"), new Vector2f(-0.85f, -0.76f), 0.2f);
 		

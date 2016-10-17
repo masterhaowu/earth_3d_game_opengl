@@ -7,6 +7,7 @@ public class GameStateController {
 	public static final int DRAGGING_ENTITY_OBJECT = 120;
 	
 	
+	public static final int PLAY_MODE_IDLE = 200;
 	public static final int CREATION_MODE_IDLE = 300;
 	public static final int CREATION_MODE_ADD_OBJECT = 310;
 	

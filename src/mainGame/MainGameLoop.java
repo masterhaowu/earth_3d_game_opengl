@@ -73,7 +73,7 @@ public class MainGameLoop {
 
 		Loader loader = new Loader();
 		// --------------------------Game State--------------------
-		GameStateController.setCurrentState(GameStateController.CREATION_MODE_IDLE);
+		GameStateController.setCurrentState(GameStateController.PLAY_MODE_IDLE);
 
 		// --------------------------Objects Controller
 		// -------------------------------------
@@ -412,10 +412,10 @@ public class MainGameLoop {
 		// mouseController.setObjectToAdd(tempEntityObject);
 		
 		// -------------------GUI Controller-------------------------------
-		List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		GuiTexture gui3dTesting = new GuiTexture(loader.loadTexture("planet"), loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f), 0.2f);
+		//List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		//GuiTexture gui3dTesting = new GuiTexture(loader.loadTexture("planet"), loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f), 0.22f);
 		//System.out.println(gui3dTesting.getPosition());
-		guis.add(gui3dTesting);
+		//guis.add(gui3dTesting);
 
 		while (!Display.isCloseRequested()) {
 			// float newHeight = (float) (water.getHeight() + 0.1 *
@@ -496,7 +496,7 @@ public class MainGameLoop {
 			// PostProcessing.doPostProcessing(fbo.getColourTexture());
 
 			//guiRenderer.render(eventController.getGuisToDisplay());
-			gui3dRenderer.render(guis, camera);
+			gui3dRenderer.render(eventController.getGuisSphere3D());
 
 			TextMaster.render();
 

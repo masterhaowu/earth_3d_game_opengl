@@ -113,6 +113,10 @@ public class GameEventController {
 	public List<GuiTexture> getGuisToDisplay(){
 		return guiController.getGuisToDisplay();
 	}
+	
+	public List<GuiTexture> getGuisSphere3D(){
+		return guiController.getGuisSphere3D();
+	}
 
 	public boolean isShowCircle() {
 		return showCircle;
