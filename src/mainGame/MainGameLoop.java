@@ -96,7 +96,7 @@ public class MainGameLoop {
 		TextMaster.init(loader);
 
 		FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
-		GUIText text = new GUIText("Game Testing", 1, font, new Vector2f(0.8f, 0.95f), 0.2f, true);
+		GUIText text = new GUIText("1620", 2f, font, new Vector2f(0.825f, 0.87f), 0.2f, true);
 
 		text.setColour(1.0f, 1.0f, 1.0f);
 

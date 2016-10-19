@@ -16,7 +16,7 @@ const float borderEdge = 0.4;
 
 const vec2 offset = vec2(0.006, 0.006);
 
-const vec3 outlineColour = vec3(1.0, 0.0, 0.0);
+const vec3 outlineColour = vec3(0.5, 0.5, 0.5);
 
 void main(void){
     
@@ -28,6 +28,10 @@ void main(void){
 
     float overallAlpha = alpha + (1.0 - alpha) * outlineAlpha;
     vec3 overallColour = mix(outlineColour, colour, alpha / overallAlpha);
+    
+    if (overallAlpha > 0.7) {
+        overallAlpha = 0.7;
+    }
     
     out_colour = vec4(overallColour, overallAlpha);
     //out_colour = vec4(1, pass_textureCoords.x, pass_textureCoords.y, 1);

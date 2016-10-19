@@ -15,19 +15,17 @@ public class Gui3DShader extends ShaderProgram {
     
     private int location_transformationMatrix;
     private int location_rotationMatrix;
-    //private int location_projectionMatrix;
-    //private int location_viewMatrix;
-    private int location_backgroundTexture;
-    private int location_iconTexture;
+    private int location_backgroundTexture1;
+    private int location_iconTexture1;
     private int location_backgroundTexture2;
     private int location_iconTexture2;
-    private int location_backgroundTexture3;
-    private int location_iconTexture3;
     private int location_useColourFilter;
-    private int location_colourFilter[];
-    private int location_currentState;
-    private int location_nextState;
+    private int location_colourFilter1;
+    private int location_colourFilter2;
+ 
     private int location_stateTransition;
+    private int location_scaleDown1;
+    private int location_scaleDown2;
     
 
 	public Gui3DShader() {
@@ -43,72 +41,41 @@ public class Gui3DShader extends ShaderProgram {
 		super.loadMatrix(location_rotationMatrix, matrix);
 	}
 	
-	public void loadColourFilterInfo(boolean useFilter, List<Vector3f> colours){
-		super.loadBoolean(location_useColourFilter, useFilter);
-		//super.loadVector(location_colourFilter, colour);
-		for (int i=0; i<3; i++){
-			if (i < colours.size()) {
-				super.loadVector(location_colourFilter[i], colours.get(i));
-			}
-			else{
-				super.loadVector(location_colourFilter[i], new Vector3f(0, 0, 0));
-			}
-		}
-	}
+	
 	
 	public void connectTextureUnits(){
-		super.loadInt(location_backgroundTexture, 0);
-		super.loadInt(location_iconTexture, 1);
+		super.loadInt(location_backgroundTexture1, 0);
+		super.loadInt(location_iconTexture1, 1);
 		super.loadInt(location_backgroundTexture2, 2);
 		super.loadInt(location_iconTexture2, 3);
-		super.loadInt(location_backgroundTexture3, 4);
-		super.loadInt(location_iconTexture3, 5);
-	}
-	
-	public void loadSingleState(int state){
-		super.loadInt(location_currentState, state);
-		super.loadInt(location_nextState, state);
-		super.loadFloat(location_stateTransition, 0);
-	}
-	
-	public void loadStates(int currentState, int nextState, float value){
-		super.loadInt(location_currentState, currentState);
-		super.loadInt(location_nextState, nextState);
-		super.loadFloat(location_stateTransition, value);
 	}
 	
 	
-	/*
-	public void loadProjectionMatrix(Matrix4f projection){
-		super.loadMatrix(location_projectionMatrix, projection);
-	}
 	
-	public void loadViewMatrix(Matrix4f viewMatrix){
-		super.loadMatrix(location_viewMatrix, viewMatrix);
+	public void loadStates(boolean useColourFilter, float transition, Vector3f currentColour, Vector3f nextColour, float currentScale, float nextScale){
+		super.loadBoolean(location_useColourFilter, useColourFilter);
+		super.loadFloat(location_stateTransition, transition);
+		super.loadVector(location_colourFilter1, currentColour);
+		super.loadVector(location_colourFilter2, nextColour);
+		super.loadFloat(location_scaleDown1, currentScale);
+		super.loadFloat(location_scaleDown2, nextScale);
 	}
-	*/
+
 	@Override
 	protected void getAllUniformLocations() {
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_rotationMatrix = super.getUniformLocation("rotationMatrix");
-		//location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		//location_viewMatrix = super.getUniformLocation("viewMatrix");
-		location_backgroundTexture = super.getUniformLocation("backgroundTexture");
-		location_iconTexture = super.getUniformLocation("iconTexture");
+		location_backgroundTexture1 = super.getUniformLocation("backgroundTexture1");
+		location_iconTexture1 = super.getUniformLocation("iconTexture1");
 		location_backgroundTexture2 = super.getUniformLocation("backgroundTexture2");
 		location_iconTexture2 = super.getUniformLocation("iconTexture2");
-		location_backgroundTexture3 = super.getUniformLocation("backgroundTexture3");
-		location_iconTexture3 = super.getUniformLocation("iconTexture3");
-		location_useColourFilter = super.getUniformLocation("useColourFilter");
-		//location_colourFilter = super.getUniformLocation("colourFilter");
-		location_currentState = super.getUniformLocation("currentState");
-		location_nextState = super.getUniformLocation("nextState");
+		location_useColourFilter = super.getUniformLocation("useColourFilter");	
 		location_stateTransition = super.getUniformLocation("stateTransition");
+		location_scaleDown1 = super.getUniformLocation("scaleDown1");
+		location_scaleDown2 = super.getUniformLocation("scaleDown2");
+		location_colourFilter1 = super.getUniformLocation("colourFilter1");
+		location_colourFilter2 = super.getUniformLocation("colourFilter2");
 		
-		location_colourFilter = new int[3];
-		for (int i=0; i<3; i++){
-			location_colourFilter[i] = super.getUniformLocation("colourFilter[" + i + "]");
-		}
 	}
 
 	@Override

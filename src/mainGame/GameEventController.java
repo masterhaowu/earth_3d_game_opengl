@@ -9,6 +9,7 @@ import entities.Entity;
 import entityObjects.EntityObject;
 import entityObjects.ObjectsNetwork;
 import guis.GuiController;
+import guis.GuiSphereTexture;
 import guis.GuiTexture;
 import mouse.HighlightedCircle;
 import mouse.MouseDraggingController;
@@ -114,7 +115,7 @@ public class GameEventController {
 		return guiController.getGuisToDisplay();
 	}
 	
-	public List<GuiTexture> getGuisSphere3D(){
+	public List<GuiSphereTexture> getGuisSphere3D(){
 		return guiController.getGuisSphere3D();
 	}
 

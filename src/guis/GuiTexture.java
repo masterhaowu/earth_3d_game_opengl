@@ -29,6 +29,8 @@ public class GuiTexture {
 	private boolean useHighlightedColour;
 	private Vector3f highlightedColour;
 	
+	private float scaleDown = 1.1f;
+	
 	private boolean highlighted;
 	
 	//private boolean use
@@ -39,7 +41,7 @@ public class GuiTexture {
 	private int currentState = 0;
 	private int nextState = 0;
 	private float transition = 0;
-	private float transitSpeed = 0.003f;
+	private float transitSpeed = 0.008f;
 	
 	
 	
@@ -114,6 +116,14 @@ public class GuiTexture {
 	public void useSoildColour(Vector3f colour){
 		this.useSolidColour = true;
 		this.colour = colour;
+	}
+	
+	
+	public void useSoildColour(Vector3f colour1, Vector3f colour2, Vector3f colour3){
+		this.useSolidColour = true;
+		this.colours.add(colour1);
+		this.colours.add(colour2);
+		this.colours.add(colour3);
 	}
 	
 	public void useHighlightedColour(Vector3f colour){
@@ -224,6 +234,7 @@ public class GuiTexture {
 
 	public void setNextState(int nextState) {
 		this.nextState = nextState;
+		this.transition = 0;
 	}
 
 	public float getTransition() {
@@ -239,11 +250,29 @@ public class GuiTexture {
 	}
 	
 	public void incrementTransition() {
+		if (currentState == nextState) {
+			return;
+		}
 		this.transition += transitSpeed;
 		if (transition > 1) {
 			this.currentState = nextState;
 			this.transition = 0;
 		}
+	}
+
+	public float getScaleDown() {
+		return scaleDown;
+	}
+
+	public void setScaleDown(float scaleDown) {
+		this.scaleDown = scaleDown;
+	}
+	
+	
+	public void set3Textures(int texture1, int texture2, int texture3){
+		this.texture = texture1;
+		this.texture2 = texture2;
+		this.texture3 = texture3;
 	}
 	
 	
