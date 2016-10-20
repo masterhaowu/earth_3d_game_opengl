@@ -74,6 +74,7 @@ public class MainGameLoop {
 		Loader loader = new Loader();
 		// --------------------------Game State--------------------
 		GameStateController.setCurrentState(GameStateController.PLAY_MODE_IDLE);
+		GameStateController.gameModeState = GameStateController.CREATION_TERRAIN_MODE;
 
 		// --------------------------Objects Controller
 		// -------------------------------------
@@ -96,9 +97,9 @@ public class MainGameLoop {
 		TextMaster.init(loader);
 
 		FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
-		GUIText text = new GUIText("1620", 2f, font, new Vector2f(0.825f, 0.87f), 0.2f, true);
+		//GUIText text = new GUIText("1620", 2f, font, new Vector2f(0.825f, 0.87f), 0.2f, true);
 
-		text.setColour(1.0f, 1.0f, 1.0f);
+		//text.setColour(1.0f, 1.0f, 1.0f);
 
 		// staticModel.getTexture().setReflectivity(0.2f);
 		// staticModel.getTexture().setShineDamper(2.0f);

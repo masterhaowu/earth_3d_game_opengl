@@ -50,10 +50,15 @@ void main(void){
     iconColour1 = texture(iconTexture1, iconTextureCoords1);
     iconColour2 = texture(iconTexture2, iconTextureCoords2);
 
-
+    float scaleDown11 = scaleDown1 * (1 + (pass_brightness)/2);
+    float scaleDown22 = scaleDown2 * (1 + (pass_brightness)/2);
     
-    if (pass_textureCoords.x < ((1 - 1/scaleDown)/2) || pass_textureCoords.x > (0.5 + (1/scaleDown)/2)  || pass_textureCoords.y < ((1 - 1/scaleDown)/2)  || pass_textureCoords.y > (0.5 + (1/scaleDown)/2)  ) {
+    if (pass_textureCoords.x < ((1 - 1/scaleDown11)/2) || pass_textureCoords.x > (0.5 + (1/scaleDown11)/2)  || pass_textureCoords.y < ((1 - 1/scaleDown11)/2)  || pass_textureCoords.y > (0.5 + (1/scaleDown11)/2)  ) {
         iconColour1 = vec4(0, 0, 0, 0);
+        //iconColour2 = vec4(0, 0, 0, 0);
+    }
+    if (pass_textureCoords.x < ((1 - 1/scaleDown22)/2) || pass_textureCoords.x > (0.5 + (1/scaleDown22)/2)  || pass_textureCoords.y < ((1 - 1/scaleDown22)/2)  || pass_textureCoords.y > (0.5 + (1/scaleDown22)/2)  ) {
+        //iconColour1 = vec4(0, 0, 0, 0);
         iconColour2 = vec4(0, 0, 0, 0);
     }
     

@@ -23,6 +23,23 @@ public class GameStateController {
 	
 	public static int currentState;
 	
+	public static int gameModeState;
+	
+	public static int gameLeftModeState;
+	public static int gameRightModeState;
+	//public static final int 
+	public static final int CREATION_MODE = 1;
+	public static final int RESEARCH_MODE = 2;
+	public static final int TERRAIN_MODE = 1;
+	public static final int ANIMAL_MODE = 2;
+	
+	public static final int CREATION_TERRAIN_MODE = 1;
+	public static final int CREATION_ANIMAL_MODE = 2;
+	public static final int RESEARCH_TERRAIN_MODE = 3;
+	public static final int RESEARCH_ANIMAL_MODE = 4;
+	
+	
+	
 	public static int currentInfoState;
 
 
