@@ -44,6 +44,11 @@ public class GuiTexture {
 	private float transitSpeed = 0.008f;
 	
 	
+	private boolean useBorder = false;
+	private Vector3f borderColour = new Vector3f(0,0,0);
+	private Vector2f borderPrecentage = new Vector2f(0, 0);
+	private float borderTransparency = 0;
+	
 	
 	public GuiTexture(int texture, int backgroundTexture, Vector2f position, Vector2f scale) {
 		this.texture = texture;
@@ -116,6 +121,20 @@ public class GuiTexture {
 	public void useSoildColour(Vector3f colour){
 		this.useSolidColour = true;
 		this.colour = colour;
+	}
+	
+	public void useBorder(Vector3f colour, Vector2f precent, float transparency){
+		this.useBorder = true;
+		this.borderColour = colour;
+		this.borderPrecentage = precent;
+		this.borderTransparency = transparency;
+	}
+	
+	public void useBorder(Vector3f colour, float precent, float transparency){
+		this.useBorder = true;
+		this.borderColour = colour;
+		this.borderPrecentage = new Vector2f(precent, precent/DisplayManager.HEIGHT * DisplayManager.WIDTH);
+		this.borderTransparency = transparency;
 	}
 	
 	
@@ -274,6 +293,24 @@ public class GuiTexture {
 		this.texture2 = texture2;
 		this.texture3 = texture3;
 	}
+
+	public boolean isUseBorder() {
+		return useBorder;
+	}
+
+	public Vector3f getBorderColour() {
+		return borderColour;
+	}
+
+	public Vector2f getBorderPrecentage() {
+		return borderPrecentage;
+	}
+
+	public float getBorderTransparency() {
+		return borderTransparency;
+	}
+	
+	
 	
 	
 	

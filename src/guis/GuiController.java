@@ -17,27 +17,29 @@ public class GuiController {
 	// private List<GuiTexture> guis;
 	private List<GuiTexture> guisToDisplay;
 	private List<GuiSphereTexture> guisSphere3D;
+	private List<GuiTexture> guisPanel;
+	private List<GuiObjectUnit> guiObjectUnits;
 
 	public GuiController(Loader loader, MousePickerSphere picker) {
 		// this.guis = new ArrayList<GuiTexture>();
 		this.picker = picker;
 		this.guisToDisplay = new ArrayList<GuiTexture>();
 		this.guisSphere3D = new ArrayList<GuiSphereTexture>();
+		this.guisPanel = new ArrayList<GuiTexture>();
+		this.guiObjectUnits = new ArrayList<GuiObjectUnit>();
 		guiData = new GuiData(loader);
 
 		// guisToDisplay.add(guiData.blackHexTrayBot);
 		// guisToDisplay.add(guiData.addObjectGuiBackground);
-		guisToDisplay.add(guiData.addObjectGuiCircle);
-		guisToDisplay.add(guiData.addObjectGuiIcon);
-		guisToDisplay.add(guiData.terrainGuiCircle);
-		guisToDisplay.add(guiData.terrainGuiIcon);
 
 		// guisToDisplay.add(guiData.planetBackground);
 		// guisToDisplay.add(guiData.planetBlueBar);
-		guisToDisplay.add(guiData.planetCircle);
-		guisToDisplay.add(guiData.planetIcon);
+		// guisToDisplay.add(guiData.planetCircle);
+		// guisToDisplay.add(guiData.planetIcon);
 
 		// guisToDisplay.add(guiData.iTunesTesting);
+
+		GameStateController.CTState = GameStateController.CT_IDLE;
 
 	}
 
@@ -82,6 +84,13 @@ public class GuiController {
 		guisSphere3D.add(guiData.sphereRight2);
 		guisSphere3D.add(guiData.sphereRight3);
 
+		if (!guisPanel.isEmpty()) {
+			for (int i = 0; i < guisPanel.size(); i++) {
+				guisToDisplay.add(guisPanel.get(i));
+				// System.out.println(i);
+			}
+		}
+
 		switch (GameStateController.currentState) {
 		case GameStateController.PLAY_MODE_IDLE:
 			switch (GameStateController.gameModeState) {
@@ -96,9 +105,29 @@ public class GuiController {
 					guiData.rightSphere.setNextState(1);
 					setToolBarStates(1);
 					GameStateController.gameModeState = GameStateController.CREATION_ANIMAL_MODE;
+				} else if (checkClicked() == guiData.sphereLeft3 && Mouse.isButtonDown(0)
+						&& guiData.sphereLeft3.getCurrentState() == 0
+						&& GameStateController.CTState != GameStateController.CT_TERRAIN_TYPE) {
+					guisPanel.clear();
+					GameStateController.CTState = GameStateController.CT_TERRAIN_TYPE;
+					guisPanel.add(guiData.panelBackground);
+					
+					
+					guiObjectUnits.clear();
+					
+					for(int i=0; i<guiData.OBJECT_ROWS; i++){
+						for(int j=0; j<guiData.OBJECT_COLS; j++){
+							guiObjectUnits.add(guiData.guiObjects[i][j]);
+						}
+					}
+					
+					//guiObjectUnits.add(guiData.guiObjects[0][3]);
+					//guisPanel.add(guiData.panelBorder);
+					
+
 				}
 				break;
-				
+
 			case GameStateController.CREATION_ANIMAL_MODE:
 				if (checkClicked() == guiData.leftSphere && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 0) {
@@ -112,7 +141,7 @@ public class GuiController {
 					GameStateController.gameModeState = GameStateController.CREATION_TERRAIN_MODE;
 				}
 				break;
-				
+
 			case GameStateController.RESEARCH_TERRAIN_MODE:
 				if (checkClicked() == guiData.leftSphere && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 1) {
@@ -126,7 +155,7 @@ public class GuiController {
 					GameStateController.gameModeState = GameStateController.RESEARCH_ANIMAL_MODE;
 				}
 				break;
-				
+
 			case GameStateController.RESEARCH_ANIMAL_MODE:
 				if (checkClicked() == guiData.leftSphere && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 1) {
@@ -145,43 +174,6 @@ public class GuiController {
 				break;
 			}
 
-			break;
-		case GameStateController.CREATION_MODE_IDLE:
-
-			if (checkClicked() == guiData.leftSphere && Mouse.isButtonDown(0)
-					&& guiData.leftSphere.getCurrentState() == 1) {
-				guiData.leftSphere.setNextState(2);
-				guiData.sphereMiddle.setNextState(2);
-				guiData.sphereLeft1.setNextState(2);
-				guiData.sphereLeft2.setNextState(2);
-				guiData.sphereLeft3.setNextState(2);
-				guiData.sphereRight1.setNextState(2);
-				guiData.sphereRight2.setNextState(2);
-				guiData.sphereRight3.setNextState(2);
-				GameStateController.currentState = GameStateController.RESEARCH_MODE_IDLE;
-			}
-			break;
-		case GameStateController.RESEARCH_MODE_IDLE:
-
-			if (checkClicked() == guiData.leftSphere && Mouse.isButtonDown(0)
-					&& guiData.leftSphere.getCurrentState() == 2) {
-				guiData.leftSphere.setNextState(0);
-				guiData.sphereMiddle.setNextState(0);
-				guiData.sphereLeft1.setNextState(0);
-				guiData.sphereLeft2.setNextState(0);
-				guiData.sphereLeft3.setNextState(0);
-				guiData.sphereRight1.setNextState(0);
-				guiData.sphereRight2.setNextState(0);
-				guiData.sphereRight3.setNextState(0);
-				GameStateController.currentState = GameStateController.PLAY_MODE_IDLE;
-			}
-			break;
-		case GameStateController.CREATION_MODE_ADD_OBJECT:
-			guisToDisplay.add(guiData.addObjectGuiCircle);
-			guisToDisplay.add(guiData.addObjectGuiIcon);
-			guisToDisplay.add(guiData.terrainGuiCircle);
-			guisToDisplay.add(guiData.terrainGuiIcon);
-			guisToDisplay.add(guiData.objectPanelBackground);
 			break;
 
 		default:
@@ -220,5 +212,11 @@ public class GuiController {
 	public List<GuiSphereTexture> getGuisSphere3D() {
 		return guisSphere3D;
 	}
+
+	public List<GuiObjectUnit> getGuiObjectUnits() {
+		return guiObjectUnits;
+	}
+	
+	
 
 }

@@ -65,8 +65,15 @@ public class Gui3DRenderer {
 			// Matrix4f matrix = Maths.createTransformationMatrix(new
 			// Vector3f(0, 0, 450), 0, 0, 0, 50);
 			shader.loadTransformation(matrix);
-			Matrix4f rotation = Maths.createTransformationMatrix(new Vector3f(0, 0, 0), -time * 360, 0, 0, 1);
-			shader.loadRotationMatrix(rotation);
+			if (gui.isAutoRotate()) {
+				Matrix4f rotation = Maths.createTransformationMatrix(new Vector3f(0, 0, 0), -time * 360, 0, 0, 1);
+				shader.loadRotationMatrix(rotation);
+			}
+			else{
+				Matrix4f rotation = Maths.createTransformationMatrix(new Vector3f(0, 0, 0), 0, 0, 0, 1);
+				shader.loadRotationMatrix(rotation);
+			}
+			
 
 			if (gui.isUseColours()) {
 				shader.loadStates(gui.isUseColours(), gui.getTransition(), gui.getColours().get(currentState),

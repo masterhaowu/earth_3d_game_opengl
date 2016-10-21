@@ -23,6 +23,8 @@ public class GuiSphereTexture {
 	private int nextState = 0;
 	private float transition = 0;
 	private float transitSpeed = 0.008f;
+	
+	private boolean autoRotate = true;
 
 	public GuiSphereTexture(int texture, int backgroundTexture, float scaleDown, Vector2f position, float scaleHeight) {
 		this.textures = new ArrayList<Integer>();
@@ -184,5 +186,15 @@ public class GuiSphereTexture {
 			this.transition = 0;
 		}
 	}
+	
+	public void disableAutoRotate(){
+		this.autoRotate = false;
+	}
+
+	public boolean isAutoRotate() {
+		return autoRotate;
+	}
+	
+	
 
 }

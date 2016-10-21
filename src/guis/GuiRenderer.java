@@ -39,6 +39,7 @@ public class GuiRenderer {
 			shader.loadColourInfo(gui.isUseSolidColour(), gui.getColour());
 			shader.loadHighlightedColourInfo(gui.isUseHighlightedColour(), gui.getHighlightedColour());
 			shader.loadHighlighted(gui.isHighlighted());
+			shader.loadBorderInfo(gui.isUseBorder(), gui.getBorderColour(), gui.getBorderPrecentage(), gui.getBorderTransparency());
 			GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVerticesCount());
 		}
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

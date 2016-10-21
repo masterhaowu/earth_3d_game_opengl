@@ -9,6 +9,7 @@ import entities.Entity;
 import entityObjects.EntityObject;
 import entityObjects.ObjectsNetwork;
 import guis.GuiController;
+import guis.GuiObjectUnit;
 import guis.GuiSphereTexture;
 import guis.GuiTexture;
 import mouse.HighlightedCircle;
@@ -112,7 +113,16 @@ public class GameEventController {
 	}
 	
 	public List<GuiTexture> getGuisToDisplay(){
-		return guiController.getGuisToDisplay();
+		List<GuiTexture> guisToDisplay = guiController.getGuisToDisplay();
+		List<GuiObjectUnit> guiObjectUnits = guiController.getGuiObjectUnits();
+		for (int i=0; i<guiObjectUnits.size(); i++){
+			GuiObjectUnit currentObject = guiObjectUnits.get(i);
+			List<GuiTexture> objectGuiTextures = currentObject.getGuiTextures();
+			for (int j = 0; j < objectGuiTextures.size(); j++) {
+				guisToDisplay.add(objectGuiTextures.get(j));
+			}
+		}
+		return guisToDisplay;
 	}
 	
 	public List<GuiSphereTexture> getGuisSphere3D(){

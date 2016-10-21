@@ -1,8 +1,10 @@
 package guis;
  
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import renderEngine.DisplayManager;
 import shaders.ShaderProgram;
  
 public class GuiShader extends ShaderProgram{
@@ -17,6 +19,10 @@ public class GuiShader extends ShaderProgram{
     private int location_useHighlightedColour;
     private int location_highlightedColour;
     private int location_highlighted;
+    private int location_useBorder;
+    private int location_borderColour;
+    private int location_borderTransparency;
+    private int location_borderPrecentage;
  
     public GuiShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -43,6 +49,15 @@ public class GuiShader extends ShaderProgram{
     public void loadHighlighted(boolean highlighted){
     	super.loadBoolean(location_highlighted, highlighted);
     }
+    
+    public void loadBorderInfo(boolean useBorder, Vector3f colour, Vector2f precent, float transparency){
+    	super.loadBoolean(location_useBorder, useBorder);
+    	super.loadVector(location_borderColour, colour);
+    	super.load2DVector(location_borderPrecentage, precent);
+    	super.loadFloat(location_borderTransparency, transparency);
+    }
+    
+    
  
     @Override
     protected void getAllUniformLocations() {
@@ -53,6 +68,10 @@ public class GuiShader extends ShaderProgram{
         location_useHighlightedColour = super.getUniformLocation("useHighlightedColour");
         location_highlightedColour = super.getUniformLocation("highlightedColour");
         location_highlighted = super.getUniformLocation("highlighted");
+        location_useBorder = super.getUniformLocation("useBorder");
+        location_borderColour = super.getUniformLocation("borderColour");
+        location_borderTransparency = super.getUniformLocation("borderTransparency");
+        location_borderPrecentage = super.getUniformLocation("borderPrecentage");
     }
  
     @Override

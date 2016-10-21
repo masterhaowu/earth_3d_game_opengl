@@ -496,7 +496,7 @@ public class MainGameLoop {
 			// ParticleMaster.renderParticles(camera);
 			// PostProcessing.doPostProcessing(fbo.getColourTexture());
 
-			//guiRenderer.render(eventController.getGuisToDisplay());
+			guiRenderer.render(eventController.getGuisToDisplay());
 			gui3dRenderer.render(eventController.getGuisSphere3D());
 
 			TextMaster.render();

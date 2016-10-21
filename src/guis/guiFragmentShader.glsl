@@ -12,6 +12,11 @@ uniform vec3 highlightedColour;
 uniform bool highlighted;
 uniform float transparency;
 
+uniform bool useBorder;
+uniform vec2 borderPrecentage;
+uniform vec3 borderColour;
+uniform float borderTransparency;
+
 
 void main(void){
 
@@ -31,6 +36,13 @@ void main(void){
     if (transparency < 1) {
         out_Color.w = out_Color.w * transparency;
     }
+    if (useBorder) {
+        if (textureCoords.x < borderPrecentage.x || textureCoords.x > (1 - borderPrecentage.x) || textureCoords.y < borderPrecentage.y || textureCoords.y > (1 - borderPrecentage.y)) {
+            out_Color = vec4(borderColour, borderTransparency);
+        }
+    }
+    
+    
       //  out_Color.w = transparency;
     //}
     //else{

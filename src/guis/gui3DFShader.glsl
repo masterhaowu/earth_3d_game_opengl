@@ -23,6 +23,7 @@ uniform float stateTransition;
 uniform float scaleDown1;
 uniform float scaleDown2;
 
+uniform bool highlighted;
 
 const float transitionRange = 0.1;
 
@@ -82,6 +83,7 @@ void main(void){
 
 
         outColor = transitionColourPrecentage * outColor1 + (1 - transitionColourPrecentage) * outColor2;
+        outColor = outColor * (1.5 - abs(transitionColourPrecentage - 0.5));
     }
     
     
@@ -107,16 +109,8 @@ void main(void){
         colour2.y = outColor.y * colourFilter2.y * (1-borderColourPrecentage) + borderColourPrecentage * outColor.y;
         colour2.z = outColor.z * colourFilter2.z * (1-borderColourPrecentage) + borderColourPrecentage * outColor.z;
         
-                /*
-        if (pass_averageX > stateTransition) {
-            
-            outColor = colour2;
-        }
-        else{
-            outColor = colour1;
-        }
-         */
         outColor = transitionColourPrecentage * colour1 + (1 - transitionColourPrecentage) * colour2;
+        outColor = outColor * (1.5 - abs(transitionColourPrecentage - 0.5));
     }
 
     if (iconColour.w > 0.7) {
@@ -129,31 +123,5 @@ void main(void){
     }
     
     
-    //outColor = texture(iconTexture, pass_textureCoords);
     
-    //out_Color.w = pass_z;
-    //out_Color.w = pass_brightness;
-    //out_Color = vec4(pass_brightness, pass_brightness, pass_brightness, 1);
-    /*
-    //if (out_Color.w > 0.5) {
-    if (useSolidColour == true) {
-        out_Color.x = solidColour.x;
-        out_Color.y = solidColour.y;
-        out_Color.z = solidColour.z;
-    }
-    if (useHighlightedColour == true && highlighted == true) {
-        out_Color.x = highlightedColour.x;
-        out_Color.y = highlightedColour.y;
-        out_Color.z = highlightedColour.z;
-    }
-    if (transparency < 1) {
-        out_Color.w = out_Color.w * transparency;
-    }
-      //  out_Color.w = transparency;
-    //}
-    //else{
-    //    out_Color.w = 0.0;
-    //}
-   
-     */
 }

@@ -23,7 +23,9 @@ public class GameStateController {
 	
 	public static int currentState;
 	
-	public static int gameModeState;
+	public static int gameModeState; // this depends on the left and right spheres of main game
+	
+	public static int CTState; //creation_terrain mode
 	
 	public static int gameLeftModeState;
 	public static int gameRightModeState;
@@ -38,9 +40,14 @@ public class GameStateController {
 	public static final int RESEARCH_TERRAIN_MODE = 3;
 	public static final int RESEARCH_ANIMAL_MODE = 4;
 	
+	public static final int CT_IDLE = 0;
+	public static final int CT_TERRAIN_TYPE = 1;
+	
 	
 	
 	public static int currentInfoState;
+	
+	
 
 
 	public static int getCurrentState() {
