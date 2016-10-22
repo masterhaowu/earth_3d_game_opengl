@@ -3,6 +3,7 @@ package guis;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import entityObjects.ObjectsNetwork;
 import renderEngine.Loader;
 import toolbox.Maths;
 
@@ -228,6 +229,7 @@ public class GuiData {
 				float currentX = Xleft + panelBackground.getScale().x * (2 * j + 1) / OBJECT_COLS * (1 - (PANEL_PADDING_LEFT + PANEL_PADDING_RIGHT)/2f);
 				guiObjects[i][j] = new GuiObjectUnit(new Vector2f(currentX, currentY),
 						new Vector2f(Xscale, Yscale), loader);
+				guiObjects[i][j].setTerrainUnit(ObjectsNetwork.snowTerrain); //testing stuff
 			}
 		}
 		/*

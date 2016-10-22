@@ -194,6 +194,10 @@ public class GuiSphereTexture {
 	public boolean isAutoRotate() {
 		return autoRotate;
 	}
+
+	public void setPosition(Vector2f position) {
+		this.position = position;
+	}
 	
 	
 

@@ -445,7 +445,7 @@ public class MainGameLoop {
 
 			animationController.update();
 
-			eventController.updateMouse(gameEntityObjectsController.getEntityObjects());
+			eventController.updateEvents(gameEntityObjectsController.getEntityObjects());
 			
 			// System.out.println(terrainPoint);
 

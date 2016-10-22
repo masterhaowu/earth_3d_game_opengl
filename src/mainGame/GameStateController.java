@@ -43,6 +43,8 @@ public class GameStateController {
 	public static final int CT_IDLE = 0;
 	public static final int CT_TERRAIN_TYPE = 1;
 	
+	public static final int CT_TERRAIN_DRAGGING = 2;
+	
 	
 	
 	public static int currentInfoState;
