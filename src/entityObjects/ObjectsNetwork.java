@@ -12,6 +12,7 @@ public class ObjectsNetwork {
 	public static final int MOUNTAIN_TERRAIN = 21;
 	public static final int CLIFF_TERRAIN = 22;
 	public static final int PLAIN_TERRAIN = 23;
+	public static final int SAVANNA_TERRAIN = 24;
 	public static final int SHALLOW_WATER_TERRAIN = -21;
 	public static final int DEEP_WATER_TERRAIN = -22;
 	
@@ -36,6 +37,8 @@ public class ObjectsNetwork {
 			(float) 58 / 255);
 	public static final Vector3f PLAIN_COLOUR = new Vector3f((float) 158 / 255, (float) 149 / 255, (float) 100 / 255);
 	
+	public static final Vector3f SAVANNA_COLOUR = new Vector3f((float) 119 / 255, (float) 249 / 255, (float) 25 / 255);
+	
 	//objects that affects terrain colour
 	public static final Vector3f GRASS_OBJECT_COLOUR = new Vector3f((float) 181 / 255, (float) 215 / 255, (float) 101 / 255);
 	public static final Vector3f LOW_GRASS1_OBJECT_COLOUR = new Vector3f((float) 181 / 255, (float) 215 / 255, (float) 101 / 255);
@@ -46,6 +49,7 @@ public class ObjectsNetwork {
 	public static ObjectData mountainTerrain;
 	public static ObjectData plainTerrain;
 	public static ObjectData cliffTerrain;
+	public static ObjectData savannaTerrain;
 	public static ObjectData shallowWaterTerrain;
 	public static ObjectData deepWaterTerrain;
 	
@@ -89,6 +93,13 @@ public class ObjectsNetwork {
 		plainTerrain.setAffectTerrainColour(true);
 		plainTerrain.setObjectInitAmount(100);
 		ObjectsMap.put(PLAIN_TERRAIN, plainTerrain);
+		
+		//savannaTerrain
+		savannaTerrain = new ObjectData(SAVANNA_TERRAIN);
+		savannaTerrain.setColour(SAVANNA_COLOUR);
+		savannaTerrain.setAffectTerrainColour(true);
+		savannaTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(SAVANNA_TERRAIN, savannaTerrain);
 		
 		//cliffTerrain
 		cliffTerrain = new ObjectData(CLIFF_TERRAIN);

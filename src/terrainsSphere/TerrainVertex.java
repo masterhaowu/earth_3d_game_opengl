@@ -21,12 +21,16 @@ public class TerrainVertex {
 	private Vector3f polar;
 	private Vector3f colour;
 	private Vector3f colourBasedOnHeight;
+	private Vector3f colourPreview; //this colour should disappear the moment the mouse left the current face
+
 	private Vector3f filteredColour;
-	private int terrainType;
+	//private int terrainType;
 	private float totalColourObjectAmount;
 	// private List<Integer> terrainSecondaryTypes;
 	// private List<TerrainObject> terrainObjects;
 	private HashMap<Integer, TerrainObject> objects;
+	
+	private HashMap<Integer, ObjectData> terrainTypes;
 	
 
 	private int index;
@@ -36,6 +40,9 @@ public class TerrainVertex {
 	private List<Integer> neighborIndices;
 	private List<TerrainVertex> neighborVertices;
 	private List<TerrainFace> neighborFaces;
+	
+	
+	private float height = 0;
 
 	public TerrainVertex(Vector3f position, int index) {
 		this.position = position;
@@ -49,8 +56,67 @@ public class TerrainVertex {
 		this.colour = new Vector3f(0, 0, 0);
 		// this.terrainSecondaryTypes = new ArrayList<Integer>();
 		this.objects = new HashMap<Integer, TerrainObject>();
+		this.terrainTypes = new HashMap<Integer, ObjectData>();
 		this.totalColourObjectAmount = 0;
+		this.colourPreview = new Vector3f(0, 0, 0);
 	}
+	
+	public void updateTerrainColour(){
+		this.colour = new Vector3f(0, 0, 0);
+		for (int i=0; i<neighborFaces.size(); i++){
+			//System.out.println(neighborFaces.get(i).getTerrainType().getColour());
+			this.colour = Vector3f.add(this.colour, neighborFaces.get(i).getTerrainType().getColour(), null);
+		}
+		//System.out.println(this.colour);
+		//this.colour = Maths.vectorMult(this.colour, 1 / neighborFaces.size());
+		this.colour.x = this.colour.x / neighborFaces.size();
+		this.colour.y = this.colour.y / neighborFaces.size();
+		this.colour.z = this.colour.z / neighborFaces.size();
+		
+	}
+	
+	
+	
+	
+	public void previewColour(ObjectData objectData, float amount){
+		if (!objectData.isAffectTerrainColour()) {
+			return;
+		}
+		
+		Vector3f tempColour = new Vector3f(0, 0, 0);
+		for (TerrainObject terrainObject : objects.values()){
+			tempColour.x += terrainObject.getColour().x * terrainObject.getObjectAmount();
+			tempColour.y += terrainObject.getColour().y * terrainObject.getObjectAmount();
+			tempColour.z += terrainObject.getColour().z * terrainObject.getObjectAmount();
+		}
+		
+		tempColour.x += objectData.getColour().x * objectData.getObjectInitAmount();
+		tempColour.y += objectData.getColour().y * objectData.getObjectInitAmount();
+		tempColour.z += objectData.getColour().z * objectData.getObjectInitAmount();
+		
+		this.colourPreview.x = tempColour.x / (totalColourObjectAmount + objectData.getObjectInitAmount());
+		this.colourPreview.y = tempColour.y / (totalColourObjectAmount + objectData.getObjectInitAmount());
+		this.colourPreview.z = tempColour.z / (totalColourObjectAmount + objectData.getObjectInitAmount());
+		
+	}
+	
+	
+	public void reduceObjectFromVertex(ObjectData objectData, float amount){
+		int type = objectData.getObjectType();
+		this.totalColourObjectAmount -= amount;
+		if (objects.containsKey(type)) {
+			objects.get(type).setObjectAmount(objects.get(type).getObjectAmount() - amount);
+			if(objects.get(type).getObjectAmount() == 0){
+				objects.remove(type);
+			}
+		}
+		
+		
+		calculateVertexColour();
+	
+	}
+	
+	
 	
 	
 
@@ -166,7 +232,7 @@ public class TerrainVertex {
 	public void setColour(Vector3f colour) {
 		this.colour = colour;
 	}
-
+	/*
 	public int getTerrainType() {
 		return terrainType;
 	}
@@ -174,6 +240,7 @@ public class TerrainVertex {
 	public void setTerrainType(int terrainType) {
 		this.terrainType = terrainType;
 	}
+	*/
 
 	public int getIndex() {
 		return index;
@@ -221,6 +288,24 @@ public class TerrainVertex {
 
 	public void setColourBasedOnHeight(Vector3f colourBasedOnHeight) {
 		this.colourBasedOnHeight = colourBasedOnHeight;
+	}
+
+
+	public Vector3f getColourPreview() {
+		return colourPreview;
+	}
+
+
+	public void setColourPreview(Vector3f colourPreview) {
+		this.colourPreview = colourPreview;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
 	}
 	
 	

@@ -3,6 +3,7 @@ package mainGame;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Entity;
@@ -82,11 +83,34 @@ public class GameEventController {
 					//System.out.println("here");
 					currentFace = picker.getCurrentTerrainFace();
 					// colourController.addObjectToFace(face, object, loader);
+					/*
 					colourController.addObjectToFace(currentFace, guiController.getTerrainToReturn(),
 							guiController.getTerrainToReturn().getObjectInitAmount(),
 							guiController.getTerrainToReturn().isAffectTerrainColour(), 1);
+					*/
+					/*
+					colourController.restoreFaceColour(previousFace);
 					
+					colourController.addObjectToFacePreview(currentFace, guiController.getTerrainToReturn(),
+							guiController.getTerrainToReturn().getObjectInitAmount());
 					colourController.updateColourVBO(loader);
+					*/
+					if (Mouse.isButtonDown(0)) {
+						colourController.setTerrain(currentFace, guiController.getTerrainToReturn());
+						colourController.setPreviewTerrain(currentFace, guiController.getTerrainToReturn());
+						//System.out.println("here");
+						colourController.updateColourVBO(loader);
+						
+					}
+					
+					colourController.restoreFaceColour(previousFace);
+					colourController.setPreviewTerrain(currentFace, guiController.getTerrainToReturn());
+					colourController.updateColourVBO(loader);
+					
+					
+					
+					previousFace = currentFace;
+					
 					break;
 
 				default:

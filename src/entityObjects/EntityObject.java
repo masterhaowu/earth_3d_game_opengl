@@ -20,12 +20,14 @@ public class EntityObject {
 	private ObjectData objectData;
 	//private float initScale;
 	//private Vector3f position;
+	private float amount;
 	
 	
 	public EntityObject(Entity entity, ObjectData objectData){
 		this.entity = entity;
 		this.objectData = objectData;
 		this.multipleEntities = false;
+		this.amount = objectData.getObjectInitAmount();
 		//this.face = face;
 	}
 	
@@ -33,6 +35,7 @@ public class EntityObject {
 		this.entityList = entities;
 		this.objectData = objectData;
 		this.multipleEntities = true;
+		this.amount = objectData.getObjectInitAmount();
 		//this.face = face;
 	}
 	
@@ -195,6 +198,18 @@ public class EntityObject {
 		else{
 			entity.setHighlighted(highlighted);
 		}
+	}
+
+	public float getAmount() {
+		return amount;
+	}
+
+	public void setAmount(float amount) {
+		this.amount = amount;
+	}
+
+	public TerrainFace getFace() {
+		return face;
 	}
 
 	

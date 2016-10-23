@@ -282,11 +282,17 @@ public class TerrainSphere {
 			heightMapController.loadColourBasedOnHeight(theta1, theta2, terrainVerticesList.get(i));
 
 		}
+		
+		for (int i = 0; i < facesCount; i++){
+			heightMapController.loadFaceTerrainType(finalTerrainFaces.get(i));
+		}
 
 		for (int i = 0; i < verticesCount; i++) {
+			terrainVerticesList.get(i).updateTerrainColour();
+			//System.out.println(terrainVerticesList.get(i).getColour());
 			filterColourDefault(terrainVerticesList.get(i));
 			Vector3f filteredColour = terrainVerticesList.get(i).getFilteredColour();
-
+			//System.out.println(filteredColour);
 			colourFinal[i * 3] = filteredColour.x;
 			colourFinal[i * 3 + 1] = filteredColour.y;
 			colourFinal[i * 3 + 2] = filteredColour.z;

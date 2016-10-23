@@ -198,6 +198,14 @@ public class GuiSphereTexture {
 	public void setPosition(Vector2f position) {
 		this.position = position;
 	}
+
+	public void setScale(Vector2f scale) {
+		this.scale = scale;
+	}
+	
+	public void setScale(float scaleHeight){
+		this.scale = new Vector2f(scaleHeight*DisplayManager.HEIGHT/DisplayManager.WIDTH, scaleHeight);
+	}
 	
 	
 

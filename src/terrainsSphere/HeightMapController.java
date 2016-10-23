@@ -178,12 +178,36 @@ public class HeightMapController {
 		if (width < 0 || width >= HEIGHT_MAP_WIDTH || height < 0 || height >= HEIGHT_MAP_HEIGHT) {
 			return;
 		}
-		ObjectData objectToLoad = ObjectsNetwork.getObjectDataBasedOnType(terrainTypes[height][width]);
+		//ObjectData objectToLoad = ObjectsNetwork.getObjectDataBasedOnType(terrainTypes[height][width]);
+		vertex.setHeight(heights[height][width]);
+		/*
 		if (objectToLoad != null) {
 			//System.out.println(objectToLoad.getObjectType());
 			//vertex.addObjectDirectlyToVertex(ObjectsController.snowTerrain, 10, true);
-			vertex.addObjectDirectlyToVertex(objectToLoad, 10, true);
+			vertex.addObjectDirectlyToVertex(objectToLoad, objectToLoad.getObjectInitAmount(), true);
 		}		
+		*/
+	}
+	
+	public void loadFaceTerrainType(TerrainFace face){
+		float averageHeight = 0;
+		for (int i=0; i<face.getNeighorVerticesDefault().size(); i++){
+			averageHeight += face.getNeighorVerticesDefault().get(i).getHeight();
+		}
+		averageHeight /= face.getNeighorVerticesDefault().size();
+		if (averageHeight > HeightGeneratorSphere.AMPLITUDE * 0.45) {
+			face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(SNOW_TERRAIN));
+		} else if (averageHeight > HeightGeneratorSphere.AMPLITUDE * 0.18) {
+			face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(MOUNTAIN_TERRAIN));
+		} else if (averageHeight > HeightGeneratorSphere.AMPLITUDE * 0.02) {
+			face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(PLAIN_TERRAIN));
+		} else if (averageHeight > -HeightGeneratorSphere.AMPLITUDE * 0.05) {
+			face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(CLIFF_TERRAIN));
+		} else if (averageHeight > -HeightGeneratorSphere.AMPLITUDE * 0.18) {
+			face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(SHALLOW_WATER_TERRAIN));
+		} else {
+			face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(DEEP_WATER_TERRAIN));
+		}
 	}
 	
 	/*

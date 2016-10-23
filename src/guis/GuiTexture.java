@@ -309,6 +309,14 @@ public class GuiTexture {
 	public float getBorderTransparency() {
 		return borderTransparency;
 	}
+
+	public void setPosition(Vector2f position) {
+		this.position = position;
+	}
+
+	public void setScale(Vector2f scale) {
+		this.scale = scale;
+	}
 	
 	
 	

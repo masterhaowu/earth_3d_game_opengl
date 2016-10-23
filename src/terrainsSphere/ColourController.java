@@ -49,8 +49,82 @@ public class ColourController {
 		}
 		//updateColourVBO(loader);
 	}
+	/*
+	public void addObjectToFacePreview(TerrainFace face, ObjectData objectData, float amount){
+		if (face == null) {
+			return;
+		}
+		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
+		for (int i=0; i<neighborVertices.size(); i++){
+			//for (int i=0; i<1; i++){
+				TerrainVertex vertex = neighborVertices.get(i);
+				vertex.previewColour(objectData, amount);
+				//vertex.addObjectDirectlyToVertex(objectData, amount, computeColour);
+				//updateVertexColour(vertex);
+				updateVertexColourPreview(vertex);
+			}
+	}
+	*/
+	public void setTerrain(TerrainFace face, ObjectData objectData){
+		if (face == null) {
+			return;
+		}
+		//face.setTerrainTypePreview(face.getTerrainType());
+		face.setTerrainType(objectData);
+		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
+		for (int i=0; i<neighborVertices.size(); i++){
+			TerrainVertex vertex = neighborVertices.get(i);
+			updateVertexColour(vertex);
+		}
+		
+	}
+	
+	
+	public void setPreviewTerrain(TerrainFace face, ObjectData objectData){
+		if (face == null) {
+			return;
+		}
+		face.setTerrainTypePreview(face.getTerrainType());
+		face.setTerrainType(objectData);
+		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
+		for (int i=0; i<neighborVertices.size(); i++){
+			TerrainVertex vertex = neighborVertices.get(i);
+			updateVertexColourPreview(vertex);
+		}
+		
+	}
+	
+	public void restoreFaceColour(TerrainFace face){
+		if (face == null) {
+			return;
+		}
+		face.setTerrainType(face.getTerrainTypePreview());
+		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
+		for (int i=0; i<neighborVertices.size(); i++){
+			//for (int i=0; i<1; i++){
+				TerrainVertex vertex = neighborVertices.get(i);
+				restoreVertexColour(vertex);
+		}
+	}
+	
+	/*
+	public void restoreFaceColour(TerrainFace face){
+		if (face == null) {
+			return;
+		}
+		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
+		for (int i=0; i<neighborVertices.size(); i++){
+			//for (int i=0; i<1; i++){
+				TerrainVertex vertex = neighborVertices.get(i);
+				restoreVertexColour(vertex);
+		}
+	}
+	*/
 	
 	public void addObjectToFace(TerrainFace face, ObjectData objectData, float amount, boolean computeColour, int range){
+		if (face == null) {
+			return;
+		}
 		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
 		for (int i=0; i<neighborVertices.size(); i++){
 			//for (int i=0; i<1; i++){
@@ -60,9 +134,23 @@ public class ColourController {
 			}
 	}
 	
+	public void updateVertexColourPreview(TerrainVertex vertex){
+		//store the vertex colour into colourFinal
+		//Vector3f colour = vertex.getColourPreview();
+		vertex.updateTerrainColour();
+		Vector3f colour = vertex.getColour();
+		int i = vertex.getIndex();
+		terrainSphere.getColourFinal()[i * 3] = colour.x;
+		terrainSphere.getColourFinal()[i * 3 + 1] = colour.y;
+		terrainSphere.getColourFinal()[i * 3 + 2] = colour.z;
+		
+		
+	}
+	
 	
 	public void updateVertexColour(TerrainVertex vertex){
 		//store the vertex colour into colourFinal
+		vertex.updateTerrainColour();
 		Vector3f colour = vertex.getColour();
 		int i = vertex.getIndex();
 		terrainSphere.getColourFinal()[i * 3] = colour.x;
@@ -71,6 +159,30 @@ public class ColourController {
 		//colourFinal[i * 3] = 0;
 		//colourFinal[i * 3 + 1] = colour.y;
 		//colourFinal[i * 3 + 2] = colour.z;
+		
+	}
+	/*
+	public void restoreVertexColour(TerrainVertex vertex){
+		vertex.setColourPreview(new Vector3f(0, 0, 0));
+		Vector3f colour = vertex.getColour();
+		int i = vertex.getIndex();
+		terrainSphere.getColourFinal()[i * 3] = colour.x;
+		terrainSphere.getColourFinal()[i * 3 + 1] = colour.y;
+		terrainSphere.getColourFinal()[i * 3 + 2] = colour.z;
+		
+		
+	}
+	*/
+	
+	public void restoreVertexColour(TerrainVertex vertex){
+		//vertex.setColourPreview(new Vector3f(0, 0, 0));
+		vertex.updateTerrainColour();
+		Vector3f colour = vertex.getColour();
+		int i = vertex.getIndex();
+		terrainSphere.getColourFinal()[i * 3] = colour.x;
+		terrainSphere.getColourFinal()[i * 3 + 1] = colour.y;
+		terrainSphere.getColourFinal()[i * 3 + 2] = colour.z;
+		
 		
 	}
 	

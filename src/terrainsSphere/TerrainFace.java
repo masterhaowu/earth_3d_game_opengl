@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import entityObjects.EntityObject;
 import entityObjects.ObjectData;
 import toolbox.Maths;
 
@@ -21,7 +22,13 @@ public class TerrainFace {
 	//private List<TerrainFace> neighbors;
 	private List<TerrainVertex> vertices;
 	private List<TerrainFace> children;
+	private List<EntityObject> entityObjects;
 	private List<TerrainObject> terrainObjects;
+	
+	
+	private ObjectData terrainType;
+	private ObjectData terrainTypePreview;
+	
 	private TerrainFace parent;
 	private int level;
 	private boolean isBottom;
@@ -38,6 +45,7 @@ public class TerrainFace {
 		this.vertices = new ArrayList<TerrainVertex>();
 		this.children = new ArrayList<TerrainFace>();
 		this.terrainObjects = new ArrayList<TerrainObject>();
+		this.entityObjects = new ArrayList<EntityObject>();
 	}
 
 	public TerrainFace(Vector3f indices, TerrainFace parent, boolean isBottom) {
@@ -47,6 +55,7 @@ public class TerrainFace {
 		this.level = parent.level + 1;
 		this.parent = parent;
 		this.vertices = new ArrayList<TerrainVertex>();
+		this.entityObjects = new ArrayList<EntityObject>();
 		// this.neighbors = new ArrayList<TerrainFace>();
 		if (isBottom) {
 			this.children = null;
@@ -176,6 +185,22 @@ public class TerrainFace {
 
 	public void setL3(float[] l3) {
 		this.l3 = l3;
+	}
+
+	public ObjectData getTerrainType() {
+		return terrainType;
+	}
+
+	public void setTerrainType(ObjectData terrainType) {
+		this.terrainType = terrainType;
+	}
+
+	public ObjectData getTerrainTypePreview() {
+		return terrainTypePreview;
+	}
+
+	public void setTerrainTypePreview(ObjectData terrainTypePreview) {
+		this.terrainTypePreview = terrainTypePreview;
 	}
 	
 	

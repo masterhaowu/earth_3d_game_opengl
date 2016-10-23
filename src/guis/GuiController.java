@@ -28,7 +28,7 @@ public class GuiController {
 	
 	private ObjectData terrainToReturn;
 
-	
+	private boolean clickDisabled = false;
 	
 	
 	
@@ -121,21 +121,23 @@ public class GuiController {
 		case GameStateController.PLAY_MODE_IDLE:
 			switch (GameStateController.gameModeState) {
 			case GameStateController.CREATION_TERRAIN_MODE:
-				if (checkMouseoverSphere() == guiData.leftSphere && Mouse.isButtonDown(0)
+				if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 0) {
 					guiData.leftSphere.setNextState(1);
 					setToolBarStates(2);
 					GameStateController.gameModeState = GameStateController.RESEARCH_TERRAIN_MODE;
-				} else if (checkMouseoverSphere() == guiData.rightSphere && Mouse.isButtonDown(0)
+				} else if (checkSingleSphere(guiData.rightSphere)  && Mouse.isButtonDown(0)
 						&& guiData.rightSphere.getCurrentState() == 0) {
 					guiData.rightSphere.setNextState(1);
 					setToolBarStates(1);
 					GameStateController.gameModeState = GameStateController.CREATION_ANIMAL_MODE;
-				} else if (checkMouseoverSphere() == guiData.sphereLeft3 && Mouse.isButtonDown(0)
-						&& guiData.sphereLeft3.getCurrentState() == 0
+				} else if (checkSingleSphere(guiData.sphereLeft3)  && Mouse.isButtonDown(0)
+						&& !clickDisabled 
 						&& GameStateController.CTState != GameStateController.CT_TERRAIN_TYPE) {
+					
 					guisPanel.clear();
 					GameStateController.CTState = GameStateController.CT_TERRAIN_TYPE;
+					clickDisabled = true;
 					guisPanel.add(guiData.panelBackground);
 					
 					
@@ -143,13 +145,34 @@ public class GuiController {
 					
 					for(int i=0; i<GuiData.OBJECT_ROWS; i++){
 						for(int j=0; j<GuiData.OBJECT_COLS; j++){
-							guiObjectUnits.add(guiData.guiObjects[i][j]);
+							//guiObjectUnits.add(guiData.guiObjects[i][j]);
+							int index = i * GuiData.OBJECT_ROWS + j;
+							if (index < guiData.guiDataTerrains.guiObjectUnits.size()) {
+								GuiObjectUnit currentUnit = guiData.guiDataTerrains.guiObjectUnits.get(index);
+								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j], guiData.guiObjectUnitScale);
+								guiObjectUnits.add(currentUnit);
+							}
 						}
 					}
 				}
 				
 				switch (GameStateController.CTState) {
+				case GameStateController.CT_IDLE:
+					if (!Mouse.isButtonDown(0)) {
+						clickDisabled = false;
+					}
+					break;
 				case GameStateController.CT_TERRAIN_TYPE:
+					if (!Mouse.isButtonDown(0)) {
+						clickDisabled = false;
+					}
+					if (checkSingleSphere(guiData.sphereLeft3) && Mouse.isButtonDown(0) && !clickDisabled) {
+						GameStateController.CTState = GameStateController.CT_IDLE;
+						clickDisabled = true;
+						guiObjectUnits.clear();
+						guisPanel.clear();
+					}
+					
 					for (int i=0; i<guiObjectUnits.size(); i++){
 						if (checkSingleSphere(guiObjectUnits.get(i).getComfirm())&& Mouse.isButtonDown(0)) {
 							dataTypeToReturn = RETURN_TERRAIN;
@@ -170,12 +193,12 @@ public class GuiController {
 				break;
 
 			case GameStateController.CREATION_ANIMAL_MODE:
-				if (checkMouseoverSphere() == guiData.leftSphere && Mouse.isButtonDown(0)
+				if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 0) {
 					guiData.leftSphere.setNextState(1);
 					setToolBarStates(3);
 					GameStateController.gameModeState = GameStateController.RESEARCH_ANIMAL_MODE;
-				} else if (checkMouseoverSphere() == guiData.rightSphere && Mouse.isButtonDown(0)
+				} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
 						&& guiData.rightSphere.getCurrentState() == 1) {
 					guiData.rightSphere.setNextState(0);
 					setToolBarStates(0);
@@ -184,12 +207,12 @@ public class GuiController {
 				break;
 
 			case GameStateController.RESEARCH_TERRAIN_MODE:
-				if (checkMouseoverSphere() == guiData.leftSphere && Mouse.isButtonDown(0)
+				if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 1) {
 					guiData.leftSphere.setNextState(0);
 					setToolBarStates(0);
 					GameStateController.gameModeState = GameStateController.CREATION_TERRAIN_MODE;
-				} else if (checkMouseoverSphere() == guiData.rightSphere && Mouse.isButtonDown(0)
+				} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
 						&& guiData.rightSphere.getCurrentState() == 0) {
 					guiData.rightSphere.setNextState(1);
 					setToolBarStates(3);
@@ -198,12 +221,12 @@ public class GuiController {
 				break;
 
 			case GameStateController.RESEARCH_ANIMAL_MODE:
-				if (checkMouseoverSphere() == guiData.leftSphere && Mouse.isButtonDown(0)
+				if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 1) {
 					guiData.leftSphere.setNextState(0);
 					setToolBarStates(1);
 					GameStateController.gameModeState = GameStateController.CREATION_ANIMAL_MODE;
-				} else if (checkMouseoverSphere() == guiData.rightSphere && Mouse.isButtonDown(0)
+				} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
 						&& guiData.rightSphere.getCurrentState() == 1) {
 					guiData.rightSphere.setNextState(0);
 					setToolBarStates(2);

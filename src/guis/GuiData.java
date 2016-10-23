@@ -1,5 +1,6 @@
 package guis;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -71,16 +72,14 @@ public class GuiData {
 	public GuiObjectUnit guiObjectUnitTesting3;
 	
 	public GuiObjectUnit[][] guiObjects;
+	public Vector2f [][] guiObjectUnitPositions; // this depends on row and col
+	public Vector2f guiObjectUnitScale;
 
 	// public GuiTexture add
+	
+	public GuiDataTerrains guiDataTerrains;
 
-	public GuiTexture blackHexTrayBot;
-	public GuiTexture blackBarBot;
 
-	public GuiTexture planetBackground;
-	public GuiTexture planetCircle;
-	public GuiTexture planetIcon;
-	public GuiTexture planetBlueBar;
 
 	public GuiTexture objectPanelClassBackground;
 	public GuiTexture objectPanelBackground;
@@ -90,6 +89,11 @@ public class GuiData {
 	public GuiTexture gui3dTesting;
 
 	public GuiData(Loader loader) {
+		
+		guiDataTerrains = new GuiDataTerrains();
+		guiDataTerrains.loadTerrains(loader);
+		
+		
 		Vector3f CT1 = new Vector3f(BLUE.x + blueToGreenInc.x, BLUE.y + blueToGreenInc.y, BLUE.z + blueToGreenInc.z);
 		Vector3f CT2 = new Vector3f(BLUE.x + blueToGreenInc.x * 2, BLUE.y + blueToGreenInc.y * 2,
 				BLUE.z + blueToGreenInc.z * 2);
@@ -180,13 +184,13 @@ public class GuiData {
 
 		sphereLeft2 = new GuiSphereTexture(loader.loadTexture("rock"), loader.loadTexture("greyCircle"), CT2, 1.2f,
 				new Vector2f(-toolBarPadding * 2f, SPHERES_Y), toolBarScale);
-		sphereLeft2.addTextureAndColour(loader.loadTexture("eagle2"), CA2, 1.0f);
+		sphereLeft2.addTextureAndColour(loader.loadTexture("eagle2"), CA2, 1.05f);
 		sphereLeft2.addTextureAndColour(locked, RT2, 1.4f);
 		sphereLeft2.addTextureAndColour(locked, RA2, 1.4f);
 
-		sphereLeft3 = new GuiSphereTexture(loader.loadTexture("mountain"), loader.loadTexture("greyCircle"), CT1, 1.0f,
+		sphereLeft3 = new GuiSphereTexture(loader.loadTexture("mountain2"), loader.loadTexture("greyCircle"), CT1, 1.1f,
 				new Vector2f(-toolBarPadding * 3f, SPHERES_Y), toolBarScale);
-		sphereLeft3.addTextureAndColour(locked, CA1, 1.4f);
+		sphereLeft3.addTextureAndColour(loader.loadTexture("fish2"), CA1, 1.25f);
 		sphereLeft3.addTextureAndColour(locked, RT1, 1.4f);
 		sphereLeft3.addTextureAndColour(locked, RA1, 1.4f);
 
@@ -220,8 +224,11 @@ public class GuiData {
 		float Yscale = panelBackground.getScale().y/(OBJECT_ROWS + 0.1f) * (1 - (PANEL_PADDING_TOP + PANEL_PADDING_BOTTOM)/2f);
 		
 		guiObjects = new GuiObjectUnit[OBJECT_ROWS][];
+		guiObjectUnitScale = new Vector2f(Xscale, Yscale);
+		guiObjectUnitPositions = new Vector2f[OBJECT_ROWS][];
 		for(int i = 0; i<OBJECT_ROWS; i++){
 			guiObjects[i] = new GuiObjectUnit[OBJECT_COLS];
+			guiObjectUnitPositions[i] = new Vector2f[OBJECT_COLS];
 			float currentY = Ytop - panelBackground.getScale().y * (2 * i + 1) / OBJECT_ROWS * (1 - (PANEL_PADDING_TOP + PANEL_PADDING_BOTTOM)/2f);
 			//System.out.println(currentY);
 			//currentY = 0.5f;
@@ -230,6 +237,8 @@ public class GuiData {
 				guiObjects[i][j] = new GuiObjectUnit(new Vector2f(currentX, currentY),
 						new Vector2f(Xscale, Yscale), loader);
 				guiObjects[i][j].setTerrainUnit(ObjectsNetwork.snowTerrain); //testing stuff
+				guiObjectUnitPositions[i][j] = new Vector2f(currentX, currentY);
+				
 			}
 		}
 		/*

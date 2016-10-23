@@ -8,6 +8,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entityObjects.EntityObject;
 import entityObjects.ObjectData;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
 import renderEngine.Loader;
 
 public class GuiObjectUnit {
@@ -19,8 +21,10 @@ public class GuiObjectUnit {
 	
 	private GuiTexture background;
 	private GuiSphereTexture mainOrb;
-	private GuiTexture name;
+	private FontType font;
+	private GUIText name;
 	private GuiSphereTexture comfirm;
+	private GuiSphereTexture info;
 
 	private List<GuiTexture> guiTextures;
 	private List<GuiSphereTexture> guiSphereTextures;
@@ -56,6 +60,26 @@ public class GuiObjectUnit {
 				GuiData.GREEN, 1.0f, new Vector2f(position.x + scale.x * 0.7f, position.y - scale.y * 0.7f), scale.y * 0.3f);
 		this.guiSphereTextures.add(comfirm);
 		
+		this.info = new GuiSphereTexture(loader.loadTexture("locked"), loader.loadTexture("greyCircle"),
+				GuiData.BLUE, 1.0f, new Vector2f(position.x - scale.x * 0.7f, position.y - scale.y * 0.7f), scale.y * 0.3f);
+		this.guiSphereTextures.add(info);
+		
+		this.font = new FontType(loader.loadFontTexture("candara"), "candara");
+		//this.name = new GUIText("testing", 1f, font, new Vector2f((position.x - scale.x + 1)/2f, (position.y - scale.y + 1)/2f), scale.x, true);
+		
+	}
+	
+	public void updatePositionAndScale(Vector2f position, Vector2f scale){
+		this.position = position;
+		this.scale = scale;
+		this.background.setPosition(position);
+		this.background.setScale(scale);
+		this.mainOrb.setPosition(new Vector2f(position.x, position.y - scale.y * 0.15f));
+		this.mainOrb.setScale(scale. y * 0.8f);
+		this.comfirm.setPosition(new Vector2f(position.x + scale.x * 0.7f, position.y - scale.y * 0.7f));
+		this.comfirm.setScale(scale.y * 0.3f);
+		this.info.setPosition(new Vector2f(position.x - scale.x * 0.7f, position.y - scale.y * 0.7f));
+		this.info.setScale(scale.y * 0.3f);
 	}
 	
 	
@@ -85,7 +109,7 @@ public class GuiObjectUnit {
 	public EntityObject getEntityObject() {
 		return entityObject;
 	}
-
+	/*
 	public void setPosition(Vector2f position) {
 		this.position = position;
 	}
@@ -93,7 +117,7 @@ public class GuiObjectUnit {
 	public void setScale(Vector2f scale) {
 		this.scale = scale;
 	}
-
+	*/
 	public Vector2f getPosition() {
 		return position;
 	}
