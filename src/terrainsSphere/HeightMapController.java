@@ -1,5 +1,6 @@
 package terrainsSphere;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,13 +48,67 @@ public class HeightMapController {
 		terrainTypes = new int[HEIGHT_MAP_HEIGHT][HEIGHT_MAP_WIDTH];
 		heightGeneratorSphere = new HeightGeneratorSphere(HEIGHT_MAP_HEIGHT, HEIGHT_MAP_WIDTH);
 	}
+	
+	
+	
+	public void fillTerrainHeightMapWithImage(String filename) {
+
+		try {
+			BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/res/" + filename + ".png"));
+			System.out.println(img.getWidth());
+			System.out.println(img.getHeight());
+			for (int i = 0; i < HEIGHT_MAP_HEIGHT; i++) {
+				for (int j = 0; j < HEIGHT_MAP_WIDTH; j++) {
+					float height;
+					
+					
+					
+					height = 0xFF & img.getRGB(HEIGHT_MAP_WIDTH - j - 1, HEIGHT_MAP_HEIGHT - i - 1);
+					
+					
+					height = (height / 255 * 2 - 1) * HeightGeneratorSphere.AMPLITUDE;
+					
+					float heightNoise = heightGeneratorSphere.generateHeight(i, j / 8) / 8f;
+					
+					height += heightNoise;
+					height += HeightGeneratorSphere.AMPLITUDE/3f;
+					
+					heights[i][j] = height;
+					/*
+					int terrainType = 0;
+					if (height > HeightGeneratorSphere.AMPLITUDE * 0.45) {
+						terrainType = SNOW_TERRAIN;
+						// terrainTypes[j][i] = SNOW_TERRAIN;
+					} else if (height > HeightGeneratorSphere.AMPLITUDE * 0.18) {
+						terrainType = MOUNTAIN_TERRAIN;
+					} else if (height > HeightGeneratorSphere.AMPLITUDE * 0.02) {
+						terrainType = PLAIN_TERRAIN;
+					} else if (height > -HeightGeneratorSphere.AMPLITUDE * 0.05) {
+						terrainType = CLIFF_TERRAIN;
+					} else if (height > -HeightGeneratorSphere.AMPLITUDE * 0.18) {
+						terrainType = SHALLOW_WATER_TERRAIN;
+					} else {
+						terrainType = DEEP_WATER_TERRAIN;
+					}
+					terrainTypes[i][j] = terrainType;
+					*/
+				}
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
 
 	public void fillTerrainHeightMapWithEarth() {
 
 		try {
 			BufferedImage img = ImageIO.read(getClass().getResourceAsStream("/res/earth.png"));
-			System.out.print(img.getWidth());
-			System.out.print(img.getHeight());
+			System.out.println(img.getWidth());
+			System.out.println(img.getHeight());
 			for (int i = 0; i < HEIGHT_MAP_HEIGHT; i++) {
 				for (int j = 0; j < HEIGHT_MAP_WIDTH; j++) {
 					float height;
@@ -61,10 +116,10 @@ public class HeightMapController {
 					height = 0xFF & img.getRGB(HEIGHT_MAP_WIDTH - j - 1, HEIGHT_MAP_HEIGHT - i - 1);
 					
 					
-					height = height / 255 * HeightGeneratorSphere.AMPLITUDE;
+					height = (height / 255 * 2 - 1) * HeightGeneratorSphere.AMPLITUDE;
 					
 					
-					//height = height - 3.9f;
+					height = height + HeightGeneratorSphere.AMPLITUDE * 0.4f;
 
 					heights[i][j] = height;
 					int terrainType = 0;
@@ -116,6 +171,7 @@ public class HeightMapController {
 				// (int)(j/factor));
 
 				heights[i][j] = height;
+				
 				int terrainType = 0;
 				if (height > HeightGeneratorSphere.AMPLITUDE * 0.45) {
 					terrainType = SNOW_TERRAIN;
@@ -189,11 +245,22 @@ public class HeightMapController {
 		*/
 	}
 	
-	public void loadFaceTerrainType(TerrainFace face){
+	
+	public void updateAverageHeight(TerrainFace face){
 		float averageHeight = 0;
 		for (int i=0; i<face.getNeighorVerticesDefault().size(); i++){
 			averageHeight += face.getNeighorVerticesDefault().get(i).getHeight();
+			
 		}
+		averageHeight /= face.getNeighorVerticesDefault().size();
+		face.setHeight(averageHeight);
+		if (averageHeight <= 0) {
+			face.setDistanceToWater(0);
+		}
+	}
+	
+	public void loadFaceTerrainType(TerrainFace face){
+		float averageHeight = face.getHeight();
 		averageHeight /= face.getNeighorVerticesDefault().size();
 		if (averageHeight > HeightGeneratorSphere.AMPLITUDE * 0.45) {
 			face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(SNOW_TERRAIN));
@@ -208,6 +275,7 @@ public class HeightMapController {
 		} else {
 			face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(DEEP_WATER_TERRAIN));
 		}
+		//face.setTerrainType(ObjectsNetwork.getObjectDataBasedOnType(SHALLOW_WATER_TERRAIN));
 	}
 	
 	/*

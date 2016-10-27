@@ -20,6 +20,7 @@ import java.util.Vector;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import climate.TemperatureController;
 import entityObjects.ObjectsNetwork;
 import models.RawModel;
 import objConverter.Vertex;
@@ -41,6 +42,7 @@ public class TerrainSphere {
 	private float scale;
 
 	private HeightMapController heightMapController;
+	
 
 	private int faceLoops;
 
@@ -72,12 +74,14 @@ public class TerrainSphere {
 		this.scale = scale;
 		index = 0;
 		this.faceLoops = loops;
+		//this.temperatureController = temperatureController;
 		// verticesList = new ArrayList<Vector3f>();
 		middlePointIndexCache = new HashMap<Long, Integer>();
 
 		heightMapController = new HeightMapController();
-		heightMapController.fillTerrainHeightMapAndTypes();
+		//heightMapController.fillTerrainHeightMapAndTypes();
 		// heightMapController.fillTerrainHeightMapWithEarth();
+		heightMapController.fillTerrainHeightMapWithImage("island");
 
 		this.model = generateTerrainSphereIco(loader);
 	}
@@ -150,6 +154,13 @@ public class TerrainSphere {
 						vertexB.addNeighbor(vertexZ);
 						vertexZ.addNeighbor(vertexC);
 						vertexC.addNeighbor(vertexZ);
+						
+						vertexA.addNeighbor(vertexB);
+						vertexB.addNeighbor(vertexA);
+						vertexA.addNeighbor(vertexC);
+						vertexC.addNeighbor(vertexA);
+						vertexB.addNeighbor(vertexC);
+						vertexC.addNeighbor(vertexB);
 
 					}
 
@@ -284,19 +295,27 @@ public class TerrainSphere {
 		}
 		
 		for (int i = 0; i < facesCount; i++){
+			finalTerrainFaces.get(i).averagePolar();
+			heightMapController.updateAverageHeight(finalTerrainFaces.get(i));
 			heightMapController.loadFaceTerrainType(finalTerrainFaces.get(i));
 		}
-
+		
 		for (int i = 0; i < verticesCount; i++) {
 			terrainVerticesList.get(i).updateTerrainColour();
-			//System.out.println(terrainVerticesList.get(i).getColour());
+		}
+		for (int i = 0; i < verticesCount; i++) {
+			//System.out.println(terrainVerticesList.get(i).getNeighborVertices().size());
 			filterColourDefault(terrainVerticesList.get(i));
 			Vector3f filteredColour = terrainVerticesList.get(i).getFilteredColour();
+			//filteredColour = terrainVerticesList.get(i).getColour();
 			//System.out.println(filteredColour);
 			colourFinal[i * 3] = filteredColour.x;
 			colourFinal[i * 3 + 1] = filteredColour.y;
 			colourFinal[i * 3 + 2] = filteredColour.z;
 		}
+		//System.out.println("haha");
+		//System.out.println(verticesCount);
+		//System.out.println(testing);
 
 		return loader.loadToVAOPositionAndColour(verticesFinal, colourFinal, indicesFinal, 3);
 
@@ -397,7 +416,7 @@ public class TerrainSphere {
 		tempColour.x = vertex.getColour().x / 2.0f;
 		tempColour.y = vertex.getColour().y / 2.0f;
 		tempColour.z = vertex.getColour().z / 2.0f;
-
+		/*
 		float offset = 2.0f * vertex.getNeighborIndices().size();
 		for (int i = 0; i < vertex.getNeighborIndices().size(); i++) {
 			Vector3f neighborColour = terrainVerticesList.get(vertex.getNeighborIndices().get(i)).getColour();
@@ -405,7 +424,17 @@ public class TerrainSphere {
 			tempColour.y += neighborColour.y / offset;
 			tempColour.z += neighborColour.z / offset;
 		}
-
+		*/
+		float offset = 2.0f * vertex.getNeighborVertices().size();
+		//System.out.println(vertex.getNeighborVertices().size());
+		for (int i = 0; i < vertex.getNeighborVertices().size(); i++) {
+			Vector3f neighborColour = vertex.getNeighborVertices().get(i).getColour();
+			//System.out.println(neighborColour);
+			tempColour.x += neighborColour.x / offset;
+			tempColour.y += neighborColour.y / offset;
+			tempColour.z += neighborColour.z / offset;
+		}
+		
 		vertex.setFilteredColour(tempColour);
 	}
 
@@ -771,5 +800,11 @@ public class TerrainSphere {
 	public float[] getColourFinal() {
 		return colourFinal;
 	}
+
+	public List<TerrainFace> getFinalTerrainFaces() {
+		return finalTerrainFaces;
+	}
+	
+	
 
 }

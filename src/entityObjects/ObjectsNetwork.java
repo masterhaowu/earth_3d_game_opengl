@@ -8,11 +8,39 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class ObjectsNetwork {
 	//basic terrain objects that only has colour
+	
+	public static final int ICE_CAP_TERRAIN = 100;
+	public static final int TUNDRA_TERRAIN = 101;
+	public static final int TAIGA_TERRAIN = 102;
+	public static final int CANYON_TERRAIN = 103;
+	public static final int STEPPE_TERRAIN = 104;
+	public static final int FOREST_TERRAIN = 105;
+	public static final int DESERT_TERRAIN = 106;
+	public static final int SAVANNA_TERRAIN = 107;
+	public static final int WETLAND_TERRAIN = 108;
+	public static final int RAIN_FOREST_TERRAIN = 109;
+	
+	
+	public static final Vector3f ICE_CAP_COLOUR = new Vector3f((float) 255 / 255, (float) 255 / 255, (float) 255 / 255);
+	public static final Vector3f TUNDRA_COLOUR = new Vector3f((float) 215 / 255, (float) 255 / 255, (float) 235 / 255);
+	public static final Vector3f TAIGA_COLOUR = new Vector3f((float) 175 / 255, (float) 255 / 255, (float) 195 / 255);
+	public static final Vector3f CANYON_COLOUR = new Vector3f((float) 215 / 255, (float) 149 / 255, (float) 89 / 255);
+	public static final Vector3f STEPPE_COLOUR = new Vector3f((float) 91 / 255, (float) 122 / 255, (float) 49 / 255);
+	public static final Vector3f FOREST_COLOUR = new Vector3f((float) 39 / 255, (float) 124 / 255, (float) 20 / 255);
+	public static final Vector3f DESERT_COLOUR = new Vector3f((float) 184 / 255, (float) 172 / 255, (float) 85 / 255);
+	public static final Vector3f SAVANNA_COLOUR = new Vector3f((float) 200 / 255, (float) 200 / 255, (float) 95 / 255);
+	public static final Vector3f WETLAND_COLOUR = new Vector3f((float) 60 / 255, (float) 129 / 255, (float) 90 / 255);
+	public static final Vector3f RAIN_FOREST_COLOUR = new Vector3f((float) 45 / 255, (float) 170 / 255, (float) 100 / 255);
+	
+	
+	
+	
+	
 	public static final int SNOW_TERRAIN = 20;
 	public static final int MOUNTAIN_TERRAIN = 21;
 	public static final int CLIFF_TERRAIN = 22;
 	public static final int PLAIN_TERRAIN = 23;
-	public static final int SAVANNA_TERRAIN = 24;
+	//public static final int SAVANNA_TERRAIN = 24;
 	public static final int SHALLOW_WATER_TERRAIN = -21;
 	public static final int DEEP_WATER_TERRAIN = -22;
 	
@@ -34,10 +62,10 @@ public class ObjectsNetwork {
 	public static final Vector3f SHALLOW_WATER_COLOUR = new Vector3f((float) 20 / 255, (float) 56 / 255,
 			(float) 78 / 255);
 	public static final Vector3f DEEEP_WATER_COLOUR = new Vector3f((float) 04 / 255, (float) 14 / 255,
-			(float) 58 / 255);
+			(float) 128 / 255);
 	public static final Vector3f PLAIN_COLOUR = new Vector3f((float) 158 / 255, (float) 149 / 255, (float) 100 / 255);
 	
-	public static final Vector3f SAVANNA_COLOUR = new Vector3f((float) 119 / 255, (float) 249 / 255, (float) 25 / 255);
+	
 	
 	//objects that affects terrain colour
 	public static final Vector3f GRASS_OBJECT_COLOUR = new Vector3f((float) 181 / 255, (float) 215 / 255, (float) 101 / 255);
@@ -49,7 +77,21 @@ public class ObjectsNetwork {
 	public static ObjectData mountainTerrain;
 	public static ObjectData plainTerrain;
 	public static ObjectData cliffTerrain;
+	
+	
+	public static ObjectData iceCapTerrain;
+	public static ObjectData tundraTerrain;
+	public static ObjectData taigaTerrain;
+	public static ObjectData canyonTerrain;
+	public static ObjectData steppeTerrain;
+	public static ObjectData forestTerrain;
+	public static ObjectData desertTerrain;
 	public static ObjectData savannaTerrain;
+	public static ObjectData wetlandTerrain;
+	public static ObjectData rainForestTerrain;
+	
+	
+	
 	public static ObjectData shallowWaterTerrain;
 	public static ObjectData deepWaterTerrain;
 	
@@ -94,6 +136,64 @@ public class ObjectsNetwork {
 		plainTerrain.setObjectInitAmount(100);
 		ObjectsMap.put(PLAIN_TERRAIN, plainTerrain);
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//iceCapTerrain
+		iceCapTerrain = new ObjectData(ICE_CAP_TERRAIN);
+		iceCapTerrain.setColour(ICE_CAP_COLOUR);
+		iceCapTerrain.setAffectTerrainColour(true);
+		iceCapTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(ICE_CAP_TERRAIN, iceCapTerrain);
+		
+		//tundraTerrain
+		tundraTerrain = new ObjectData(TUNDRA_TERRAIN);
+		tundraTerrain.setColour(TUNDRA_COLOUR);
+		tundraTerrain.setAffectTerrainColour(true);
+		tundraTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(TUNDRA_TERRAIN, tundraTerrain);
+		
+		//taigaTerrain
+		taigaTerrain = new ObjectData(TAIGA_TERRAIN);
+		taigaTerrain.setColour(TAIGA_COLOUR);
+		taigaTerrain.setAffectTerrainColour(true);
+		taigaTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(TAIGA_TERRAIN, taigaTerrain);
+		
+		//canyonTerrain
+		canyonTerrain = new ObjectData(CANYON_TERRAIN);
+		canyonTerrain.setColour(CANYON_COLOUR);
+		canyonTerrain.setAffectTerrainColour(true);
+		canyonTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(CANYON_TERRAIN, canyonTerrain);
+		
+		//steppeTerrain
+		steppeTerrain = new ObjectData(STEPPE_TERRAIN);
+		steppeTerrain.setColour(STEPPE_COLOUR);
+		steppeTerrain.setAffectTerrainColour(true);
+		steppeTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(STEPPE_TERRAIN, steppeTerrain);
+		
+		//forestTerrain
+		forestTerrain = new ObjectData(FOREST_TERRAIN);
+		forestTerrain.setColour(FOREST_COLOUR);
+		forestTerrain.setAffectTerrainColour(true);
+		forestTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(FOREST_TERRAIN, forestTerrain);
+		
+		//desertTerrain
+		desertTerrain = new ObjectData(DESERT_TERRAIN);
+		desertTerrain.setColour(DESERT_COLOUR);
+		desertTerrain.setAffectTerrainColour(true);
+		desertTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(DESERT_TERRAIN, desertTerrain);
+		
 		//savannaTerrain
 		savannaTerrain = new ObjectData(SAVANNA_TERRAIN);
 		savannaTerrain.setColour(SAVANNA_COLOUR);
@@ -101,12 +201,39 @@ public class ObjectsNetwork {
 		savannaTerrain.setObjectInitAmount(100);
 		ObjectsMap.put(SAVANNA_TERRAIN, savannaTerrain);
 		
+		//wetlandTerrain
+		wetlandTerrain = new ObjectData(WETLAND_TERRAIN);
+		wetlandTerrain.setColour(WETLAND_COLOUR);
+		wetlandTerrain.setAffectTerrainColour(true);
+		wetlandTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(WETLAND_TERRAIN, wetlandTerrain);
+		
+		//rainForestTerrain
+		rainForestTerrain = new ObjectData(RAIN_FOREST_TERRAIN);
+		rainForestTerrain.setColour(RAIN_FOREST_COLOUR);
+		rainForestTerrain.setAffectTerrainColour(true);
+		rainForestTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(RAIN_FOREST_TERRAIN, rainForestTerrain);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		//cliffTerrain
 		cliffTerrain = new ObjectData(CLIFF_TERRAIN);
 		cliffTerrain.setColour(CLIFF_COLOUR);
 		cliffTerrain.setAffectTerrainColour(true);
 		cliffTerrain.setObjectInitAmount(100);
 		ObjectsMap.put(CLIFF_TERRAIN, cliffTerrain);
+		
 		
 		//shallowWaterTerrain
 		shallowWaterTerrain = new ObjectData(SHALLOW_WATER_TERRAIN);

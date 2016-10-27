@@ -14,6 +14,8 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import animations.AnimationController;
+import climate.HumidityController;
+import climate.TemperatureController;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -51,6 +53,7 @@ import terrainsSphere.ColourController;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainObject;
 import terrainsSphere.TerrainSphere;
+import terrainsSphere.TerrainTypeController;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
@@ -91,15 +94,14 @@ public class MainGameLoop {
 		// --------------------------
 		GameEntityObjectsController gameEntityObjectsController = new GameEntityObjectsController(animationController);
 
-		
-
 		// --------------------------Font----------------------------------------------------
 		TextMaster.init(loader);
 
 		FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
-		//GUIText text = new GUIText("1620", 2f, font, new Vector2f(0.825f, 0.87f), 0.2f, true);
+		// GUIText text = new GUIText("1620", 2f, font, new Vector2f(0.825f,
+		// 0.87f), 0.2f, true);
 
-		//text.setColour(1.0f, 1.0f, 1.0f);
+		// text.setColour(1.0f, 1.0f, 1.0f);
 
 		// staticModel.getTexture().setReflectivity(0.2f);
 		// staticModel.getTexture().setShineDamper(2.0f);
@@ -204,7 +206,17 @@ public class MainGameLoop {
 
 		// --------------------------TerrainSphere---------------------------------------------
 		TerrainSphere terrainSphere = new TerrainSphere(loader, 6, 400f);
+
+		// ------------------TerrainType
+		// Controllers------------------------------------------
 		ColourController colourController = new ColourController(terrainSphere);
+		TemperatureController temperatureController = new TemperatureController(terrainSphere);
+		//temperatureController.updateSphereTemp();
+		HumidityController humidityController = new HumidityController(terrainSphere);
+
+		TerrainTypeController terrainTypeController = new TerrainTypeController(loader, terrainSphere, colourController,
+				temperatureController, humidityController);
+		terrainTypeController.updateAllFaces();
 
 		// --------------------------Lights----------------------------------------------------
 		List<Light> lights = new ArrayList<Light>();
@@ -408,15 +420,18 @@ public class MainGameLoop {
 		// highlightedCircle, terrainSphere);
 
 		// -------------------Event Controller ----------------------------
-		GameEventController eventController = new GameEventController(picker, colourController, loader, highlightedCircle,
-				terrainSphere, gameEntityObjectsController);
-		// mouseController.setObjectToAdd(tempEntityObject);
-		
+		GameEventController eventController = new GameEventController(picker, colourController, loader,
+				highlightedCircle, terrainSphere, gameEntityObjectsController);
+				// mouseController.setObjectToAdd(tempEntityObject);
+
 		// -------------------GUI Controller-------------------------------
-		//List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		//GuiTexture gui3dTesting = new GuiTexture(loader.loadTexture("planet"), loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f), 0.22f);
-		//System.out.println(gui3dTesting.getPosition());
-		//guis.add(gui3dTesting);
+		// List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		// GuiTexture gui3dTesting = new
+		// GuiTexture(loader.loadTexture("planet"),
+		// loader.loadTexture("blueCircle"), new Vector2f(-0.85f, -0.76f),
+		// 0.22f);
+		// System.out.println(gui3dTesting.getPosition());
+		// guis.add(gui3dTesting);
 
 		while (!Display.isCloseRequested()) {
 			// float newHeight = (float) (water.getHeight() + 0.1 *
@@ -446,7 +461,7 @@ public class MainGameLoop {
 			animationController.update();
 
 			eventController.updateEvents(gameEntityObjectsController.getEntityObjects());
-			
+
 			// System.out.println(terrainPoint);
 
 			// if (terrainPoint != null) {

@@ -34,6 +34,10 @@ public class GameEventController {
 	private boolean changeFace;
 	private boolean showCircle;
 	private HighlightedCircle highlightedCircle;
+	
+	private boolean mousePrevious = false;
+	private boolean mouseCurrent = false;
+	private boolean mouseClicked = false;
 
 	private EntityObject entityObjectToDrag;
 	private EntityObject entityObjectToAdd;
@@ -70,6 +74,7 @@ public class GameEventController {
 	}
 
 	public void updateEvents(List<EntityObject> entityObjects) {
+		updateMouse();
 		picker.updateOptimized();
 		guiController.update();
 		switch (GameStateController.currentState) {
@@ -201,6 +206,25 @@ public class GameEventController {
 
 	public boolean isShowCircle() {
 		return showCircle;
+	}
+	
+	
+	public void updateMouse(){
+		if (Mouse.isButtonDown(0)) {
+			mouseCurrent = true;
+		}
+		else{
+			mouseCurrent = false;
+		}
+		if (mouseCurrent == true && mousePrevious == false) {
+			mouseClicked = true;
+			//System.out.println("click");
+		}
+		else{
+			mouseClicked = false;
+		}
+		mousePrevious = mouseCurrent;
+		
 	}
 
 }

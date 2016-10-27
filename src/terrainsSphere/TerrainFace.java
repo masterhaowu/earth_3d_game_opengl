@@ -16,6 +16,7 @@ public class TerrainFace {
 
 	private Vector3f indices;
 	private Vector3f normal;
+	private Vector3f averagePolar = new Vector3f(0, 0, 0);
 	private float[] l1;
 	private float[] l2;
 	private float[] l3;
@@ -28,6 +29,12 @@ public class TerrainFace {
 	
 	private ObjectData terrainType;
 	private ObjectData terrainTypePreview;
+	
+	private float height;
+	private float temperature;
+	private float humidity;
+	private float humidityWithOffset; // this will map humidity to the correct position when calculating types
+	private int distanceToWater = -1; // -1 means unchecked or need to recheck
 	
 	private TerrainFace parent;
 	private int level;
@@ -104,6 +111,7 @@ public class TerrainFace {
 				//then copy neighbors
 				for (TerrainVertex vertex: vertices){
 					List<TerrainFace> vertexNeighborFaces = vertex.getNeighborFaces();
+					//System.out.println(vertexNeighborFaces.size());
 					for (TerrainFace currentNeighborFace : vertexNeighborFaces){
 						if (!incresedFaces.contains(currentNeighborFace)) {
 							incresedFaces.add(currentNeighborFace);
@@ -116,6 +124,8 @@ public class TerrainFace {
 		}
 		return neighborFaces;
 	}
+	
+	
 	
 	
 	
@@ -201,6 +211,62 @@ public class TerrainFace {
 
 	public void setTerrainTypePreview(ObjectData terrainTypePreview) {
 		this.terrainTypePreview = terrainTypePreview;
+	}
+
+	public Vector3f getAveragePolar() {
+		return averagePolar;
+	}
+	
+	public void averagePolar(){
+		averagePolar = new Vector3f(0, 0, 0);
+		for (int i=0; i<vertices.size(); i++){
+			Vector3f.add(averagePolar, vertices.get(i).getPolar(), averagePolar);
+		}
+		//System.out.println(vertices.size());
+		averagePolar.x /= vertices.size();
+		averagePolar.y /= vertices.size();
+		averagePolar.z /= vertices.size();
+		//System.out.println(averagePolar);
+	}
+
+	public float getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(float temperature) {
+		this.temperature = temperature;
+	}
+
+	public float getHumidity() {
+		return humidity;
+	}
+
+	public void setHumidity(float humidity) {
+		this.humidity = humidity;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+	}
+
+	public int getDistanceToWater() {
+		return distanceToWater;
+	}
+
+	public void setDistanceToWater(int distanceToWater) {
+		this.distanceToWater = distanceToWater;
+	}
+
+	public float getHumidityWithOffset() {
+		return humidityWithOffset;
+	}
+
+	public void setHumidityWithOffset(float humidityWithOffset) {
+		this.humidityWithOffset = humidityWithOffset;
 	}
 	
 	

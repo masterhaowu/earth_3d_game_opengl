@@ -9,7 +9,8 @@ import entities.Camera;
 public class Maths {
 	
 	public static Vector3f vectorMult(Vector3f v1, float a){
-		return new Vector3f(v1.x * a, v1.y * a, v1.z * a);
+		Vector3f v2 = new Vector3f(v1.x * a, v1.y * a, v1.z * a);
+		return v2;
 	}
 	
 	public static float sideOperations(float[] a, float b[]){

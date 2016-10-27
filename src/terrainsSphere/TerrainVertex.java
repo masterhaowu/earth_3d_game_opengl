@@ -307,6 +307,12 @@ public class TerrainVertex {
 	public void setHeight(float height) {
 		this.height = height;
 	}
+
+	public Vector3f getPolar() {
+		return polar;
+	}
+	
+	
 	
 	
 	
