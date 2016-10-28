@@ -82,6 +82,12 @@ public class ParticleRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
 		shader.loadNumberOfRows(texture.getNumberOfRows());
+		if (texture.isUseColourFilter()) {
+			shader.loadFilterInfo(true, texture.getColour());
+		}
+		else{
+			shader.loadFilterInfo(false, new Vector3f(0, 0, 0));
+		}
 	}
 
 	

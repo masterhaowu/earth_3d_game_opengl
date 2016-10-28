@@ -21,16 +21,16 @@ public class ObjectsNetwork {
 	public static final int RAIN_FOREST_TERRAIN = 109;
 	
 	
-	public static final Vector3f ICE_CAP_COLOUR = new Vector3f((float) 255 / 255, (float) 255 / 255, (float) 255 / 255);
-	public static final Vector3f TUNDRA_COLOUR = new Vector3f((float) 215 / 255, (float) 255 / 255, (float) 235 / 255);
-	public static final Vector3f TAIGA_COLOUR = new Vector3f((float) 175 / 255, (float) 255 / 255, (float) 195 / 255);
-	public static final Vector3f CANYON_COLOUR = new Vector3f((float) 215 / 255, (float) 149 / 255, (float) 89 / 255);
-	public static final Vector3f STEPPE_COLOUR = new Vector3f((float) 91 / 255, (float) 122 / 255, (float) 49 / 255);
+	public static final Vector3f ICE_CAP_COLOUR = new Vector3f((float) 160 / 255, (float) 160 / 255, (float) 160 / 255);
+	public static final Vector3f TUNDRA_COLOUR = new Vector3f((float) 135 / 255, (float) 160 / 255, (float) 145 / 255);
+	public static final Vector3f TAIGA_COLOUR = new Vector3f((float) 115 / 255, (float) 160 / 255, (float) 135 / 255);
+	public static final Vector3f CANYON_COLOUR = new Vector3f((float) 160 / 255, (float) 109 / 255, (float) 69 / 255);
+	public static final Vector3f STEPPE_COLOUR = new Vector3f((float) 91 / 255, (float) 122 / 255, (float) 29 / 255);
 	public static final Vector3f FOREST_COLOUR = new Vector3f((float) 39 / 255, (float) 124 / 255, (float) 20 / 255);
-	public static final Vector3f DESERT_COLOUR = new Vector3f((float) 184 / 255, (float) 172 / 255, (float) 85 / 255);
-	public static final Vector3f SAVANNA_COLOUR = new Vector3f((float) 200 / 255, (float) 200 / 255, (float) 95 / 255);
-	public static final Vector3f WETLAND_COLOUR = new Vector3f((float) 60 / 255, (float) 129 / 255, (float) 90 / 255);
-	public static final Vector3f RAIN_FOREST_COLOUR = new Vector3f((float) 45 / 255, (float) 170 / 255, (float) 100 / 255);
+	public static final Vector3f DESERT_COLOUR = new Vector3f((float) 144 / 255, (float) 132 / 255, (float) 45 / 255);
+	public static final Vector3f SAVANNA_COLOUR = new Vector3f((float) 100 / 255, (float) 100 / 255, (float) 35 / 255);
+	public static final Vector3f WETLAND_COLOUR = new Vector3f((float) 30 / 255, (float) 129 / 255, (float) 90 / 255);
+	public static final Vector3f RAIN_FOREST_COLOUR = new Vector3f((float) 25 / 255, (float) 120 / 255, (float) 70 / 255);
 	
 	
 	

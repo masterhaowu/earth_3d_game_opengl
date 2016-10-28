@@ -42,6 +42,7 @@ import particles.Particle;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
 import particles.ParticleTexture;
+import particles.SnowSystem;
 import postProcessing.Fbo;
 import postProcessing.PostProcessing;
 import renderEngine.DisplayManager;
@@ -206,6 +207,12 @@ public class MainGameLoop {
 
 		// --------------------------TerrainSphere---------------------------------------------
 		TerrainSphere terrainSphere = new TerrainSphere(loader, 6, 400f);
+		
+		
+		//------------Climate Particle Systems------------------------------
+		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("glow"), 1, false);
+		particleTexture.useColour(new Vector3f(1, 1, 1));
+		SnowSystem snowSystem = new SnowSystem(particleTexture, terrainSphere);
 
 		// ------------------TerrainType
 		// Controllers------------------------------------------
@@ -215,17 +222,19 @@ public class MainGameLoop {
 		HumidityController humidityController = new HumidityController(terrainSphere);
 
 		TerrainTypeController terrainTypeController = new TerrainTypeController(loader, terrainSphere, colourController,
-				temperatureController, humidityController);
+				temperatureController, humidityController, snowSystem);
 		terrainTypeController.updateAllFaces();
 
 		// --------------------------Lights----------------------------------------------------
 		List<Light> lights = new ArrayList<Light>();
 
-		Light sun = new Light(new Vector3f(1840, -1700, 1760), new Vector3f(1.6f, 1.6f, 1.6f));
-		Light sun2 = new Light(new Vector3f(1840, 1700, 1760), new Vector3f(1.2f, 1.2f, 1.2f));
+		Light sun = new Light(new Vector3f(1000, 1000, 1000), new Vector3f(1.3f, 1.3f, 1.3f));
+		Light sun2 = new Light(new Vector3f(1000, 0, 1000), new Vector3f(1.2f, 1.2f, 1.2f));
+		Light sun3 = new Light(new Vector3f(1000, -1000, 1000), new Vector3f(1.2f, 1.2f, 1.2f));
 
 		lights.add(sun);
 		lights.add(sun2);
+		lights.add(sun3);
 		// lights.add(sun2);
 		// lights.add(new Light(new Vector3f(8410,
 		// terrain.getHeightOfTerrain(8410, 7610) + 10f, 7610), new Vector3f(2,
@@ -304,7 +313,7 @@ public class MainGameLoop {
 			// tempEntityObject.getEntity().setEnableShaderAnimation(false);
 			tempEntityObject.getEntity().setupScaleAnimation(0.02f, 1f);
 			animationController.addEntityWithScaleAnimation(tempEntityObject.getEntity(), 0.02f, 1f);
-			if (tempEntityObject.checkObjectCanExistOnTerrain(terrainSphere)) {
+			if (tempEntityObject.checkObjectAboveWater(terrainSphere)) {
 				// entities.add(tempEntitiy);
 				// entityObjects.add(tempEntityObject);
 				// System.out.println("here");
@@ -367,7 +376,7 @@ public class MainGameLoop {
 		WaterSphere water = new WaterSphere(terrainSphere, 1, loader);
 		waters.add(water);
 
-		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleAtlas"), 4, false);
+		
 
 		ParticleSystem particleSystem = new ParticleSystem(particleTexture, 150, 35, 0.3f, 4, 1);
 		particleSystem.randomizeRotation();
@@ -432,6 +441,8 @@ public class MainGameLoop {
 		// 0.22f);
 		// System.out.println(gui3dTesting.getPosition());
 		// guis.add(gui3dTesting);
+		//Particle marked = new Particle(particleTexture, new Vector3f(0, 0 , 440), new Vector3f(0, 0, -1), 0, 20, 0, 1);
+		//marked.marked = true;
 
 		while (!Display.isCloseRequested()) {
 			// float newHeight = (float) (water.getHeight() + 0.1 *
@@ -448,8 +459,9 @@ public class MainGameLoop {
 			player.move(terrainSphere);
 			camera.move();
 
-			particleSystem.generateParticles(player.getPosition());
-			particleSystemFire.generateParticles(new Vector3f(150, 10, -150));
+			//particleSystem.generateParticles(player.getPosition());
+			snowSystem.updateSnowSystem();
+			//particleSystemFire.generateParticles(new Vector3f(150, 10, -150));
 
 			ParticleMaster.update(camera);
 
@@ -508,7 +520,7 @@ public class MainGameLoop {
 
 			// fbo.unbindFrameBuffer();
 			// GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
-			// ParticleMaster.renderParticles(camera);
+			ParticleMaster.renderParticles(camera);
 			// PostProcessing.doPostProcessing(fbo.getColourTexture());
 
 			guiRenderer.render(eventController.getGuisToDisplay());

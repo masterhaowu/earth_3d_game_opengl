@@ -5,6 +5,7 @@ import java.util.List;
 import climate.HumidityController;
 import climate.TemperatureController;
 import entityObjects.ObjectsNetwork;
+import particles.SnowSystem;
 import renderEngine.Loader;
 
 public class TerrainTypeController {
@@ -14,9 +15,11 @@ public class TerrainTypeController {
 	private ColourController colourController;
 	private TemperatureController temperatureController;
 	private HumidityController humidityController;
+	
+	private SnowSystem snowSystem;
 
 	public TerrainTypeController(Loader loader, TerrainSphere terrainSphere, ColourController colourController,
-			TemperatureController temperatureController, HumidityController humidityController) {
+			TemperatureController temperatureController, HumidityController humidityController, SnowSystem snowSystem) {
 		this.loader = loader;
 		this.terrainSphere = terrainSphere;
 		this.colourController = colourController;
@@ -25,6 +28,7 @@ public class TerrainTypeController {
 		temperatureController.updateSphereTemp();
 		humidityController.fillDistanceToWater();
 		humidityController.updateSphereHumidity();
+		this.snowSystem = snowSystem;
 	}
 
 	public void updateTerrainType(TerrainFace face) {
@@ -38,9 +42,12 @@ public class TerrainTypeController {
 		if (height > 0 && height < HeightGeneratorSphere.AMPLITUDE/2f) {
 			if (temp < TemperatureController.POLAR_TEMP + TemperatureController.tempRange) {
 				colourController.setTerrain(face, ObjectsNetwork.iceCapTerrain);
+				face.setSnowAmount(0.01f);
+				snowSystem.addFace(face);
 				
 			} else if (temp < TemperatureController.POLAR_TEMP + TemperatureController.tempRange * 2) {
-				
+				face.setSnowAmount(0.01f * (temp - TemperatureController.POLAR_TEMP)/(0 - TemperatureController.POLAR_TEMP));
+				snowSystem.addFace(face);
 				if (humid < HumidityController.humidityRange) {
 					colourController.setTerrain(face, ObjectsNetwork.tundraTerrain);
 				}
@@ -66,10 +73,10 @@ public class TerrainTypeController {
 					colourController.setTerrain(face, ObjectsNetwork.savannaTerrain);
 				}
 				else if(humid < HumidityController.humidityRange * 3f){
-					colourController.setTerrain(face, ObjectsNetwork.wetlandTerrain);
+					colourController.setTerrain(face, ObjectsNetwork.rainForestTerrain);
 				}
 				else{
-					colourController.setTerrain(face, ObjectsNetwork.rainForestTerrain);
+					colourController.setTerrain(face, ObjectsNetwork.wetlandTerrain);
 				}
 			}
 
@@ -78,6 +85,8 @@ public class TerrainTypeController {
 		else if(height > 0) {
 			if (temp < 0) {
 				colourController.setTerrain(face, ObjectsNetwork.iceCapTerrain);
+				face.setSnowAmount(0.01f);
+				snowSystem.addFace(face);
 			} else{
 				colourController.setTerrain(face, ObjectsNetwork.mountainTerrain);
 			}

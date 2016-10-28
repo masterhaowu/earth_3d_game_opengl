@@ -92,7 +92,7 @@ public class GuiController {
 		return false;
 	}
 
-	public void update() {
+	public void update(boolean mouseClicked) {
 		dataTypeToReturn = RETURN_NULL;
 		guisSphere3D.clear();
 		guisToDisplay.clear();
@@ -154,6 +154,33 @@ public class GuiController {
 							}
 						}
 					}
+					
+					
+				} else if (checkSingleSphere(guiData.sphereRight3)  && Mouse.isButtonDown(0)
+						&& mouseClicked 
+						&& GameStateController.CTState != GameStateController.CT_TREE) {
+					
+					guisPanel.clear();
+					GameStateController.CTState = GameStateController.CT_TREE;
+					clickDisabled = true;
+					guisPanel.add(guiData.panelBackground);
+					
+					
+					guiObjectUnits.clear();
+					
+					for(int i=0; i<GuiData.OBJECT_ROWS; i++){
+						for(int j=0; j<GuiData.OBJECT_COLS; j++){
+							//guiObjectUnits.add(guiData.guiObjects[i][j]);
+							int index = i * GuiData.OBJECT_ROWS + j;
+							if (index < guiData.guiDataTerrains.guiObjectUnits.size()) {
+								GuiObjectUnit currentUnit = guiData.guiDataTerrains.guiObjectUnits.get(index);
+								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j], guiData.guiObjectUnitScale);
+								guiObjectUnits.add(currentUnit);
+							}
+						}
+					}
+					
+					
 				}
 				
 				switch (GameStateController.CTState) {

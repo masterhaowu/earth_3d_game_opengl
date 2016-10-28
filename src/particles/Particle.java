@@ -19,6 +19,7 @@ public class Particle {
 	private float elapsedTime = 0;
 	private float distance;
 	
+	public boolean marked = false;
 	
 	private Vector2f texOffset1 = new Vector2f();
 	private Vector2f texOffset2 = new Vector2f();
@@ -94,7 +95,7 @@ public class Particle {
 	
 	
 	protected boolean update(Camera camera){
-		velocity.y += Player.GRAVITY * gravityEffect * DisplayManager.getFrameTimeSeconds();
+		//velocity.y += Player.GRAVITY * gravityEffect * DisplayManager.getFrameTimeSeconds();
 		Vector3f change = new Vector3f(velocity);
 		change.scale(DisplayManager.getFrameTimeSeconds());
 		Vector3f.add(change, position, position);
@@ -112,6 +113,11 @@ public class Particle {
 		int index1 = (int) Math.floor(atlasProgression);
 		int index2 = index1 < stageCount - 1 ? index1 + 1 : index1;
 		this.blend = atlasProgression % 1;
+		/*
+		if (marked) {
+			System.out.println(blend);
+		}
+		*/
 		setTextureOffset(texOffset1, index1);
 		setTextureOffset(texOffset2, index2);
 	}

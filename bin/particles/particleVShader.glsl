@@ -11,6 +11,7 @@ in float blendFactor;
 out vec2 textureCoords1;
 out vec2 textureCoords2;
 out float blend;
+out float pass_numberOfRows;
 
 uniform mat4 projectionMatrix;
 
@@ -28,6 +29,7 @@ void main(void){
     textureCoords1.y = textureCoords.y + texOffsets.y;
     textureCoords2 = textureCoords + texOffsets.zw;
     blend = blendFactor;
+    pass_numberOfRows = numberOfRows;
 
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 0.0, 1.0);
 

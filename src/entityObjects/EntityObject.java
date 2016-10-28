@@ -45,6 +45,14 @@ public class EntityObject {
 		return true;
 	}
 	
+	public boolean checkObjectAboveWater(TerrainSphere terrainSphere){
+		this.face = terrainSphere.getTargetFacePlucker(this.entity.getPosition());
+		if (face.getHeight() > 0) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	public boolean checkObjectCanExistOnTerrain(TerrainSphere terrainSphere){
 		this.face = terrainSphere.getTargetFacePlucker(this.entity.getPosition());

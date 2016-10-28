@@ -76,7 +76,7 @@ public class GameEventController {
 	public void updateEvents(List<EntityObject> entityObjects) {
 		updateMouse();
 		picker.updateOptimized();
-		guiController.update();
+		guiController.update(mouseClicked);
 		switch (GameStateController.currentState) {
 		case GameStateController.PLAY_MODE_IDLE:
 

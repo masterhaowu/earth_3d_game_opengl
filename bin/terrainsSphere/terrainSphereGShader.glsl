@@ -72,6 +72,7 @@ vec4 calculateDiffuseAndSpecular(vec3 toCameraVector, vec3 unitNormal, int numbe
     vec4 tempFinalColour = vec4(totalDiffuse, 1.0) * averageColour + vec4(totalSpecular, 1.0);
     //tempFinalColour = tempFinalColour;
     tempFinalColour = mix(tempFinalColour, averageColour, 0.5);
+    tempFinalColour = tempFinalColour * 0.9;
     //if (isNight == false) {
      //   tempFinalColour = tempFinalColour + vec4(0.1, 0.1, 0.1, 0);
     //}

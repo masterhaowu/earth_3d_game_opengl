@@ -36,6 +36,8 @@ public class TerrainFace {
 	private float humidityWithOffset; // this will map humidity to the correct position when calculating types
 	private int distanceToWater = -1; // -1 means unchecked or need to recheck
 	
+	private float snowAmount = 0;
+	
 	private TerrainFace parent;
 	private int level;
 	private boolean isBottom;
@@ -228,6 +230,11 @@ public class TerrainFace {
 		averagePolar.z /= vertices.size();
 		//System.out.println(averagePolar);
 	}
+	
+	public Vector3f getAveragePolarWithHeight(){
+		return new Vector3f(averagePolar.x + height/HeightMapController.HEIGHT_SCALE, averagePolar.y, averagePolar.z);
+		//System.out.println(averagePolar);
+	}
 
 	public float getTemperature() {
 		return temperature;
@@ -267,6 +274,14 @@ public class TerrainFace {
 
 	public void setHumidityWithOffset(float humidityWithOffset) {
 		this.humidityWithOffset = humidityWithOffset;
+	}
+
+	public float getSnowAmount() {
+		return snowAmount;
+	}
+
+	public void setSnowAmount(float snowAmount) {
+		this.snowAmount = snowAmount;
 	}
 	
 	
