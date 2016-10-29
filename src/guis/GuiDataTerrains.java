@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import entityObjects.ObjectsNetwork;
+import gameDataBase.ObjectsNetwork;
 import renderEngine.Loader;
 
 public class GuiDataTerrains {

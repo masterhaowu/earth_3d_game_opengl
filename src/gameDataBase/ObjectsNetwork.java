@@ -1,10 +1,12 @@
-package entityObjects;
+package gameDataBase;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import org.lwjgl.util.vector.Vector3f;
+
+import entityObjects.ObjectData;
 
 public class ObjectsNetwork {
 	//basic terrain objects that only has colour

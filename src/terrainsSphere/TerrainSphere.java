@@ -21,7 +21,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import climate.TemperatureController;
-import entityObjects.ObjectsNetwork;
+import gameDataBase.ObjectsNetwork;
 import models.RawModel;
 import objConverter.Vertex;
 import renderEngine.Loader;

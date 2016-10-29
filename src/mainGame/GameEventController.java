@@ -8,7 +8,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Entity;
 import entityObjects.EntityObject;
-import entityObjects.ObjectsNetwork;
+import gameDataBase.EntityModelDataBase;
+import gameDataBase.ObjectsNetwork;
 import guis.GuiController;
 import guis.GuiObjectUnit;
 import guis.GuiSphereTexture;
@@ -150,7 +151,7 @@ public class GameEventController {
 			// testing
 			if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
 				entityObjectToDrag = gameEntityObjectsController
-						.createEntityObjectAndAddToList(EntityObjectModelData.lowGrass1Model, ObjectsNetwork.lowGrass1);
+						.createEntityObjectAndAddToList(EntityModelDataBase.lowGrass1Model, ObjectsNetwork.lowGrass1);
 				entityObjectToDrag.getEntity().randomRotZ();
 				// System.out.println(entityObjectToDrag.getEntity().getRotZ());
 				this.showCircle = true;
@@ -202,6 +203,10 @@ public class GameEventController {
 		}
 		return guiSphereTextures;
 		// return guiController.getGuisSphere3D();
+	}
+	
+	public List<GuiObjectUnit> getGuiObjectUnit(){
+		return guiController.getGuiObjectUnits();
 	}
 
 	public boolean isShowCircle() {

@@ -318,7 +318,9 @@ public class GuiTexture {
 		this.scale = scale;
 	}
 	
-	
+	public void setScale(float scaleHeight){
+		this.scale = new Vector2f(scaleHeight*DisplayManager.HEIGHT/DisplayManager.WIDTH, scaleHeight);
+	}
 	
 	
 	

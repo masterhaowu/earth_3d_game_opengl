@@ -18,11 +18,14 @@ public class GuiSphereTexture {
 
 	private boolean useColours;
 	private boolean highlighted;
+	
 
 	private int currentState = 0;
 	private int nextState = 0;
 	private float transition = 0;
 	private float transitSpeed = 0.008f;
+	
+	private float transparency = 1;
 	
 	private boolean autoRotate = true;
 
@@ -205,6 +208,14 @@ public class GuiSphereTexture {
 	
 	public void setScale(float scaleHeight){
 		this.scale = new Vector2f(scaleHeight*DisplayManager.HEIGHT/DisplayManager.WIDTH, scaleHeight);
+	}
+
+	public float getTransparency() {
+		return transparency;
+	}
+
+	public void setTransparency(float transparency) {
+		this.transparency = transparency;
 	}
 	
 	

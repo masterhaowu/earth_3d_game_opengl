@@ -25,6 +25,9 @@ uniform float scaleDown2;
 
 uniform bool highlighted;
 
+
+uniform float transparency;
+
 const float transitionRange = 0.1;
 
 
@@ -121,6 +124,9 @@ void main(void){
         outColor.y = mix(outColor.y, 1, iconColour.w);
         outColor.z = mix(outColor.z, 1, iconColour.w);
     }
+    
+    outColor.w = outColor.w * transparency;
+    //outColor.w = transparency;
     
     
     

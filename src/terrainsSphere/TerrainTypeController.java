@@ -4,7 +4,7 @@ import java.util.List;
 
 import climate.HumidityController;
 import climate.TemperatureController;
-import entityObjects.ObjectsNetwork;
+import gameDataBase.ObjectsNetwork;
 import particles.SnowSystem;
 import renderEngine.Loader;
 

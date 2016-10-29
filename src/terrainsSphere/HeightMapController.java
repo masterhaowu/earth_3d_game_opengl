@@ -11,7 +11,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.util.ResourceLoader;
 
 import entityObjects.ObjectData;
-import entityObjects.ObjectsNetwork;
+import gameDataBase.ObjectsNetwork;
 
 public class HeightMapController {
 	public static final int SNOW_TERRAIN = 20;

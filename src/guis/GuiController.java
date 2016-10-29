@@ -7,6 +7,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
 import entityObjects.ObjectData;
+import fontMeshCreator.GUIText;
 import mainGame.GameStateController;
 import mouse.MousePickerSphere;
 import renderEngine.Loader;
@@ -14,6 +15,7 @@ import renderEngine.Loader;
 public class GuiController {
 	public static final int RETURN_NULL = 0;
 	public static final int RETURN_TERRAIN = 1;
+	public static final int RETURN_OBJECT = 2;
 	public int dataTypeToReturn = 0;
 	
 	
@@ -25,6 +27,8 @@ public class GuiController {
 	private List<GuiSphereTexture> guisSphere3D;
 	private List<GuiTexture> guisPanel;
 	private List<GuiObjectUnit> guiObjectUnits;
+	
+	private List<GUIText> guiTexts;
 	
 	private ObjectData terrainToReturn;
 
@@ -172,8 +176,8 @@ public class GuiController {
 						for(int j=0; j<GuiData.OBJECT_COLS; j++){
 							//guiObjectUnits.add(guiData.guiObjects[i][j]);
 							int index = i * GuiData.OBJECT_ROWS + j;
-							if (index < guiData.guiDataTerrains.guiObjectUnits.size()) {
-								GuiObjectUnit currentUnit = guiData.guiDataTerrains.guiObjectUnits.get(index);
+							if (index < guiData.guiDataTrees.guiObjectUnits.size()) {
+								GuiObjectUnit currentUnit = guiData.guiDataTrees.guiObjectUnits.get(index);
 								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j], guiData.guiObjectUnitScale);
 								guiObjectUnits.add(currentUnit);
 							}
@@ -213,6 +217,13 @@ public class GuiController {
 				case GameStateController.CT_TERRAIN_DRAGGING:
 					guiObjectUnits.clear();
 					guisPanel.clear();
+					
+				case GameStateController.CT_TREE:
+					
+					if (checkSingleSphere(guiData.sphereRight3) && mouseClicked) {
+						
+					}
+					break;
 
 				default:
 					break;

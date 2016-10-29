@@ -1,4 +1,4 @@
-package mainGame;
+package gameDataBase;
 
 import models.RawModel;
 import models.TexturedModel;
@@ -7,7 +7,7 @@ import objConverter.OBJFileLoader;
 import renderEngine.Loader;
 import textures.ModelTexture;
 
-public class EntityObjectModelData {
+public class EntityModelDataBase {
 
 	// private static Loader loader;
 
@@ -26,20 +26,19 @@ public class EntityObjectModelData {
 	public static void loadLowGrass1Data(Loader loader) {
 		ModelData lowGrass1Data = OBJFileLoader.loadOBJ("lowGrass1");
 		RawModel lowGrass1RawModel = loader.loadToVAOwithData(lowGrass1Data.getVertices(),
-				lowGrass1Data.getTextureCoords(), lowGrass1Data.getNormals(), lowGrass1Data.getIndices(), lowGrass1Data);
+				lowGrass1Data.getTextureCoords(), lowGrass1Data.getIndices(), lowGrass1Data);
 		lowGrass1Model = new TexturedModel(lowGrass1RawModel, new ModelTexture(loader.loadTexture("lowGrass1")));
 	}
 
 	public static void loadDeer1Data(Loader loader) {
 		ModelData deerData = OBJFileLoader.loadOBJ("deer");
-		RawModel deerRawModel = loader.loadToVAOwithData(deerData.getVertices(), deerData.getTextureCoords(),
-				deerData.getNormals(), deerData.getIndices(), deerData);
+		RawModel deerRawModel = loader.loadToVAOwithData(deerData.getVertices(), deerData.getTextureCoords(), deerData.getIndices(), deerData);
 		deer1Model = new TexturedModel(deerRawModel, new ModelTexture(loader.loadTexture("deerFlipped")));
 	}
 
 	public static void loadTestingTreeData(Loader loader) {
 		ModelData data = OBJFileLoader.loadOBJ("simpleTree");
-		RawModel model = loader.loadToVAOwithData(data.getVertices(), data.getTextureCoords(), data.getNormals(),
+		RawModel model = loader.loadToVAOwithData(data.getVertices(), data.getTextureCoords(),
 				data.getIndices(), data);
 
 		testingTreeModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("simpleTree")));

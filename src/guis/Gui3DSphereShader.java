@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import shaders.ShaderProgram;
 
-public class Gui3DShader extends ShaderProgram {
+public class Gui3DSphereShader extends ShaderProgram {
 	
 	private static final String VERTEX_FILE = "/guis/gui3DVShader.glsl";
 	private static final String GEOMETRY_FILE = "/guis/gui3DGShader.glsl";
@@ -27,8 +27,10 @@ public class Gui3DShader extends ShaderProgram {
     private int location_scaleDown1;
     private int location_scaleDown2;
     
+    private int location_transparency;
+    
 
-	public Gui3DShader() {
+	public Gui3DSphereShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE, GEOMETRY_FILE);
 	}
 	
@@ -60,6 +62,10 @@ public class Gui3DShader extends ShaderProgram {
 		super.loadFloat(location_scaleDown1, currentScale);
 		super.loadFloat(location_scaleDown2, nextScale);
 	}
+	
+	public void loadTransparency(float transparency){
+		super.loadFloat(location_transparency, transparency);
+	}
 
 	@Override
 	protected void getAllUniformLocations() {
@@ -75,6 +81,7 @@ public class Gui3DShader extends ShaderProgram {
 		location_scaleDown2 = super.getUniformLocation("scaleDown2");
 		location_colourFilter1 = super.getUniformLocation("colourFilter1");
 		location_colourFilter2 = super.getUniformLocation("colourFilter2");
+		location_transparency = super.getUniformLocation("transparency");
 		
 	}
 

@@ -21,11 +21,14 @@ import entities.Entity;
 import entities.Light;
 import entities.Player;
 import entityObjects.EntityObject;
-import entityObjects.ObjectsNetwork;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
-import guis.Gui3DRenderer;
+import gameDataBase.EntityModelDataBase;
+import gameDataBase.ObjectsNetwork;
+import guis.Gui3DObjectRenderer;
+import guis.Gui3DObjectShader;
+import guis.Gui3DSphereRenderer;
 import guis.GuiController;
 import guis.GuiData;
 import guis.GuiRenderer;
@@ -86,7 +89,7 @@ public class MainGameLoop {
 
 		// -------------------------EntityObjectModel
 		// Data-----------------------------------
-		EntityObjectModelData.loadAllObjects(loader);
+		EntityModelDataBase.loadAllObjects(loader);
 
 		// --------------------------Animation Controller ---------------------
 		AnimationController animationController = new AnimationController();
@@ -280,7 +283,7 @@ public class MainGameLoop {
 
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 
-		Entity deer1Entity = new Entity(EntityObjectModelData.deer1Model, new Vector3f(0, 0, terrainSphere.getScale()),
+		Entity deer1Entity = new Entity(EntityModelDataBase.deer1Model, new Vector3f(0, 0, terrainSphere.getScale()),
 				90, 0, 0, 5);
 				// entities.add(deerEntity);
 				// System.out.println(deerEntity.getModel().getRawModel().getVaoID());
@@ -302,7 +305,7 @@ public class MainGameLoop {
 			// Entity(EntityObjectModelData.testingTreeModel, entityPos, 90, 0,
 			// 0, 2f);
 			EntityObject tempEntityObject = gameEntityObjectsController
-					.createEntityObject(EntityObjectModelData.testingTreeModel, ObjectsNetwork.simpleTree);
+					.createEntityObject(EntityModelDataBase.testingTreeModel, ObjectsNetwork.simpleTree);
 			// tempEntitiy.updateRotation();
 			// entities.add(new Entity(staticModel, new Vector3f(x, y, z), 0, 0,
 			// 0, 1));
@@ -338,7 +341,8 @@ public class MainGameLoop {
 		// new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 		// guis.add(shadowMap);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
-		Gui3DRenderer gui3dRenderer = new Gui3DRenderer(loader, renderer.getProjectionMatrix());
+		Gui3DSphereRenderer gui3dRenderer = new Gui3DSphereRenderer(loader, renderer.getProjectionMatrix());
+		Gui3DObjectRenderer gui3dObjectRenderer = new Gui3DObjectRenderer();
 
 		// --------------------------MousePicker----------------------------------------------------
 		// MousePicker picker = new MousePicker(camera,
@@ -524,6 +528,9 @@ public class MainGameLoop {
 			// PostProcessing.doPostProcessing(fbo.getColourTexture());
 
 			guiRenderer.render(eventController.getGuisToDisplay());
+			//gui3dRenderer.render(eventController.getGuisSphere3D());
+			//System.out.println(eventController.getGuiObjectUnit().size());
+			gui3dObjectRenderer.render(eventController.getGuiObjectUnit());
 			gui3dRenderer.render(eventController.getGuisSphere3D());
 
 			TextMaster.render();

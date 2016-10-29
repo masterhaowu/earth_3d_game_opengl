@@ -9,7 +9,7 @@ import animations.AnimationController;
 import entities.Entity;
 import entityObjects.EntityObject;
 import entityObjects.ObjectData;
-import entityObjects.ObjectsNetwork;
+import gameDataBase.ObjectsNetwork;
 import models.TexturedModel;
 
 public class GameEntityObjectsController {

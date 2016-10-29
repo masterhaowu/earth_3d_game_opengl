@@ -61,6 +61,20 @@ public class Loader {
 		tempModel.setMin(data.getMin());
 		return tempModel;
 	}
+	
+	public RawModel loadToVAOwithData(float[] positions, float[] textureCoords, int[] indices, ModelData data) {
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0, 3, positions);
+		storeDataInAttributeList(1, 2, textureCoords);
+		//storeDataInAttributeList(2, 3, normals);
+		unbindVAO();
+		RawModel tempModel = new RawModel(vaoID, indices.length);
+		tempModel.setModelData(data);
+		tempModel.setMax(data.getMax());
+		tempModel.setMin(data.getMin());
+		return tempModel;
+	}
 	/*
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] colors, float[] normals, int[] indices) {
 		int vaoID = createVAO();

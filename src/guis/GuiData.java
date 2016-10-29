@@ -4,7 +4,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import entityObjects.ObjectsNetwork;
+import gameDataBase.ObjectsNetwork;
 import renderEngine.Loader;
 import toolbox.Maths;
 
@@ -71,13 +71,14 @@ public class GuiData {
 	public GuiObjectUnit guiObjectUnitTesting2;
 	public GuiObjectUnit guiObjectUnitTesting3;
 	
-	public GuiObjectUnit[][] guiObjects;
+	//public GuiObjectUnit[][] guiObjects;
 	public Vector2f [][] guiObjectUnitPositions; // this depends on row and col
 	public Vector2f guiObjectUnitScale;
 
 	// public GuiTexture add
 	
 	public GuiDataTerrains guiDataTerrains;
+	public GuiDataTrees guiDataTrees;
 
 
 
@@ -92,6 +93,9 @@ public class GuiData {
 		
 		guiDataTerrains = new GuiDataTerrains();
 		guiDataTerrains.loadTerrains(loader);
+		
+		guiDataTrees = new GuiDataTrees();
+		guiDataTrees.loadTrees(loader);
 		
 		
 		Vector3f CT1 = new Vector3f(BLUE.x + blueToGreenInc.x, BLUE.y + blueToGreenInc.y, BLUE.z + blueToGreenInc.z);
@@ -216,31 +220,32 @@ public class GuiData {
 				new Vector2f(0.7f, 0.7f));
 		panelBackground.useSoildColour(new Vector3f(0, 0, 0));
 		panelBackground.setTransparency(0.5f);
-		panelBackground.useBorder(new Vector3f(1, 1, 1), 0.005f, 0.5f);
+		panelBackground.useBorder(new Vector3f(0, 0, 0), 0.005f, 0.3f);
 		
 		float Xleft = panelBackground.getPosition().x - panelBackground.getScale().x + panelBackground.getScale().x * PANEL_PADDING_LEFT;
 		float Ytop = panelBackground.getPosition().y + panelBackground.getScale().y - panelBackground.getScale().y * PANEL_PADDING_TOP;
 		float Xscale = panelBackground.getScale().x/(OBJECT_COLS + 0.1f) * (1 - (PANEL_PADDING_LEFT + PANEL_PADDING_RIGHT)/2f);
 		float Yscale = panelBackground.getScale().y/(OBJECT_ROWS + 0.1f) * (1 - (PANEL_PADDING_TOP + PANEL_PADDING_BOTTOM)/2f);
 		
-		guiObjects = new GuiObjectUnit[OBJECT_ROWS][];
+		//guiObjects = new GuiObjectUnit[OBJECT_ROWS][];
 		guiObjectUnitScale = new Vector2f(Xscale, Yscale);
 		guiObjectUnitPositions = new Vector2f[OBJECT_ROWS][];
 		for(int i = 0; i<OBJECT_ROWS; i++){
-			guiObjects[i] = new GuiObjectUnit[OBJECT_COLS];
+			//guiObjects[i] = new GuiObjectUnit[OBJECT_COLS];
 			guiObjectUnitPositions[i] = new Vector2f[OBJECT_COLS];
 			float currentY = Ytop - panelBackground.getScale().y * (2 * i + 1) / OBJECT_ROWS * (1 - (PANEL_PADDING_TOP + PANEL_PADDING_BOTTOM)/2f);
 			//System.out.println(currentY);
 			//currentY = 0.5f;
 			for(int j=0; j<OBJECT_COLS; j++){
 				float currentX = Xleft + panelBackground.getScale().x * (2 * j + 1) / OBJECT_COLS * (1 - (PANEL_PADDING_LEFT + PANEL_PADDING_RIGHT)/2f);
-				guiObjects[i][j] = new GuiObjectUnit(new Vector2f(currentX, currentY),
-						new Vector2f(Xscale, Yscale), loader);
-				guiObjects[i][j].setTerrainUnit(ObjectsNetwork.snowTerrain); //testing stuff
+				//guiObjects[i][j] = new GuiObjectUnit(new Vector2f(currentX, currentY),
+				//		new Vector2f(Xscale, Yscale), loader);
+				//guiObjects[i][j].setTerrainUnit(ObjectsNetwork.snowTerrain); //testing stuff
 				guiObjectUnitPositions[i][j] = new Vector2f(currentX, currentY);
 				
 			}
 		}
+		
 		/*
 		float unitX = panelBackground.getPosition().x + panelBackground.getScale().x / 3;
 		//float Ybot = panelBackground.getPosition().y - panelBackground.getScale().y;
@@ -253,7 +258,7 @@ public class GuiData {
 	*/
 		panelBorder = new GuiTexture(loader.loadTexture("blackBorder"), panelBackground.getPosition(),
 				panelBackground.getScale());
-		panelBorder.useSoildColour(new Vector3f(0.5f, 0.5f, 0.5f));
+		panelBorder.useSoildColour(new Vector3f(0.3f, 0.3f, 0.3f));
 		panelBorder.setTransparency(0.8f);
 
 	}
