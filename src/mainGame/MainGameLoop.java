@@ -23,13 +23,15 @@ import entities.Player;
 import entityObjects.EntityObject;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
+import fontRendering.FontController;
+import fontRendering.TextMapController;
 import fontRendering.TextMaster;
 import gameDataBase.EntityModelDataBase;
 import gameDataBase.ObjectsNetwork;
 import guis.Gui3DObjectRenderer;
 import guis.Gui3DObjectShader;
 import guis.Gui3DSphereRenderer;
-import guis.GuiController;
+import guis.GuiEventController;
 import guis.GuiData;
 import guis.GuiRenderer;
 import guis.GuiTexture;
@@ -99,11 +101,13 @@ public class MainGameLoop {
 		GameEntityObjectsController gameEntityObjectsController = new GameEntityObjectsController(animationController);
 
 		// --------------------------Font----------------------------------------------------
-		TextMaster.init(loader);
+		//TextMaster.init(loader);
+		FontController.init(loader);
+		TextMapController textMapController = new TextMapController(loader);
 
-		FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
-		// GUIText text = new GUIText("1620", 2f, font, new Vector2f(0.825f,
-		// 0.87f), 0.2f, true);
+		//FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
+		GUIText text = new GUIText("testing", 3f, FontController.candara, new Vector2f(0.5f, 0.5f), 0.2f, true);
+		text.loadText(loader);
 
 		// text.setColour(1.0f, 1.0f, 1.0f);
 
@@ -532,8 +536,21 @@ public class MainGameLoop {
 			//System.out.println(eventController.getGuiObjectUnit().size());
 			gui3dObjectRenderer.render(eventController.getGuiObjectUnit());
 			gui3dRenderer.render(eventController.getGuisSphere3D());
+			
+			textMapController.clearMap();
+			textMapController.processListOfText(eventController.geGuiTexts());
+			/*
+			textMapController.processText(text);
+			if (eventController.geGuiTexts().size() > 0) {
+				GUIText text2 = new GUIText("fuck", 3f, FontController.candara, new Vector2f(0.3f, 0.7f), 0.3f, true);
+				text2.loadText(loader);
+				textMapController.processText(text2);
+				
+			}
+			*/
+			textMapController.render();
 
-			TextMaster.render();
+			//TextMaster.render();
 
 			DisplayManager.updateDisplay();
 		}
@@ -541,7 +558,8 @@ public class MainGameLoop {
 		PostProcessing.cleanUp();
 		fbo.cleanUp();
 		ParticleMaster.cleanUp();
-		TextMaster.cleanUp();
+		//TextMaster.cleanUp();
+		textMapController.cleanUp();
 		// fbos.cleanUp();
 		// waterShader.cleanUp();
 		waterSphereShader.cleanUp();

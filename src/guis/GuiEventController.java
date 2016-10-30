@@ -6,19 +6,22 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 
+import entityObjects.EntityObject;
 import entityObjects.ObjectData;
 import fontMeshCreator.GUIText;
+import mainGame.GameEntityObjectsController;
 import mainGame.GameStateController;
+import models.TexturedModel;
 import mouse.MousePickerSphere;
 import renderEngine.Loader;
 
-public class GuiController {
+public class GuiEventController {
 	public static final int RETURN_NULL = 0;
 	public static final int RETURN_TERRAIN = 1;
 	public static final int RETURN_OBJECT = 2;
 	public int dataTypeToReturn = 0;
 	
-	
+	private GameEntityObjectsController gameEntityObjectsController;
 
 	private GuiData guiData;
 	private MousePickerSphere picker;
@@ -31,18 +34,23 @@ public class GuiController {
 	private List<GUIText> guiTexts;
 	
 	private ObjectData terrainToReturn;
+	private ObjectData entityObject;
+	private TexturedModel texturedModel;
+	private EntityObject entityObjectToReturn;
 
 	private boolean clickDisabled = false;
 	
 	
 	
-	public GuiController(Loader loader, MousePickerSphere picker) {
+	public GuiEventController(Loader loader, MousePickerSphere picker, GameEntityObjectsController gameEntityObjectsController) {
+		this.gameEntityObjectsController  = gameEntityObjectsController;
 		// this.guis = new ArrayList<GuiTexture>();
 		this.picker = picker;
 		this.guisToDisplay = new ArrayList<GuiTexture>();
 		this.guisSphere3D = new ArrayList<GuiSphereTexture>();
 		this.guisPanel = new ArrayList<GuiTexture>();
 		this.guiObjectUnits = new ArrayList<GuiObjectUnit>();
+		this.guiTexts = new ArrayList<GUIText>();
 		guiData = new GuiData(loader);
 
 		// guisToDisplay.add(guiData.blackHexTrayBot);
@@ -95,11 +103,25 @@ public class GuiController {
 		}
 		return false;
 	}
+	
+	public boolean checkSingleGui(GuiTexture gui){
+		Vector2f mousePos = picker.getNormalizedXY();
+		gui.setHighlighted(false);
+		float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
+		float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
+		if (xDiff <= gui.getScale().x && yDiff <= gui.getScale().y) {
+			gui.setHighlighted(true);
+			return true;
+			// System.out.println("gg!");
+		}
+		return false;
+	}
 
 	public void update(boolean mouseClicked) {
 		dataTypeToReturn = RETURN_NULL;
 		guisSphere3D.clear();
 		guisToDisplay.clear();
+		guiTexts.clear();
 		// guisToDisplay.add(guiData.planetCircle);
 		// guisToDisplay.add(guiData.planetIcon);
 		guisSphere3D.add(guiData.leftSphere);
@@ -163,7 +185,7 @@ public class GuiController {
 				} else if (checkSingleSphere(guiData.sphereRight3)  && Mouse.isButtonDown(0)
 						&& mouseClicked 
 						&& GameStateController.CTState != GameStateController.CT_TREE) {
-					
+					mouseClicked = false;
 					guisPanel.clear();
 					GameStateController.CTState = GameStateController.CT_TREE;
 					clickDisabled = true;
@@ -217,12 +239,35 @@ public class GuiController {
 				case GameStateController.CT_TERRAIN_DRAGGING:
 					guiObjectUnits.clear();
 					guisPanel.clear();
+					break;
 					
 				case GameStateController.CT_TREE:
 					
 					if (checkSingleSphere(guiData.sphereRight3) && mouseClicked) {
-						
+						mouseClicked = false;
+						GameStateController.CTState = GameStateController.CT_IDLE;
+						guiObjectUnits.clear();
+						guisPanel.clear();
 					}
+					for (int i=0; i<guiObjectUnits.size(); i++){
+						if (checkSingleGui(guiObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
+							mouseClicked = false;
+							//dataTypeToReturn = RETURN_TERRAIN;
+							//terrainToReturn = guiObjectUnits.get(i).getObjectData();
+							//entityObjectToReturn = guiObjectUnits.get(i).getEntityObject();
+							entityObject = guiObjectUnits.get(i).getObjectData();
+							texturedModel = guiObjectUnits.get(i).getModel();
+							
+							entityObjectToReturn = gameEntityObjectsController.createEntityObjectAndAddToList(texturedModel, entityObject);
+							GameStateController.CTState = GameStateController.CT_TREE_DRAGGING;
+							//guiObjectUnits.clear();
+						}
+					}
+					break;
+					
+				case GameStateController.CT_TREE_DRAGGING:
+					guiObjectUnits.clear();
+					guisPanel.clear();
 					break;
 
 				default:
@@ -321,6 +366,16 @@ public class GuiController {
 
 	public ObjectData getTerrainToReturn() {
 		return terrainToReturn;
+	}
+	
+	
+
+	public EntityObject getEntityObjectToReturn() {
+		return entityObjectToReturn;
+	}
+
+	public List<GUIText> getGuiTexts() {
+		return guiTexts;
 	}
 	
 	

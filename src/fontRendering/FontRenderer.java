@@ -24,6 +24,7 @@ public class FontRenderer {
 		for (FontType font : texts.keySet()){
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureAtlas());
+			
 			for (GUIText text : texts.get(font)){
 				renderText(text);
 			}
@@ -38,6 +39,8 @@ public class FontRenderer {
 	private void prepare(){
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		shader.start();
 	}
@@ -48,6 +51,7 @@ public class FontRenderer {
 		GL20.glEnableVertexAttribArray(1);
 		shader.loadColour(text.getColour());
 		shader.loadTranslation(text.getPosition());
+		//System.out.println(text.getPosition());
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, text.getVertexCount());
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);

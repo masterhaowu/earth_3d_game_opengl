@@ -50,6 +50,7 @@ public class MouseDraggingController {
 				}
 			} else {
 				Entity entity = entityObject.getEntity();
+				
 				entity.setPosition(dragPos);
 				entity.updateRotation();
 			}

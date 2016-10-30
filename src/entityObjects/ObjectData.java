@@ -9,7 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 public class ObjectData { //objectData dont keep track of the amount, terrainObject does that
 	
 	private int objectType;
-	private String objectName;
+	private String objectName = "LOCKED";
 	private float objectInitAmount;
 	//private float objectAmount;
 	private boolean affectTerrainColour;

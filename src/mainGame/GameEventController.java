@@ -8,9 +8,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Entity;
 import entityObjects.EntityObject;
+import fontMeshCreator.GUIText;
 import gameDataBase.EntityModelDataBase;
 import gameDataBase.ObjectsNetwork;
-import guis.GuiController;
+import guis.GuiEventController;
 import guis.GuiObjectUnit;
 import guis.GuiSphereTexture;
 import guis.GuiTexture;
@@ -25,7 +26,7 @@ import terrainsSphere.TerrainSphere;
 
 public class GameEventController {
 
-	private GuiController guiController;
+	private GuiEventController guiEventController;
 	private MousePickerSphere picker;
 	private ColourController colourController;
 	private Loader loader;
@@ -51,7 +52,7 @@ public class GameEventController {
 	public GameEventController(MousePickerSphere picker, ColourController colourController, Loader loader,
 			HighlightedCircle highlightedCircle, TerrainSphere terrainSphere,
 			GameEntityObjectsController gameEntityObjectsController) {
-		this.guiController = new GuiController(loader, picker);
+		this.guiEventController = new GuiEventController(loader, picker, gameEntityObjectsController);
 		this.picker = picker;
 		this.colourController = colourController;
 		this.loader = loader;
@@ -77,7 +78,7 @@ public class GameEventController {
 	public void updateEvents(List<EntityObject> entityObjects) {
 		updateMouse();
 		picker.updateOptimized();
-		guiController.update(mouseClicked);
+		guiEventController.update(mouseClicked);
 		switch (GameStateController.currentState) {
 		case GameStateController.PLAY_MODE_IDLE:
 
@@ -88,35 +89,29 @@ public class GameEventController {
 				case GameStateController.CT_TERRAIN_DRAGGING:
 					//System.out.println("here");
 					currentFace = picker.getCurrentTerrainFace();
-					// colourController.addObjectToFace(face, object, loader);
-					/*
-					colourController.addObjectToFace(currentFace, guiController.getTerrainToReturn(),
-							guiController.getTerrainToReturn().getObjectInitAmount(),
-							guiController.getTerrainToReturn().isAffectTerrainColour(), 1);
-					*/
-					/*
-					colourController.restoreFaceColour(previousFace);
 					
-					colourController.addObjectToFacePreview(currentFace, guiController.getTerrainToReturn(),
-							guiController.getTerrainToReturn().getObjectInitAmount());
-					colourController.updateColourVBO(loader);
-					*/
 					if (Mouse.isButtonDown(0)) {
-						colourController.setTerrain(currentFace, guiController.getTerrainToReturn());
-						colourController.setPreviewTerrain(currentFace, guiController.getTerrainToReturn());
+						colourController.setTerrain(currentFace, guiEventController.getTerrainToReturn());
+						colourController.setPreviewTerrain(currentFace, guiEventController.getTerrainToReturn());
 						//System.out.println("here");
 						colourController.updateColourVBO(loader);
 						
 					}
 					
 					colourController.restoreFaceColour(previousFace);
-					colourController.setPreviewTerrain(currentFace, guiController.getTerrainToReturn());
+					colourController.setPreviewTerrain(currentFace, guiEventController.getTerrainToReturn());
 					colourController.updateColourVBO(loader);
 					
 					
 					
 					previousFace = currentFace;
 					
+					break;
+					
+				case GameStateController.CT_TREE_DRAGGING:
+					entityObjectToDrag = guiEventController.getEntityObjectToReturn();
+					this.showCircle = true;
+					mouseDraggingController.drag(entityObjectToDrag);
 					break;
 
 				default:
@@ -179,8 +174,8 @@ public class GameEventController {
 	}
 
 	public List<GuiTexture> getGuisToDisplay() {
-		List<GuiTexture> guisToDisplay = guiController.getGuisToDisplay();
-		List<GuiObjectUnit> guiObjectUnits = guiController.getGuiObjectUnits();
+		List<GuiTexture> guisToDisplay = guiEventController.getGuisToDisplay();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getGuiObjectUnits();
 		for (int i = 0; i < guiObjectUnits.size(); i++) {
 			GuiObjectUnit currentObject = guiObjectUnits.get(i);
 			List<GuiTexture> objectGuiTextures = currentObject.getGuiTextures();
@@ -192,8 +187,8 @@ public class GameEventController {
 	}
 
 	public List<GuiSphereTexture> getGuisSphere3D() {
-		List<GuiSphereTexture> guiSphereTextures = guiController.getGuisSphere3D();
-		List<GuiObjectUnit> guiObjectUnits = guiController.getGuiObjectUnits();
+		List<GuiSphereTexture> guiSphereTextures = guiEventController.getGuisSphere3D();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getGuiObjectUnits();
 		for (int i = 0; i < guiObjectUnits.size(); i++) {
 			GuiObjectUnit currentObject = guiObjectUnits.get(i);
 			List<GuiSphereTexture> objectGuiSphereTextures = currentObject.getGuiSphereTextures();
@@ -205,8 +200,20 @@ public class GameEventController {
 		// return guiController.getGuisSphere3D();
 	}
 	
+	public List<GUIText> geGuiTexts(){
+		List<GUIText> guiTexts = guiEventController.getGuiTexts();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getGuiObjectUnits();
+		for (int i = 0; i < guiObjectUnits.size(); i++) {
+			GuiObjectUnit currentObject = guiObjectUnits.get(i);
+			GUIText objectGuiText = currentObject.getNameText();
+			guiTexts.add(objectGuiText);
+		}
+		//System.out.println(guiTexts.size());
+		return guiTexts;
+	}
+	
 	public List<GuiObjectUnit> getGuiObjectUnit(){
-		return guiController.getGuiObjectUnits();
+		return guiEventController.getGuiObjectUnits();
 	}
 
 	public boolean isShowCircle() {

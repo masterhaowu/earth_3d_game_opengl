@@ -22,7 +22,7 @@ public class Camera {
 
 	// private Vector3f polar = new Vector3f(0, 0, 0);
 	private float yawOffset = 0;
-	private float pitchOffset = 0;
+	private float pitchOffset = -40;
 	private float rollOffset = 0;
 
 	private Player player;

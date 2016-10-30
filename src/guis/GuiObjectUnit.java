@@ -10,11 +10,12 @@ import entityObjects.EntityObject;
 import entityObjects.ObjectData;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
+import fontRendering.FontController;
 import models.TexturedModel;
 import renderEngine.Loader;
 
 public class GuiObjectUnit {
-
+	private Loader loader;
 	private int unitID;
 
 	private Vector2f position;
@@ -23,8 +24,9 @@ public class GuiObjectUnit {
 	private GuiTexture background;
 	private GuiTexture mainOrbBackground;
 	private GuiSphereTexture mainOrb;
-	private FontType font;
-	private GUIText name;
+	//private FontType font;
+	private String name;
+	private GUIText nameText;
 	private GuiSphereTexture comfirm;
 	private GuiSphereTexture info;
 	private GuiTexture comfirmBackground;
@@ -36,8 +38,9 @@ public class GuiObjectUnit {
 	private boolean terrain = false;
 
 	private ObjectData objectData;
+	//private TexturedModel texturedModel;
 
-	private EntityObject entityObject;
+	//private EntityObject entityObject;
 
 	private TexturedModel model;
 
@@ -49,7 +52,7 @@ public class GuiObjectUnit {
 	}
 
 	public GuiObjectUnit(Vector2f position, Vector2f scale, Loader loader) {
-
+		this.loader = loader;
 		this.guiTextures = new ArrayList<GuiTexture>();
 		this.guiSphereTextures = new ArrayList<GuiSphereTexture>();
 		// guiSphereTextures objectOrb = new GuiSphereTexture(,
@@ -83,9 +86,11 @@ public class GuiObjectUnit {
 		 * Vector2f(position.x - scale.x * 0.7f, position.y - scale.y * 0.7f),
 		 * scale.y * 0.3f); this.guiSphereTextures.add(info);
 		 */
-		this.font = new FontType(loader.loadFontTexture("candara"), "candara");
-		// this.name = new GUIText("testing", 1f, font, new Vector2f((position.x
-		// - scale.x + 1)/2f, (position.y - scale.y + 1)/2f), scale.x, true);
+		//this.font = new FontType(loader.loadFontTexture("candara"), "candara");
+		//this.name = new GUIText("testing", 3f, font, new Vector2f((position.x - scale.x + 1)/2f, (position.y - scale.y + 1)/2f), scale.x, true);
+		//this.name = new GUIText("testing", 2f, font, new Vector2f(0.5f, 0.5f), 0.2f, true, loader);
+		this.nameText = new GUIText("testing", 1f, FontController.candara, new Vector2f(0.3f, 0.9f), 0.2f, true);
+		//this.name.loadText(loader);
 
 	}
 
@@ -106,11 +111,21 @@ public class GuiObjectUnit {
 		// this.info.setScale(scale.y * 0.3f);
 		this.comfirmBackground.setPosition(new Vector2f(position.x + scale.x * 0.7f, position.y - scale.y * 0.7f));
 		this.comfirmBackground.setScale(scale.y * 0.3f);
+		//System.out.println(new Vector2f((position.x - scale.x + 1)/2f, (position.y - scale.y + 1)/2f));
+		this.nameText.setPosition(new Vector2f((position.x - scale.x + 1)/2f, (1 - (position.y + scale.y + 1 + 0.01f)/2f)));
+		this.nameText.setLineMaxSize(scale.x);
+		this.nameText.loadText(loader);
+		//GUIText text2 = new GUIText("fuck", 3f, FontController.candara, new Vector2f(0.3f, 0.5f), 0.3f, true);
 	}
 
 	public void setTerrainUnit(ObjectData terrainData) {
 		this.terrain = true;
 		this.objectData = terrainData;
+	}
+	
+	public void setObjectUnit(ObjectData objectData) {
+		this.terrain = false;
+		this.objectData = objectData;
 	}
 
 	public GuiSphereTexture getMainOrb() {
@@ -129,9 +144,7 @@ public class GuiObjectUnit {
 		return objectData;
 	}
 
-	public EntityObject getEntityObject() {
-		return entityObject;
-	}
+	
 
 	/*
 	 * public void setPosition(Vector2f position) { this.position = position; }
@@ -162,13 +175,28 @@ public class GuiObjectUnit {
 		this.model = model;
 	}
 
-	public GUIText getName() {
-		return name;
+	public GUIText getNameText() {
+		return nameText;
 	}
 
 	public void setName(GUIText name) {
-		this.name = name;
+		this.nameText = name;
+		//this.nameText = new GUIText(n, 1f, FontController.candara, new Vector2f(0.3f, 0.9f), 0.2f, true);
 	}
+	
+	public void setName(String name){
+		this.name = name;
+		this.nameText = new GUIText(name, 1f, FontController.candara, new Vector2f(0.3f, 0.9f), 0.2f, true);
+	}
+
+	public GuiTexture getMainOrbBackground() {
+		return mainOrbBackground;
+	}
+
+	public GuiTexture getComfirmBackground() {
+		return comfirmBackground;
+	}
+	
 	
 	
 

@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import fontRendering.TextMaster;
+import renderEngine.Loader;
 
 /**
  * Represents a piece of text in the game.
@@ -61,8 +62,17 @@ public class GUIText {
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		TextMaster.loadText(this);
+		//TextMaster.loadText(this);
+		
 		// load text
+	}
+	
+	
+	public void loadText(Loader loader){
+		TextMeshData data = font.loadText(this);
+		int vao = loader.loadToVAO(data.getVertexPositions(), data.getTextureCoords()); 
+		this.setMeshInfo(vao, data.getVertexCount());
+		this.setColour(1.0f, 1.0f, 1.0f);
 	}
 
 	/**
@@ -71,6 +81,12 @@ public class GUIText {
 	public void remove() {
 		TextMaster.removeText(this);
 		// remove text
+	}
+	
+	
+
+	public void setPosition(Vector2f position) {
+		this.position = position;
 	}
 
 	/**
@@ -125,6 +141,16 @@ public class GUIText {
 	 */
 	public int getMesh() {
 		return textMeshVao;
+	}
+	
+	
+
+	public float getLineMaxSize() {
+		return lineMaxSize;
+	}
+
+	public void setLineMaxSize(float lineMaxSize) {
+		this.lineMaxSize = lineMaxSize;
 	}
 
 	/**
@@ -185,5 +211,7 @@ public class GUIText {
 	protected String getTextString() {
 		return textString;
 	}
+	
+	
 
 }
