@@ -41,6 +41,7 @@ public class GameEntityObjectsController {
 	
 	public EntityObject createEntityObjectAndAddToList(TexturedModel texturedModel, ObjectData objectData){
 		Entity newEntitiy = new Entity(texturedModel, new Vector3f(0, 0, -5), 90, 0, 0, objectData.getInitScale());
+		//System.out.println(objectData.getInitScale());
 		EntityObject newEntityObject = new EntityObject(newEntitiy, objectData);
 		entityObjects.add(newEntityObject);
 		return newEntityObject;

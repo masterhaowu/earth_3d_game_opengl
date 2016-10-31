@@ -1,4 +1,4 @@
-package guis;
+package guiEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,10 @@ import org.lwjgl.util.vector.Vector2f;
 import entityObjects.EntityObject;
 import entityObjects.ObjectData;
 import fontMeshCreator.GUIText;
+import guiDataBase.GuiData;
+import guis.GuiObjectUnit;
+import guis.GuiSphereTexture;
+import guis.GuiTexture;
 import mainGame.GameEntityObjectsController;
 import mainGame.GameStateController;
 import models.TexturedModel;
@@ -26,12 +30,12 @@ public class GuiEventController {
 	private GuiData guiData;
 	private MousePickerSphere picker;
 	// private List<GuiTexture> guis;
-	private List<GuiTexture> guisToDisplay;
-	private List<GuiSphereTexture> guisSphere3D;
-	private List<GuiTexture> guisPanel;
-	private List<GuiObjectUnit> guiObjectUnits;
+	//private List<GuiTexture> guisToDisplay;
+	private List<GuiSphereTexture> level1Spheres;
+	private List<GuiTexture> level2Panel;
+	private List<GuiObjectUnit> level2ObjectUnits;
 	
-	private List<GUIText> guiTexts;
+	private List<GUIText> level2Texts;
 	
 	private ObjectData terrainToReturn;
 	private ObjectData entityObject;
@@ -46,11 +50,11 @@ public class GuiEventController {
 		this.gameEntityObjectsController  = gameEntityObjectsController;
 		// this.guis = new ArrayList<GuiTexture>();
 		this.picker = picker;
-		this.guisToDisplay = new ArrayList<GuiTexture>();
-		this.guisSphere3D = new ArrayList<GuiSphereTexture>();
-		this.guisPanel = new ArrayList<GuiTexture>();
-		this.guiObjectUnits = new ArrayList<GuiObjectUnit>();
-		this.guiTexts = new ArrayList<GUIText>();
+		//this.guisToDisplay = new ArrayList<GuiTexture>();
+		this.level1Spheres = new ArrayList<GuiSphereTexture>();
+		this.level2Panel = new ArrayList<GuiTexture>();
+		this.level2ObjectUnits = new ArrayList<GuiObjectUnit>();
+		this.level2Texts = new ArrayList<GUIText>();
 		guiData = new GuiData(loader);
 
 		// guisToDisplay.add(guiData.blackHexTrayBot);
@@ -78,7 +82,7 @@ public class GuiEventController {
 		 * gui.setHighlighted(true); return gui; //System.out.println("gg!"); }
 		 * }
 		 */
-		for (GuiSphereTexture gui : guisSphere3D) {
+		for (GuiSphereTexture gui : level1Spheres) {
 			gui.setHighlighted(false);
 			float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
 			float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
@@ -117,31 +121,32 @@ public class GuiEventController {
 		return false;
 	}
 
-	public void update(boolean mouseClicked) {
+	public boolean update(boolean mouseClicked) {
 		dataTypeToReturn = RETURN_NULL;
-		guisSphere3D.clear();
-		guisToDisplay.clear();
-		guiTexts.clear();
+		level1Spheres.clear();
+		//guisToDisplay.clear();
+		level2Texts.clear();
 		// guisToDisplay.add(guiData.planetCircle);
 		// guisToDisplay.add(guiData.planetIcon);
-		guisSphere3D.add(guiData.leftSphere);
-		guisSphere3D.add(guiData.rightSphere);
+		level1Spheres.add(guiData.leftSphere);
+		level1Spheres.add(guiData.rightSphere);
 
-		guisSphere3D.add(guiData.sphereMiddle);
+		level1Spheres.add(guiData.sphereMiddle);
 
-		guisSphere3D.add(guiData.sphereLeft1);
-		guisSphere3D.add(guiData.sphereLeft2);
-		guisSphere3D.add(guiData.sphereLeft3);
-		guisSphere3D.add(guiData.sphereRight1);
-		guisSphere3D.add(guiData.sphereRight2);
-		guisSphere3D.add(guiData.sphereRight3);
-
+		level1Spheres.add(guiData.sphereLeft1);
+		level1Spheres.add(guiData.sphereLeft2);
+		level1Spheres.add(guiData.sphereLeft3);
+		level1Spheres.add(guiData.sphereRight1);
+		level1Spheres.add(guiData.sphereRight2);
+		level1Spheres.add(guiData.sphereRight3);
+		/*
 		if (!guisPanel.isEmpty()) {
 			for (int i = 0; i < guisPanel.size(); i++) {
 				guisToDisplay.add(guisPanel.get(i));
 				// System.out.println(i);
 			}
 		}
+		*/
 
 		switch (GameStateController.currentState) {
 		case GameStateController.PLAY_MODE_IDLE:
@@ -161,13 +166,13 @@ public class GuiEventController {
 						&& !clickDisabled 
 						&& GameStateController.CTState != GameStateController.CT_TERRAIN_TYPE) {
 					
-					guisPanel.clear();
+					level2Panel.clear();
 					GameStateController.CTState = GameStateController.CT_TERRAIN_TYPE;
 					clickDisabled = true;
-					guisPanel.add(guiData.panelBackground);
+					level2Panel.add(guiData.panelBackground);
 					
 					
-					guiObjectUnits.clear();
+					level2ObjectUnits.clear();
 					
 					for(int i=0; i<GuiData.OBJECT_ROWS; i++){
 						for(int j=0; j<GuiData.OBJECT_COLS; j++){
@@ -176,23 +181,49 @@ public class GuiEventController {
 							if (index < guiData.guiDataTerrains.guiObjectUnits.size()) {
 								GuiObjectUnit currentUnit = guiData.guiDataTerrains.guiObjectUnits.get(index);
 								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j], guiData.guiObjectUnitScale);
-								guiObjectUnits.add(currentUnit);
+								level2ObjectUnits.add(currentUnit);
 							}
 						}
 					}
 					
 					
-				} else if (checkSingleSphere(guiData.sphereRight3)  && Mouse.isButtonDown(0)
+				}else if (checkSingleSphere(guiData.sphereRight1)  && Mouse.isButtonDown(0)
+						&& mouseClicked 
+						&& GameStateController.CTState != GameStateController.CT_GRASS) {
+					mouseClicked = false;
+					level2Panel.clear();
+					GameStateController.CTState = GameStateController.CT_GRASS;
+					clickDisabled = true;
+					level2Panel.add(guiData.panelBackground);
+					
+					
+					level2ObjectUnits.clear();
+					
+					for(int i=0; i<GuiData.OBJECT_ROWS; i++){
+						for(int j=0; j<GuiData.OBJECT_COLS; j++){
+							//guiObjectUnits.add(guiData.guiObjects[i][j]);
+							int index = i * GuiData.OBJECT_ROWS + j;
+							if (index < guiData.guiDataGrasses.guiObjectUnits.size()) {
+								GuiObjectUnit currentUnit = guiData.guiDataGrasses.guiObjectUnits.get(index);
+								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j], guiData.guiObjectUnitScale);
+								level2ObjectUnits.add(currentUnit);
+							}
+						}
+					}
+					
+					
+				}
+				else if (checkSingleSphere(guiData.sphereRight3)  && Mouse.isButtonDown(0)
 						&& mouseClicked 
 						&& GameStateController.CTState != GameStateController.CT_TREE) {
 					mouseClicked = false;
-					guisPanel.clear();
+					level2Panel.clear();
 					GameStateController.CTState = GameStateController.CT_TREE;
 					clickDisabled = true;
-					guisPanel.add(guiData.panelBackground);
+					level2Panel.add(guiData.panelBackground);
 					
 					
-					guiObjectUnits.clear();
+					level2ObjectUnits.clear();
 					
 					for(int i=0; i<GuiData.OBJECT_ROWS; i++){
 						for(int j=0; j<GuiData.OBJECT_COLS; j++){
@@ -201,7 +232,7 @@ public class GuiEventController {
 							if (index < guiData.guiDataTrees.guiObjectUnits.size()) {
 								GuiObjectUnit currentUnit = guiData.guiDataTrees.guiObjectUnits.get(index);
 								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j], guiData.guiObjectUnitScale);
-								guiObjectUnits.add(currentUnit);
+								level2ObjectUnits.add(currentUnit);
 							}
 						}
 					}
@@ -222,14 +253,14 @@ public class GuiEventController {
 					if (checkSingleSphere(guiData.sphereLeft3) && Mouse.isButtonDown(0) && !clickDisabled) {
 						GameStateController.CTState = GameStateController.CT_IDLE;
 						clickDisabled = true;
-						guiObjectUnits.clear();
-						guisPanel.clear();
+						level2ObjectUnits.clear();
+						level2Panel.clear();
 					}
 					
-					for (int i=0; i<guiObjectUnits.size(); i++){
-						if (checkSingleSphere(guiObjectUnits.get(i).getComfirm())&& Mouse.isButtonDown(0)) {
+					for (int i=0; i<level2ObjectUnits.size(); i++){
+						if (checkSingleSphere(level2ObjectUnits.get(i).getComfirm())&& Mouse.isButtonDown(0)) {
 							dataTypeToReturn = RETURN_TERRAIN;
-							terrainToReturn = guiObjectUnits.get(i).getObjectData();
+							terrainToReturn = level2ObjectUnits.get(i).getObjectData();
 							GameStateController.CTState = GameStateController.CT_TERRAIN_DRAGGING;
 							//guiObjectUnits.clear();
 						}
@@ -237,8 +268,35 @@ public class GuiEventController {
 					break;
 					
 				case GameStateController.CT_TERRAIN_DRAGGING:
-					guiObjectUnits.clear();
-					guisPanel.clear();
+					level2ObjectUnits.clear();
+					level2Panel.clear();
+					break;
+					
+				case GameStateController.CT_GRASS:
+					
+					if (checkSingleSphere(guiData.sphereRight3) && mouseClicked) {
+						mouseClicked = false;
+						GameStateController.CTState = GameStateController.CT_IDLE;
+						level2ObjectUnits.clear();
+						level2Panel.clear();
+					}
+					for (int i=0; i<level2ObjectUnits.size(); i++){
+						if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
+							mouseClicked = false;
+							
+							entityObject = level2ObjectUnits.get(i).getObjectData();
+							texturedModel = level2ObjectUnits.get(i).getModel();
+							
+							entityObjectToReturn = gameEntityObjectsController.createEntityObjectAndAddToList(texturedModel, entityObject);
+							entityObjectToReturn.getEntity().randomRotationOnSphere();
+							GameStateController.CTState = GameStateController.CT_GRASS_DRAGGING;
+						}
+					}
+					break;
+					
+				case GameStateController.CT_GRASS_DRAGGING:
+					level2ObjectUnits.clear();
+					level2Panel.clear();
 					break;
 					
 				case GameStateController.CT_TREE:
@@ -246,19 +304,20 @@ public class GuiEventController {
 					if (checkSingleSphere(guiData.sphereRight3) && mouseClicked) {
 						mouseClicked = false;
 						GameStateController.CTState = GameStateController.CT_IDLE;
-						guiObjectUnits.clear();
-						guisPanel.clear();
+						level2ObjectUnits.clear();
+						level2Panel.clear();
 					}
-					for (int i=0; i<guiObjectUnits.size(); i++){
-						if (checkSingleGui(guiObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
+					for (int i=0; i<level2ObjectUnits.size(); i++){
+						if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
 							mouseClicked = false;
 							//dataTypeToReturn = RETURN_TERRAIN;
 							//terrainToReturn = guiObjectUnits.get(i).getObjectData();
 							//entityObjectToReturn = guiObjectUnits.get(i).getEntityObject();
-							entityObject = guiObjectUnits.get(i).getObjectData();
-							texturedModel = guiObjectUnits.get(i).getModel();
+							entityObject = level2ObjectUnits.get(i).getObjectData();
+							texturedModel = level2ObjectUnits.get(i).getModel();
 							
 							entityObjectToReturn = gameEntityObjectsController.createEntityObjectAndAddToList(texturedModel, entityObject);
+							entityObjectToReturn.getEntity().randomRotationOnSphere();
 							GameStateController.CTState = GameStateController.CT_TREE_DRAGGING;
 							//guiObjectUnits.clear();
 						}
@@ -266,8 +325,8 @@ public class GuiEventController {
 					break;
 					
 				case GameStateController.CT_TREE_DRAGGING:
-					guiObjectUnits.clear();
-					guisPanel.clear();
+					level2ObjectUnits.clear();
+					level2Panel.clear();
 					break;
 
 				default:
@@ -340,6 +399,8 @@ public class GuiEventController {
 		 * gui.getScale().y) { gui.setHighlighted(true);
 		 * //System.out.println("gg!"); } }
 		 */
+		
+		return mouseClicked;
 	}
 
 	private void setToolBarStates(int i) {
@@ -351,17 +412,18 @@ public class GuiEventController {
 		guiData.sphereRight2.setNextState(i);
 		guiData.sphereRight3.setNextState(i);
 	}
-
+	/*
 	public List<GuiTexture> getGuisToDisplay() {
 		return guisToDisplay;
 	}
+	*/
 
-	public List<GuiSphereTexture> getGuisSphere3D() {
-		return guisSphere3D;
+	public List<GuiSphereTexture> getLevel1Spheres() {
+		return level1Spheres;
 	}
 
-	public List<GuiObjectUnit> getGuiObjectUnits() {
-		return guiObjectUnits;
+	public List<GuiObjectUnit> getLevel2ObjectUnits() {
+		return level2ObjectUnits;
 	}
 
 	public ObjectData getTerrainToReturn() {
@@ -374,8 +436,12 @@ public class GuiEventController {
 		return entityObjectToReturn;
 	}
 
-	public List<GUIText> getGuiTexts() {
-		return guiTexts;
+	public List<GUIText> getLevel2Texts() {
+		return level2Texts;
+	}
+
+	public List<GuiTexture> getLevel2Panel() {
+		return level2Panel;
 	}
 	
 	

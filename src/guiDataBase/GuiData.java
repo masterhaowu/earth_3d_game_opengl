@@ -1,10 +1,13 @@
-package guis;
+package guiDataBase;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import gameDataBase.ObjectsNetwork;
+import guis.GuiObjectUnit;
+import guis.GuiSphereTexture;
+import guis.GuiTexture;
 import renderEngine.Loader;
 import toolbox.Maths;
 
@@ -67,9 +70,7 @@ public class GuiData {
 	public GuiTexture panelBackground;
 	public GuiTexture panelBorder;
 
-	public GuiObjectUnit guiObjectUnitTesting;
-	public GuiObjectUnit guiObjectUnitTesting2;
-	public GuiObjectUnit guiObjectUnitTesting3;
+	
 	
 	//public GuiObjectUnit[][] guiObjects;
 	public Vector2f [][] guiObjectUnitPositions; // this depends on row and col
@@ -78,7 +79,9 @@ public class GuiData {
 	// public GuiTexture add
 	
 	public GuiDataTerrains guiDataTerrains;
+	public GuiDataGrasses guiDataGrasses;
 	public GuiDataTrees guiDataTrees;
+
 
 
 
@@ -93,6 +96,9 @@ public class GuiData {
 		
 		guiDataTerrains = new GuiDataTerrains();
 		guiDataTerrains.loadTerrains(loader);
+		
+		guiDataGrasses = new GuiDataGrasses();
+		guiDataGrasses.loadGrasses(loader);
 		
 		guiDataTrees = new GuiDataTrees();
 		guiDataTrees.loadTrees(loader);
@@ -256,10 +262,12 @@ public class GuiData {
 		guiObjectUnitTesting13 = new GuiObjectUnit(new Vector2f(0, Ybot + panelBackground.getScale().y * 1 / 3),
 				new Vector2f(panelBackground.getScale().x/3, panelBackground.getScale().y / 4), loader);
 	*/
+		/*
 		panelBorder = new GuiTexture(loader.loadTexture("blackBorder"), panelBackground.getPosition(),
 				panelBackground.getScale());
 		panelBorder.useSoildColour(new Vector3f(0.3f, 0.3f, 0.3f));
 		panelBorder.setTransparency(0.8f);
+		*/
 
 	}
 

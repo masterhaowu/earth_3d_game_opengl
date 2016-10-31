@@ -53,6 +53,11 @@ public class ObjectsNetwork {
 	public static final int LOW_GRASS1 = 501;
 	
 	//objects
+	
+	public static final int LOW_GRASS3 = 503;
+	
+	public static final int PINE_TREE1 = 1001;
+	public static final int SEASONAL_TREE1 = 1011;
 	public static final int SIMPLE_TREE = 1000;
 	
 	
@@ -99,9 +104,12 @@ public class ObjectsNetwork {
 	
 	
 	public static ObjectData lowGrass1;
+	public static ObjectData lowGrass3;
+	
 	
 	public static ObjectData simpleTree;
-	
+	public static ObjectData pineTree1;
+	public static ObjectData seasonalTree1;
 	
 	
 	public static Map<Integer, ObjectData> ObjectsMap = new HashMap<Integer, ObjectData>();
@@ -261,6 +269,37 @@ public class ObjectsNetwork {
 		lowGrass1.addTerrainType(PLAIN_TERRAIN);
 		lowGrass1.addTerrainType(MOUNTAIN_TERRAIN);
 		ObjectsMap.put(LOW_GRASS1, lowGrass1);
+		
+		
+		//lowGrass3
+		lowGrass3 = new ObjectData(LOW_GRASS3);
+		lowGrass3.setAffectTerrainColour(false);
+		lowGrass3.setObjectInitAmount(1000);
+		lowGrass3.setInitScale(0.3f);
+		lowGrass3.addTerrainType(SAVANNA_TERRAIN);
+		lowGrass3.addTerrainType(TUNDRA_TERRAIN);
+		lowGrass3.addTerrainType(STEPPE_TERRAIN);
+		ObjectsMap.put(LOW_GRASS3, lowGrass3);
+		
+		//pineTree1
+		pineTree1 = new ObjectData(PINE_TREE1);
+		pineTree1.setAffectTerrainColour(false);
+		pineTree1.setObjectInitAmount(1000);
+		pineTree1.setInitScale(2f);
+		pineTree1.addTerrainType(TAIGA_TERRAIN);
+		pineTree1.addTerrainType(TUNDRA_TERRAIN);
+		pineTree1.addTerrainType(FOREST_TERRAIN);
+		ObjectsMap.put(PINE_TREE1, pineTree1);
+		
+		//seasonalTree1
+		seasonalTree1 = new ObjectData(SEASONAL_TREE1);
+		seasonalTree1.setAffectTerrainColour(false);
+		seasonalTree1.setObjectInitAmount(1000);
+		seasonalTree1.setInitScale(3f);
+		seasonalTree1.addTerrainType(MOUNTAIN_TERRAIN);
+		seasonalTree1.addTerrainType(FOREST_TERRAIN);
+		seasonalTree1.addTerrainType(STEPPE_TERRAIN);
+		ObjectsMap.put(SEASONAL_TREE1, seasonalTree1);
 		
 		
 		simpleTree = new ObjectData(SIMPLE_TREE);

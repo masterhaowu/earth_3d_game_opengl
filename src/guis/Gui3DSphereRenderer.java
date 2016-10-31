@@ -24,9 +24,9 @@ public class Gui3DSphereRenderer {
 	private Gui3DSphereShader shader;
 
 	private float time;
-	private float testing = 0;
+	
 
-	public Gui3DSphereRenderer(Loader loader, Matrix4f projectionMatrix) {
+	public Gui3DSphereRenderer(Loader loader) {
 		// float[] positions = {-1, 1, -1, -1, 1, 1, 1, -1};
 		// quad = loader.loadToVAO(positions, 2);
 		GuiSphereObject guiSphereObject = new GuiSphereObject(loader);

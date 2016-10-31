@@ -1,5 +1,6 @@
 package mainGame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
@@ -11,7 +12,7 @@ import entityObjects.EntityObject;
 import fontMeshCreator.GUIText;
 import gameDataBase.EntityModelDataBase;
 import gameDataBase.ObjectsNetwork;
-import guis.GuiEventController;
+import guiEvents.GuiEventController;
 import guis.GuiObjectUnit;
 import guis.GuiSphereTexture;
 import guis.GuiTexture;
@@ -78,7 +79,7 @@ public class GameEventController {
 	public void updateEvents(List<EntityObject> entityObjects) {
 		updateMouse();
 		picker.updateOptimized();
-		guiEventController.update(mouseClicked);
+		mouseClicked = guiEventController.update(mouseClicked);
 		switch (GameStateController.currentState) {
 		case GameStateController.PLAY_MODE_IDLE:
 
@@ -108,10 +109,24 @@ public class GameEventController {
 					
 					break;
 					
+				case GameStateController.CT_GRASS_DRAGGING:
+					entityObjectToDrag = guiEventController.getEntityObjectToReturn();
+					this.showCircle = true;
+					mouseDraggingController.drag(entityObjectToDrag);
+					if (mouseClicked) {
+						this.showCircle = false;
+						GameStateController.CTState = GameStateController.CT_IDLE;
+					}
+					break;
+					
 				case GameStateController.CT_TREE_DRAGGING:
 					entityObjectToDrag = guiEventController.getEntityObjectToReturn();
 					this.showCircle = true;
 					mouseDraggingController.drag(entityObjectToDrag);
+					if (mouseClicked) {
+						this.showCircle = false;
+						GameStateController.CTState = GameStateController.CT_IDLE;
+					}
 					break;
 
 				default:
@@ -173,12 +188,13 @@ public class GameEventController {
 		}
 	}
 
-	public List<GuiTexture> getGuisToDisplay() {
-		List<GuiTexture> guisToDisplay = guiEventController.getGuisToDisplay();
-		List<GuiObjectUnit> guiObjectUnits = guiEventController.getGuiObjectUnits();
+	public List<GuiTexture> getGuisToDisplay() { //not good method! no levels
+		List<GuiTexture> guisToDisplay = guiEventController.getLevel2Panel();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getLevel2ObjectUnits();
 		for (int i = 0; i < guiObjectUnits.size(); i++) {
 			GuiObjectUnit currentObject = guiObjectUnits.get(i);
 			List<GuiTexture> objectGuiTextures = currentObject.getGuiTextures();
+			//System.out.println(objectGuiTextures.size());
 			for (int j = 0; j < objectGuiTextures.size(); j++) {
 				guisToDisplay.add(objectGuiTextures.get(j));
 			}
@@ -186,9 +202,9 @@ public class GameEventController {
 		return guisToDisplay;
 	}
 
-	public List<GuiSphereTexture> getGuisSphere3D() {
-		List<GuiSphereTexture> guiSphereTextures = guiEventController.getGuisSphere3D();
-		List<GuiObjectUnit> guiObjectUnits = guiEventController.getGuiObjectUnits();
+	public List<GuiSphereTexture> getGuisSphere3D() { //not good method! no levels
+		List<GuiSphereTexture> guiSphereTextures = guiEventController.getLevel1Spheres();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getLevel2ObjectUnits();
 		for (int i = 0; i < guiObjectUnits.size(); i++) {
 			GuiObjectUnit currentObject = guiObjectUnits.get(i);
 			List<GuiSphereTexture> objectGuiSphereTextures = currentObject.getGuiSphereTextures();
@@ -200,9 +216,9 @@ public class GameEventController {
 		// return guiController.getGuisSphere3D();
 	}
 	
-	public List<GUIText> geGuiTexts(){
-		List<GUIText> guiTexts = guiEventController.getGuiTexts();
-		List<GuiObjectUnit> guiObjectUnits = guiEventController.getGuiObjectUnits();
+	public List<GUIText> geGuiTexts(){ //not good method! no levels
+		List<GUIText> guiTexts = guiEventController.getLevel2Texts();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getLevel2ObjectUnits();
 		for (int i = 0; i < guiObjectUnits.size(); i++) {
 			GuiObjectUnit currentObject = guiObjectUnits.get(i);
 			GUIText objectGuiText = currentObject.getNameText();
@@ -212,8 +228,60 @@ public class GameEventController {
 		return guiTexts;
 	}
 	
-	public List<GuiObjectUnit> getGuiObjectUnit(){
-		return guiEventController.getGuiObjectUnits();
+	public List<GUIText> getLevel2Texts(){
+		List<GUIText> guiTexts = guiEventController.getLevel2Texts();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getLevel2ObjectUnits();
+		for (int i = 0; i < guiObjectUnits.size(); i++) {
+			GuiObjectUnit currentObject = guiObjectUnits.get(i);
+			GUIText objectGuiText = currentObject.getNameText();
+			guiTexts.add(objectGuiText);
+		}
+		//System.out.println(guiTexts.size());
+		return guiTexts;
+	}
+	
+	public List<GuiSphereTexture> getLevel1Spheres() { 
+		List<GuiSphereTexture> guiSpheres = guiEventController.getLevel1Spheres();
+		return guiSpheres;
+	}
+	
+	public List<GuiSphereTexture> getLevel2Spheres() { 
+		List<GuiSphereTexture> guiSpheres = new ArrayList<GuiSphereTexture>();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getLevel2ObjectUnits();
+		for (int i = 0; i < guiObjectUnits.size(); i++) {
+			GuiObjectUnit currentObject = guiObjectUnits.get(i);
+			List<GuiSphereTexture> objectGuiSphereTextures = currentObject.getGuiSphereTextures();
+			for (int j = 0; j < objectGuiSphereTextures.size(); j++) {
+				guiSpheres.add(objectGuiSphereTextures.get(j));
+			}
+		}
+		return guiSpheres;
+	}
+	
+	public List<GuiTexture> getLevel2Panel(){
+		List<GuiTexture> guiTextures = guiEventController.getLevel2Panel();
+		return guiTextures;
+	}
+	
+	public List<GuiTexture> getLevel2textures(){
+		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
+		List<GuiObjectUnit> guiObjectUnits = guiEventController.getLevel2ObjectUnits();
+		for (int i = 0; i < guiObjectUnits.size(); i++) {
+			GuiObjectUnit currentObject = guiObjectUnits.get(i);
+			List<GuiTexture> objectGuiTextures = currentObject.getGuiTextures();
+			for (int j = 0; j < objectGuiTextures.size(); j++) {
+				guiTextures.add(objectGuiTextures.get(j));
+			}
+		}
+		return guiTextures;
+	}
+	
+	
+	
+	
+	
+	public List<GuiObjectUnit> getGuiObjectUnit(){ //not good method! no levels
+		return guiEventController.getLevel2ObjectUnits();
 	}
 
 	public boolean isShowCircle() {

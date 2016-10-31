@@ -43,6 +43,8 @@ public class GuiObjectUnit {
 	//private EntityObject entityObject;
 
 	private TexturedModel model;
+	private float modelScaleDown = 1;
+	private Vector2f positionOffsets = new Vector2f(0, 0); //with respect to the scale of x and y
 
 	float orbScale = 0.9f;
 
@@ -60,6 +62,7 @@ public class GuiObjectUnit {
 		this.background = new GuiTexture(loader.loadTexture("whiteBackground"), position, scale);
 		background.useSoildColour(new Vector3f(0, 0, 0));
 		background.setTransparency(0.1f);
+		//background.useBorder(new Vector3f(1, 1, 1), 0.01f, 0.3f);
 		this.guiTextures.add(background);
 		this.mainOrbBackground = new GuiTexture(loader.loadTexture("greyCircle"),
 				new Vector2f(position.x, position.y - scale.y * 0.15f), scale.y * orbScale);
@@ -196,6 +199,24 @@ public class GuiObjectUnit {
 	public GuiTexture getComfirmBackground() {
 		return comfirmBackground;
 	}
+
+	public float getModelScaleDown() {
+		return modelScaleDown;
+	}
+
+	public void setModelScaleDown(float modelScaleDown) {
+		this.modelScaleDown = modelScaleDown;
+	}
+
+	public Vector2f getPositionOffsets() {
+		return positionOffsets;
+	}
+
+	public void setPositionOffsets(Vector2f positionOffsets) {
+		this.positionOffsets = positionOffsets;
+	}
+	
+	
 	
 	
 	

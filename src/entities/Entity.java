@@ -12,6 +12,7 @@ public class Entity {
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float rotXOffset;
+	private float rotYOffset = 0; // this will be the rotation of the entity wrt the sphere
 	private float scale;
 	private Vector3f polar;
 	
@@ -91,6 +92,11 @@ public class Entity {
 	public void randomRotZ(){
 		Random random = new Random();
 		this.rotZ =  (float) (random.nextFloat() * 360);
+	}
+	
+	public void randomRotationOnSphere(){
+		Random random = new Random();
+		this.rotYOffset =  (float) (random.nextFloat() * 360);
 	}
 	
 	public void increasePolar(float dr, float dt1, float dt2){
@@ -190,6 +196,16 @@ public class Entity {
 		this.scaleAnimation = true;
 		this.scaleAnimationAmplitude = amplitude;
 		this.scaleAnimationSpeed = speed;
+	}
+
+
+	public float getRotYOffset() {
+		return rotYOffset;
+	}
+
+
+	public void setRotYOffset(float rotYOffset) {
+		this.rotYOffset = rotYOffset;
 	}
 	
 	

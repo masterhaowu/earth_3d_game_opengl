@@ -43,7 +43,8 @@ public class Gui3DObjectRenderer {
 			GL20.glEnableVertexAttribArray(1);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			//GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			ModelTexture texture = model.getTexture();
 			if (texture.isHasTransparency()) {
 				RendererController.disableCulling();
@@ -53,9 +54,10 @@ public class Gui3DObjectRenderer {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
 			
-			float scaleDown = (rawModel.getModelData().getMax().y - rawModel.getModelData().getMin().y)/2 * 1.1f;
-			Vector2f position = new Vector2f(guiObjectUnit.getMainOrb().getPosition().x,
-					guiObjectUnit.getMainOrb().getPosition().y - guiObjectUnit.getMainOrb().getScale().y);
+			float scaleDown = (rawModel.getModelData().getMax().y - rawModel.getModelData().getMin().y)/2 * guiObjectUnit.getModelScaleDown();
+			Vector2f offsets = guiObjectUnit.getPositionOffsets();
+			Vector2f position = new Vector2f(guiObjectUnit.getMainOrb().getPosition().x + offsets.x * guiObjectUnit.getMainOrb().getScale().x,
+					guiObjectUnit.getMainOrb().getPosition().y + (offsets.y - 1) * guiObjectUnit.getMainOrb().getScale().y);
 			Vector2f scale = new Vector2f(guiObjectUnit.getMainOrb().getScale().x / scaleDown,
 					guiObjectUnit.getMainOrb().getScale().y / scaleDown);
 

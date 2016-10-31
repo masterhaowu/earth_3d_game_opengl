@@ -28,7 +28,7 @@ public class AnimationController {
 
 	public void updateScaleAnimations() {
 		for (int i = 0; i < entitiesWithScaleAnimations.size(); i++) {
-			EntityAnimation.updateScale(entitiesWithScaleAnimations.get(i), time,
+			EntityAnimation.updateScale(entitiesWithScaleAnimations.get(i),
 					entitiesWithScaleAnimationsAmplitude.get(i), entitiesWithScaleAnimationsSpeed.get(i));
 		}
 	}

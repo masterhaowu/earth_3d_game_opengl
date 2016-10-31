@@ -1,4 +1,4 @@
-package guis;
+package guiDataBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 
 import gameDataBase.ObjectsNetwork;
+import guis.GuiObjectUnit;
 import renderEngine.Loader;
 
 public class GuiDataTerrains {

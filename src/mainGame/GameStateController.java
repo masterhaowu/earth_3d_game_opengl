@@ -44,6 +44,8 @@ public class GameStateController {
 	public static final int CT_TERRAIN_TYPE = 1;
 	
 	public static final int CT_TERRAIN_DRAGGING = 2;
+	public static final int CT_GRASS = 15;
+	public static final int CT_GRASS_DRAGGING = 16;
 	public static final int CT_TREE = 20;
 	public static final int CT_TREE_DRAGGING = 21;
 	

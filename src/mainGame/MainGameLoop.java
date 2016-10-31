@@ -28,12 +28,13 @@ import fontRendering.TextMapController;
 import fontRendering.TextMaster;
 import gameDataBase.EntityModelDataBase;
 import gameDataBase.ObjectsNetwork;
+import guiDataBase.GuiData;
+import guiEvents.GuiEventController;
 import guis.Gui3DObjectRenderer;
 import guis.Gui3DObjectShader;
 import guis.Gui3DSphereRenderer;
-import guis.GuiEventController;
-import guis.GuiData;
 import guis.GuiRenderer;
+import guis.GuiRendererController;
 import guis.GuiTexture;
 import models.RawModel;
 import models.TexturedModel;
@@ -63,6 +64,7 @@ import terrainsSphere.TerrainTypeController;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import time.TimeController;
 import toolbox.Maths;
 import toolbox.MousePicker;
 import water.WaterFrameBuffers;
@@ -103,11 +105,14 @@ public class MainGameLoop {
 		// --------------------------Font----------------------------------------------------
 		//TextMaster.init(loader);
 		FontController.init(loader);
-		TextMapController textMapController = new TextMapController(loader);
+		//TextMapController textMapController = new TextMapController(loader);
 
 		//FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
 		GUIText text = new GUIText("testing", 3f, FontController.candara, new Vector2f(0.5f, 0.5f), 0.2f, true);
 		text.loadText(loader);
+		
+		// ----------------Gui Renderer--------------------------
+		GuiRendererController guiRendererController = new GuiRendererController(loader);
 
 		// text.setColour(1.0f, 1.0f, 1.0f);
 
@@ -344,9 +349,9 @@ public class MainGameLoop {
 		// GuiTexture shadowMap = new GuiTexture(renderer.getShadowMapTexture(),
 		// new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 		// guis.add(shadowMap);
-		GuiRenderer guiRenderer = new GuiRenderer(loader);
-		Gui3DSphereRenderer gui3dRenderer = new Gui3DSphereRenderer(loader, renderer.getProjectionMatrix());
-		Gui3DObjectRenderer gui3dObjectRenderer = new Gui3DObjectRenderer();
+		//GuiRenderer guiRenderer = new GuiRenderer(loader);
+		//Gui3DSphereRenderer gui3dRenderer = new Gui3DSphereRenderer(loader, renderer.getProjectionMatrix());
+		//Gui3DObjectRenderer gui3dObjectRenderer = new Gui3DObjectRenderer();
 
 		// --------------------------MousePicker----------------------------------------------------
 		// MousePicker picker = new MousePicker(camera,
@@ -385,16 +390,16 @@ public class MainGameLoop {
 		waters.add(water);
 
 		
-
+		/*
 		ParticleSystem particleSystem = new ParticleSystem(particleTexture, 150, 35, 0.3f, 4, 1);
 		particleSystem.randomizeRotation();
 		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
 		particleSystem.setLifeError(0.1f);
 		particleSystem.setSpeedError(0.5f);
 		particleSystem.setScaleError(0.8f);
-
-		ParticleTexture particleTextureFire = new ParticleTexture(loader.loadTexture("fire"), 8, true);
-		ParticleSystem particleSystemFire = new ParticleSystem(particleTextureFire, 2, 1, 0, 6, 50);
+	*/
+		//ParticleTexture particleTextureFire = new ParticleTexture(loader.loadTexture("fire"), 8, true);
+		//ParticleSystem particleSystemFire = new ParticleSystem(particleTextureFire, 2, 1, 0, 6, 50);
 
 		// --------------------------FBO----------------------------------------------------
 		Fbo fbo = new Fbo(Display.getWidth(), Display.getWidth(), Fbo.DEPTH_RENDER_BUFFER);
@@ -453,17 +458,8 @@ public class MainGameLoop {
 		//marked.marked = true;
 
 		while (!Display.isCloseRequested()) {
-			// float newHeight = (float) (water.getHeight() + 0.1 *
-			// DisplayManager.getFrameTimeSeconds());
-			// water.setHeight(newHeight);
-			// entity.increasePosition((float) 0, 0, 0);
-			// entity.increaseRotation(0, 1, 0);
-			// barrel.setRotY(barrel.getRotY() + 2f *
-			// DisplayManager.getFrameTimeSeconds());
-			// barrel.increaseRotation(0, 1, 0);
-			// crate.increaseRotation(0, 1, 0);
-			// picker.update2();
-			// player.move(terrains, picker);
+			TimeController.updateTime();
+			
 			player.move(terrainSphere);
 			camera.move();
 
@@ -474,47 +470,13 @@ public class MainGameLoop {
 			ParticleMaster.update(camera);
 
 			renderer.renderShadowMap(gameEntityObjectsController.getEntitiesWithShadows(), sun);
-			// Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-			// System.out.println(entities.size());
-			// mouseHighlightController.checkMousePicking(entityObjects);
+			
 
 			animationController.update();
 
 			eventController.updateEvents(gameEntityObjectsController.getEntityObjects());
 
-			// System.out.println(terrainPoint);
-
-			// if (terrainPoint != null) {
-			// thirdLamp.setPosition(terrainPoint);
-
-			// }
-
-			// System.out.println(picker.getCurrentRay());
-			/*
-			 * GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
-			 * 
-			 * 
-			 * fbos.bindRefractionFrameBuffer(); renderer.processEntity(player);
-			 * renderer.renderScene(entities, normalMapEntities, terrains,
-			 * lights, camera, new Vector4f(0, -1, 0, water.getHeight() + 1f),
-			 * terrainSphere); // renderer.processEntity(player);
-			 * fbos.bindReflectionFrameBuffer();
-			 * 
-			 * float distance = 2f * (camera.getPosition().y -
-			 * water.getHeight()); camera.getPosition().y -= distance;
-			 * camera.invertPitch(); camera.invertRoll();
-			 * renderer.processEntity(player); renderer.renderScene(entities,
-			 * normalMapEntities, terrains, lights, camera, new Vector4f(0, 1,
-			 * 0, -water.getHeight() - 1f ), terrainSphere);
-			 * camera.getPosition().y += distance; camera.invertPitch();
-			 * camera.invertRoll(); fbos.unbindCurrentFrameBuffer();
-			 * 
-			 * GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
-			 */
-			// GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
-			// renderer.processEntity(player);
-
-			// fbo.bindFrameBuffer();
+			
 
 			renderer.renderScene(gameEntityObjectsController.getEntityObjects(),
 					gameEntityObjectsController.getNormalMapEntities(), lights, camera, new Vector4f(0, 1, 0, 50),
@@ -530,27 +492,18 @@ public class MainGameLoop {
 			// GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			ParticleMaster.renderParticles(camera);
 			// PostProcessing.doPostProcessing(fbo.getColourTexture());
-
-			guiRenderer.render(eventController.getGuisToDisplay());
+			guiRendererController.render(eventController);
+			//guiRenderer.render(eventController.getGuisToDisplay());
 			//gui3dRenderer.render(eventController.getGuisSphere3D());
 			//System.out.println(eventController.getGuiObjectUnit().size());
-			gui3dObjectRenderer.render(eventController.getGuiObjectUnit());
-			gui3dRenderer.render(eventController.getGuisSphere3D());
+			//gui3dObjectRenderer.render(eventController.getGuiObjectUnit());
+			//gui3dRenderer.render(eventController.getGuisSphere3D());
 			
-			textMapController.clearMap();
-			textMapController.processListOfText(eventController.geGuiTexts());
-			/*
-			textMapController.processText(text);
-			if (eventController.geGuiTexts().size() > 0) {
-				GUIText text2 = new GUIText("fuck", 3f, FontController.candara, new Vector2f(0.3f, 0.7f), 0.3f, true);
-				text2.loadText(loader);
-				textMapController.processText(text2);
-				
-			}
-			*/
-			textMapController.render();
+			//textMapController.clearMap();
+			//textMapController.processListOfText(eventController.geGuiTexts());
+			
+			//textMapController.render();
 
-			//TextMaster.render();
 
 			DisplayManager.updateDisplay();
 		}
@@ -559,11 +512,12 @@ public class MainGameLoop {
 		fbo.cleanUp();
 		ParticleMaster.cleanUp();
 		//TextMaster.cleanUp();
-		textMapController.cleanUp();
+		//textMapController.cleanUp();
 		// fbos.cleanUp();
 		// waterShader.cleanUp();
 		waterSphereShader.cleanUp();
-		guiRenderer.cleanUp();
+		//guiRenderer.cleanUp();
+		guiRendererController.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
