@@ -322,6 +322,12 @@ public class TerrainSphere {
 		// return loader.loadToVAO(verticesInit, indicesInit, 3);
 
 	}
+	
+	public void connectAllFacesWithNeighbors(int range){
+		for (TerrainFace faceToConnect : finalTerrainFaces){
+			faceToConnect.connectFaceNeighborsWithRange(range);
+		}
+	}
 
 	private int addVertex(Vector3f p) {
 		float length = (float) Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z);

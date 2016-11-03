@@ -26,6 +26,8 @@ public class TerrainFace {
 	private List<EntityObject> entityObjects;
 	private List<TerrainObject> terrainObjects;
 	
+	private ArrayList<ArrayList<TerrainFace>> neighborFaces;
+	
 	
 	private ObjectData terrainType;
 	private ObjectData terrainTypePreview;
@@ -99,19 +101,19 @@ public class TerrainFace {
 	
 	
 	public Set<TerrainFace> getNeighborFaces(int range){
-		Set<TerrainFace> neighborFaces = new HashSet<TerrainFace>();
-		neighborFaces.add(this);
+		Set<TerrainFace> neighborFacesSet = new HashSet<TerrainFace>();
+		neighborFacesSet.add(this);
 		for (int i=0; i<range; i++){
 			//create another set in case iterator keeps going due to the fact i am adding more faces to the end
 			//also i dont have to modify the original set this way
 			Set<TerrainFace> incresedFaces = new HashSet<TerrainFace>();
-			for (TerrainFace currentFace : neighborFaces){
+			for (TerrainFace currentFace : neighborFacesSet){
 				//first copy itself to the increased set
 				if (!incresedFaces.contains(currentFace)) {
 					incresedFaces.add(currentFace);
 				}
 				//then copy neighbors
-				for (TerrainVertex vertex: vertices){
+				for (TerrainVertex vertex: vertices){ // check this!!
 					List<TerrainFace> vertexNeighborFaces = vertex.getNeighborFaces();
 					//System.out.println(vertexNeighborFaces.size());
 					for (TerrainFace currentNeighborFace : vertexNeighborFaces){
@@ -122,11 +124,37 @@ public class TerrainFace {
 				}
 			}
 			//give increasedFaces to neighborFaces
-			neighborFaces = incresedFaces;
+			neighborFacesSet = incresedFaces;
 		}
-		return neighborFaces;
+		return neighborFacesSet;
 	}
 	
+	
+	public void connectFaceNeighborsWithRange(int range){
+		this.neighborFaces = new ArrayList<ArrayList<TerrainFace>>();
+		Set<TerrainFace> checkedFaces = new HashSet<>();
+		checkedFaces.add(this);
+		ArrayList<TerrainFace> initList = new ArrayList<TerrainFace>();
+		initList.add(this);
+		neighborFaces.add(initList);
+		for (int i=1; i<range+1; i++){
+			ArrayList<TerrainFace> currentFaceList = new ArrayList<TerrainFace>();
+			ArrayList<TerrainFace> previousList = neighborFaces.get(i - 1);
+			for (TerrainFace previousFace : previousList){
+				List<TerrainVertex> VertexList = previousFace.getNeighorVerticesDefault();
+				for (TerrainVertex vertex : VertexList){
+					List<TerrainFace> newFaceList = vertex.getNeighborFaces();
+					for (TerrainFace newFace : newFaceList){
+						if (!checkedFaces.contains(newFace)) {
+							currentFaceList.add(newFace);
+							checkedFaces.add(newFace);
+						}
+					}
+				}
+			}
+			neighborFaces.add(currentFaceList);
+		}
+	}
 	
 	
 	
@@ -283,9 +311,15 @@ public class TerrainFace {
 	public void setSnowAmount(float snowAmount) {
 		this.snowAmount = snowAmount;
 	}
+
+	public List<EntityObject> getEntityObjects() {
+		return entityObjects;
+	}
 	
 	
-	
+	public void addEntityObject(EntityObject entityObject){
+		entityObjects.add(entityObject);
+	}
 	
 	
 	

@@ -16,10 +16,13 @@ import org.lwjgl.util.vector.Vector4f;
 import animations.AnimationController;
 import climate.HumidityController;
 import climate.TemperatureController;
+import clock.GameTimeController;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import entityGamePlay.EntityCycleController;
+import entityGamePlay.EntityGrowthController;
 import entityObjects.EntityObject;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
@@ -81,7 +84,12 @@ public class MainGameLoop {
 		// TODO Auto-generated method stub
 
 		DisplayManager.createDisplay();
-
+		
+		//----Game Timer-----
+		GameTimeController.init();
+		
+		
+		//-----Loader-----
 		Loader loader = new Loader();
 		// --------------------------Game State--------------------
 		GameStateController.setCurrentState(GameStateController.PLAY_MODE_IDLE);
@@ -97,10 +105,18 @@ public class MainGameLoop {
 
 		// --------------------------Animation Controller ---------------------
 		AnimationController animationController = new AnimationController();
+		
+		// --------------------------TerrainSphere---------------------------------------------
+		TerrainSphere terrainSphere = new TerrainSphere(loader, 6, 400f);
+		terrainSphere.connectAllFacesWithNeighbors(4);
 
 		// --------------------------Game Entity Object Controller
 		// --------------------------
 		GameEntityObjectsController gameEntityObjectsController = new GameEntityObjectsController(animationController);
+		
+		//---------------Game Play Controllers-----------
+		//EntityGrowthController entityGrowthController = new EntityGrowthController();
+		EntityCycleController entityCycleController = new EntityCycleController();
 
 		// --------------------------Font----------------------------------------------------
 		//TextMaster.init(loader);
@@ -114,111 +130,14 @@ public class MainGameLoop {
 		// ----------------Gui Renderer--------------------------
 		GuiRendererController guiRendererController = new GuiRendererController(loader);
 
-		// text.setColour(1.0f, 1.0f, 1.0f);
+		
 
-		// staticModel.getTexture().setReflectivity(0.2f);
-		// staticModel.getTexture().setShineDamper(2.0f);
-		// Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -25),
-		// 0, 0, 0, 1);
-
-		ModelData dataPlant = OBJFileLoader.loadOBJ("grassModel");
-		RawModel modelPlant = loader.loadToVAO(dataPlant.getVertices(), dataPlant.getTextureCoords(),
-				dataPlant.getNormals(), dataPlant.getIndices());
-		// RawModel modelPlant = OBJLoader.loadObjModel("grassModel", loader);
-		TexturedModel texturedModelPlant = new TexturedModel(modelPlant,
-				new ModelTexture(loader.loadTexture("grassTexture")));
-		texturedModelPlant.getTexture().setHasTransparency(true);
-		texturedModelPlant.getTexture().setUseFakeLighting(true);
-
-		ModelData dataFern = OBJFileLoader.loadOBJ("fern");
-		RawModel modelFern = loader.loadToVAO(dataFern.getVertices(), dataFern.getTextureCoords(),
-				dataFern.getNormals(), dataFern.getIndices());
-		// RawModel modelFern = OBJLoader.loadObjModel("fern", loader);
-		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
-		fernTextureAtlas.setNumberOfRows(2);
-		TexturedModel texturedModelFern = new TexturedModel(modelFern, fernTextureAtlas);
-		texturedModelFern.getTexture().setHasTransparency(true);
-
-		ModelData dataLamp = OBJFileLoader.loadOBJ("lamp");
-		RawModel modelLamp = loader.loadToVAO(dataLamp.getVertices(), dataLamp.getTextureCoords(),
-				dataLamp.getNormals(), dataLamp.getIndices());
-		// ModelTexture lamp = new ModelTexture(loader.loadTexture("lamp"));
-		TexturedModel lamp = new TexturedModel(modelLamp, new ModelTexture(loader.loadTexture("lamp")));
-		lamp.getTexture().setUseFakeLighting(true);
-
-		TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("barrel", loader),
-				new ModelTexture(loader.loadTexture("barrel")));
-		barrelModel.getTexture().setNormalMap(loader.loadTexture("barrelNormal"));
-		barrelModel.getTexture().setShineDamper(10.0f);
-		barrelModel.getTexture().setReflectivity(0.5f);
-
-		TexturedModel crateModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("crate", loader),
-				new ModelTexture(loader.loadTexture("crate")));
-		crateModel.getTexture().setNormalMap(loader.loadTexture("crateNormal"));
-		crateModel.getTexture().setShineDamper(5.0f);
-		crateModel.getTexture().setReflectivity(0.2f);
-
-		TexturedModel boulderModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("boulder", loader),
-				new ModelTexture(loader.loadTexture("boulder")));
-		boulderModel.getTexture().setNormalMap(loader.loadTexture("boulderNormal"));
-		boulderModel.getTexture().setShineDamper(2.0f);
-		boulderModel.getTexture().setReflectivity(0.01f);
-
-		// --------------------------Terrain----------------------------------------------------
-		/*
-		 * TerrainTexture backgroundTexture = new
-		 * TerrainTexture(loader.loadTexture("dirt")); TerrainTexture rTexture =
-		 * new TerrainTexture(loader.loadTexture("grassy")); TerrainTexture
-		 * gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
-		 * TerrainTexture bTexture = new
-		 * TerrainTexture(loader.loadTexture("dirt"));
-		 * 
-		 * TerrainTexturePack texturePack = new
-		 * TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-		 * 
-		 * TerrainTexture blendMap = new
-		 * TerrainTexture(loader.loadTexture("blendMap"));
-		 * 
-		 * Terrain terrain = new Terrain(10, 9, loader, texturePack, blendMap,
-		 * "lake"); List<Terrain> terrains = new ArrayList<Terrain>();
-		 * terrains.add(terrain);
-		 */
-		// Terrain terrain2 = new Terrain(1, 1, loader, texturePack, blendMap,
-		// "lake");
-		// terrains.add(terrain2);
-
-		// List<Entity> entities = new ArrayList<Entity>();
-
-		// Entity barrel = new Entity(barrelModel, new Vector3f(8400, 15, 7550),
-		// 0, 0, 0, 1);
-		// normalMapEntities.add(barrel);
-		// Entity crate = new Entity(crateModel, new Vector3f(130, 15, -50), 0,
-		// 0, 0, 0.1f);
-		// normalMapEntities.add(crate);
+		
 
 		Random random = new Random();
-		/*
-		 * for (int i = 0; i < 100; i++) { float x = random.nextFloat() * 800;
-		 * float z = random.nextFloat() * 800; float y =
-		 * terrain.getHeightOfTerrain(x, z); Entity tempEntitiy = new
-		 * Entity(staticModel, new Vector3f(x, y, z), 0, 0, 0, 1);
-		 * //entities.add(new Entity(staticModel, new Vector3f(x, y, z), 0, 0,
-		 * 0, 1)); //entities.add(tempEntitiy);
-		 * //entitiesWithShadows.add(tempEntitiy);
-		 * 
-		 * } for (int i = 0; i < 100; i++) { float x = random.nextFloat() * 800
-		 * + 8000; float z = random.nextFloat() * 800 + 7200; float y =
-		 * terrain.getHeightOfTerrain(x, z); float rotX = random.nextFloat() *
-		 * 180; float rotY = random.nextFloat() * 180; float rotZ =
-		 * random.nextFloat() * 180; Entity tempEntity = new
-		 * Entity(boulderModel, new Vector3f(x, y, z), rotX, rotY, rotZ, 1);
-		 * //normalMapEntities.add(new Entity(boulderModel, new Vector3f(x, y,
-		 * z), rotX, rotY, rotZ, 1)); //normalMapEntities.add(tempEntity);
-		 * //entitiesWithShadows.add(tempEntity); }
-		 */
+		
 
-		// --------------------------TerrainSphere---------------------------------------------
-		TerrainSphere terrainSphere = new TerrainSphere(loader, 6, 400f);
+		
 		
 		
 		//------------Climate Particle Systems------------------------------
@@ -297,88 +216,11 @@ public class MainGameLoop {
 				// entities.add(deerEntity);
 				// System.out.println(deerEntity.getModel().getRawModel().getVaoID());
 
-		// --------------------------EntitySphere----------------------------------------------------
-		for (int i = 0; i < 60; i++) {
-			float theta1 = (float) (random.nextFloat() * Math.PI * 2 - Math.PI);
-			float theta2 = (float) (random.nextFloat() * Math.PI - Math.PI / 2);
-			// theta1 = 0;
-			// theta2 = (float) (Math.PI/2 - 0.1 * i);
-			// float y = terrain.getHeightOfTerrain(x, z);
-			// float radius = terrainSphere.getHeight(theta1, theta2);
+		
 
-			// float radius = terrainSphere.getHeightAdvanced(theta1, theta2);
-			// Vector3f entityPos = Maths.convertBackToCart(new Vector3f(radius,
-			// theta1, theta2));
-			Vector3f entityPos = terrainSphere.getPositionAdvanced(theta1, theta2);
-			// Entity tempEntitiy = new
-			// Entity(EntityObjectModelData.testingTreeModel, entityPos, 90, 0,
-			// 0, 2f);
-			EntityObject tempEntityObject = gameEntityObjectsController
-					.createEntityObject(EntityModelDataBase.testingTreeModel, ObjectsNetwork.simpleTree);
-			// tempEntitiy.updateRotation();
-			// entities.add(new Entity(staticModel, new Vector3f(x, y, z), 0, 0,
-			// 0, 1));
-			// EntityObject tempEntityObject = new EntityObject(tempEntitiy,
-			// ObjectsNetwork.simpleTree);
-			tempEntityObject.getEntity().setPosition(entityPos);
-			tempEntityObject.getEntity().updateRotation();
-			// tempEntityObject.getEntity().setEnableShaderAnimation(false);
-			tempEntityObject.getEntity().setupScaleAnimation(0.02f, 1f);
-			animationController.addEntityWithScaleAnimation(tempEntityObject.getEntity(), 0.02f, 1f);
-			if (tempEntityObject.checkObjectAboveWater(terrainSphere)) {
-				// entities.add(tempEntitiy);
-				// entityObjects.add(tempEntityObject);
-				// System.out.println("here");
-				gameEntityObjectsController.addEntityObject(tempEntityObject);
-			}
-
-			// entitiesWithShadows.add(tempEntitiy);
-
-		}
-		// Entity tempEntitiy = new Entity(EntityObjectModelData.lowGrass1Model,
-		// new Vector3f(0, 0, -5), 90, 0, 0, 0.2f);
-		// EntityObject tempEntityObject = new EntityObject(tempEntitiy,
-		// ObjectsNetwork.lowGrass1);
-		// entityObjects.add(tempEntityObject);
-
-		// --------------------------GUI----------------------------------------------------
-		// List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		// GuiTexture gui = new GuiTexture(loader.loadTexture("greyLowPoly"),
-		// new Vector2f(0f, 0f), new Vector2f(0.75f, 0.75f));
-		// guis.add(gui);
-		// GuiTexture shadowMap = new GuiTexture(renderer.getShadowMapTexture(),
-		// new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
-		// guis.add(shadowMap);
-		//GuiRenderer guiRenderer = new GuiRenderer(loader);
-		//Gui3DSphereRenderer gui3dRenderer = new Gui3DSphereRenderer(loader, renderer.getProjectionMatrix());
-		//Gui3DObjectRenderer gui3dObjectRenderer = new Gui3DObjectRenderer();
-
-		// --------------------------MousePicker----------------------------------------------------
-		// MousePicker picker = new MousePicker(camera,
-		// renderer.getProjectionMatrix(), terrain);
-
-		Entity thirdLamp = new Entity(lamp, new Vector3f(293, -6.8f, -305), 90, 0, 0, 1);
-		Entity secondLamp = new Entity(lamp, new Vector3f(293, -6.8f, -305), 90, 0, 0, 1);
-		Entity firstLamp = new Entity(lamp, new Vector3f(293, -6.8f, -305), 90, 0, 0, 1);
-		// Light thirdLight = new Light(new Vector3f(293, 7, -305), new
-		// Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f));
-
-		// entities.add(thirdLamp);
-		// entities.add(secondLamp);
-		// entities.add(firstLamp);
-		// lights.add(thirdLight);
+		
 		MousePickerSphere picker = new MousePickerSphere(camera, renderer.getProjectionMatrix(), terrainSphere);
 
-		// --------------------------Water----------------------------------------------------
-		/*
-		 * WaterFrameBuffers fbos = new WaterFrameBuffers();
-		 * 
-		 * WaterShader waterShader = new WaterShader(); WaterRenderer
-		 * waterRenderer = new WaterRenderer(loader, waterShader,
-		 * renderer.getProjectionMatrix(), fbos); List<WaterTile> waters = new
-		 * ArrayList<WaterTile>(); WaterTile water = new WaterTile(8400, 7600,
-		 * 0, loader); waters.add(water);
-		 */
 
 		// --------------------------WaterSphere----------------------------------------------------
 
@@ -459,6 +301,7 @@ public class MainGameLoop {
 
 		while (!Display.isCloseRequested()) {
 			TimeController.updateTime();
+			GameTimeController.updateGameTime();
 			
 			player.move(terrainSphere);
 			camera.move();
@@ -475,7 +318,11 @@ public class MainGameLoop {
 			animationController.update();
 
 			eventController.updateEvents(gameEntityObjectsController.getEntityObjects());
-
+			
+			if (GameTimeController.basicCycleHit) {
+				entityCycleController.updateList(gameEntityObjectsController.getEntityObjects());
+			}
+			
 			
 
 			renderer.renderScene(gameEntityObjectsController.getEntityObjects(),

@@ -115,6 +115,8 @@ public class GameEventController {
 					mouseDraggingController.drag(entityObjectToDrag);
 					if (mouseClicked) {
 						this.showCircle = false;
+						//entityObjectToDrag.setFixed(true);
+						entityObjectToDrag.connectFaceWithEntity();
 						GameStateController.CTState = GameStateController.CT_IDLE;
 					}
 					break;
@@ -125,6 +127,8 @@ public class GameEventController {
 					mouseDraggingController.drag(entityObjectToDrag);
 					if (mouseClicked) {
 						this.showCircle = false;
+						//entityObjectToDrag.setFixed(true);
+						entityObjectToDrag.connectFaceWithEntity();
 						GameStateController.CTState = GameStateController.CT_IDLE;
 					}
 					break;

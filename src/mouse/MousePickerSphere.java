@@ -543,12 +543,14 @@ public class MousePickerSphere {
 		// terrainSphere.getTerrainPointWithCameraRay(currentRay,
 		// camera.getPosition());
 		currentTerrainPoint = terrainSphere.getTerrainRayIntersectionPointCheckingNeighborFaces(currentRay,
-				camera.getPosition(), 4);
+				camera.getPosition(), 1);
 		if (currentTerrainPoint == null) {
+			//System.out.println("not intersected!");
 			if (intersectionInRange(0, RAY_RANGE, currentRay)) {
 				currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
 			} else {
 				currentTerrainPoint = null;
+				//System.out.println("not intersected!");
 			}
 		}
 		// System.out.println(currentTerrainPoint);

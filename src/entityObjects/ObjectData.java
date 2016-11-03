@@ -11,11 +11,13 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	private int objectType;
 	private String objectName = "LOCKED";
 	private float objectInitAmount;
+	private float objectMaxAmount;
+	private float objectExtinctAmount;
 	//private float objectAmount;
 	private boolean affectTerrainColour;
 	private Vector3f colour;
 	private Vector2f entityAmountRange;
-	
+	/*
 	private int foodSourcesCount;
 	private HashSet<Integer> foodSource1;
 	private float foodSource1Range;
@@ -25,16 +27,36 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	
 	private HashSet<Integer> foodSource3;
 	private float foodSource3Range;
+	*/
+	private HashSet<Integer> terrainTypes; //this is temp, need to replace this with better solution later
 	
-	private HashSet<Integer> terrainTypes;
+	
+	private boolean affectedByHumidity = false;
+	private boolean affectedByTemperature = false;
+	private boolean affectedByHeight = false;
+	
+	
+	
+	private float humidityOptimal;
+	private float temperatureOptimal;
+	private float heightOptimal;
+	
+	private float humidityRange;
+	private float temperatureRange;
+	private float heightRange;
+	
+	//private float humidityFactorAbove;
+	//private float humidityFactorBelow;
+	
+	
 	
 	private float initScale;
 	
 	public ObjectData(int objectType){
 		this.objectType = objectType;
-		foodSource1 = new HashSet<Integer>();
-		foodSource2 = new HashSet<Integer>();
-		foodSource3 = new HashSet<Integer>();
+		//foodSource1 = new HashSet<Integer>();
+		//foodSource2 = new HashSet<Integer>();
+		//foodSource3 = new HashSet<Integer>();
 		terrainTypes = new HashSet<Integer>();
 	}
 
@@ -52,6 +74,8 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 
 	public void setObjectInitAmount(float objectInitAmount) {
 		this.objectInitAmount = objectInitAmount;
+		this.objectMaxAmount = objectInitAmount * 3f;
+		this.objectExtinctAmount = objectInitAmount / 3f;
 	}
 
 	public boolean isAffectTerrainColour() {
@@ -77,61 +101,98 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	public void setEntityAmountRange(Vector2f entityAmountRange) {
 		this.entityAmountRange = entityAmountRange;
 	}
+	
+	public void setHumidityInfo(float optimal, float range){
+		this.affectedByHumidity = true;
+		this.humidityOptimal = optimal;
+		this.humidityRange = range;
+	}
+	
+	public void setTemperatureInfo(float optimal, float range){
+		this.affectedByTemperature = true;
+		this.temperatureOptimal = optimal;
+		this.temperatureRange = range;
+	}
+	
+	public void setHeightInfo(float optimal, float range){
+		this.affectedByHeight = true;
+		this.heightOptimal = optimal;
+		this.heightRange = range;
+	}
+	
+	
+	
 
-	public int getFoodSourcesCount() {
-		return foodSourcesCount;
+	public boolean isAffectedByHumidity() {
+		return affectedByHumidity;
 	}
 
-	public void setFoodSourcesCount(int foodSourcesCount) {
-		this.foodSourcesCount = foodSourcesCount;
+	public void setAffectedByHumidity(boolean affectedByHumidity) {
+		this.affectedByHumidity = affectedByHumidity;
 	}
 
-	public HashSet<Integer> getFoodSource1() {
-		return foodSource1;
+	public boolean isAffectedByTemperature() {
+		return affectedByTemperature;
 	}
 
-	public void setFoodSource1(HashSet<Integer> foodSource1) {
-		this.foodSource1 = foodSource1;
+	public void setAffectedByTemperature(boolean affectedByTemperature) {
+		this.affectedByTemperature = affectedByTemperature;
 	}
 
-	public float getFoodSource1Range() {
-		return foodSource1Range;
+	public boolean isAffectedByHeight() {
+		return affectedByHeight;
 	}
 
-	public void setFoodSource1Range(float foodSource1Range) {
-		this.foodSource1Range = foodSource1Range;
+	public void setAffectedByHeight(boolean affectedByHeight) {
+		this.affectedByHeight = affectedByHeight;
 	}
 
-	public HashSet<Integer> getFoodSource2() {
-		return foodSource2;
+	public float getHumidityOptimal() {
+		return humidityOptimal;
 	}
 
-	public void setFoodSource2(HashSet<Integer> foodSource2) {
-		this.foodSource2 = foodSource2;
+	public void setHumidityOptimal(float humidityOptimal) {
+		this.humidityOptimal = humidityOptimal;
 	}
 
-	public float getFoodSource2Range() {
-		return foodSource2Range;
+	public float getTemperatureOptimal() {
+		return temperatureOptimal;
 	}
 
-	public void setFoodSource2Range(float foodSource2Range) {
-		this.foodSource2Range = foodSource2Range;
+	public void setTemperatureOptimal(float temperatureOptimal) {
+		this.temperatureOptimal = temperatureOptimal;
 	}
 
-	public HashSet<Integer> getFoodSource3() {
-		return foodSource3;
+	public float getHeightOptimal() {
+		return heightOptimal;
 	}
 
-	public void setFoodSource3(HashSet<Integer> foodSource3) {
-		this.foodSource3 = foodSource3;
+	public void setHeightOptimal(float heightOptimal) {
+		this.heightOptimal = heightOptimal;
 	}
 
-	public float getFoodSource3Range() {
-		return foodSource3Range;
+	public float getHumidityRange() {
+		return humidityRange;
 	}
 
-	public void setFoodSource3Range(float foodSource3Range) {
-		this.foodSource3Range = foodSource3Range;
+	public void setHumidityRange(float humidityRange) {
+		this.humidityRange = humidityRange;
+	}
+
+	public float getTemperatureRange() {
+		return temperatureRange;
+	}
+
+	public void setTemperatureRange(float temperatureRange) {
+		this.temperatureRange = temperatureRange;
+	}
+
+	public float getHeightRange() {
+		return heightRange;
+	}
+
+	public void setHeightRange(float heightRange) {
+		this.heightRange = heightRange;
 	}
 
 	public HashSet<Integer> getTerrainTypes() {
@@ -158,6 +219,22 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 
 	public void setInitScale(float initScale) {
 		this.initScale = initScale;
+	}
+
+	public float getObjectMaxAmount() {
+		return objectMaxAmount;
+	}
+
+	public void setObjectMaxAmount(float objectMaxAmount) {
+		this.objectMaxAmount = objectMaxAmount;
+	}
+
+	public float getObjectExtinctAmount() {
+		return objectExtinctAmount;
+	}
+
+	public void setObjectExtinctAmount(float objectExtinctAmount) {
+		this.objectExtinctAmount = objectExtinctAmount;
 	}
 	
 	

@@ -61,6 +61,9 @@ public class ObjectsNetwork {
 	public static final int SIMPLE_TREE = 1000;
 	
 	
+	public static final int LION = 5000;
+	
+	
 	
 	//basic terrain objects that only has colour
 	public static final Vector3f SNOW_COLOUR = new Vector3f(1, 1, 1);
@@ -296,9 +299,12 @@ public class ObjectsNetwork {
 		seasonalTree1.setAffectTerrainColour(false);
 		seasonalTree1.setObjectInitAmount(1000);
 		seasonalTree1.setInitScale(3f);
+		seasonalTree1.setTemperatureInfo(15, 10);
+		seasonalTree1.setHumidityInfo(10, 15);
 		seasonalTree1.addTerrainType(MOUNTAIN_TERRAIN);
 		seasonalTree1.addTerrainType(FOREST_TERRAIN);
 		seasonalTree1.addTerrainType(STEPPE_TERRAIN);
+		seasonalTree1.addTerrainType(CANYON_TERRAIN);
 		ObjectsMap.put(SEASONAL_TREE1, seasonalTree1);
 		
 		

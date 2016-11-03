@@ -6,12 +6,15 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Entity;
+import gameDataBase.ObjectsNetwork;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainObject;
 import terrainsSphere.TerrainSphere;
 import terrainsSphere.TerrainVertex;
 
 public class EntityObject {
+	public static final int PREY_LEVELS_THRESHOLD = 4;
+	
 	private Entity entity;
 	private List<Entity> entityList; //first one will be base position
 	boolean multipleEntities;
@@ -20,7 +23,13 @@ public class EntityObject {
 	private ObjectData objectData;
 	//private float initScale;
 	//private Vector3f position;
-	private float amount;
+	private float amount = 0;
+	private boolean fixed = false;
+	
+	
+	private ArrayList<ArrayList<EntityObject>> preys;
+	private ArrayList<ArrayList<EntityObject>> predators;
+	
 	
 	
 	public EntityObject(Entity entity, ObjectData objectData){
@@ -29,6 +38,7 @@ public class EntityObject {
 		this.multipleEntities = false;
 		this.amount = objectData.getObjectInitAmount();
 		//this.face = face;
+		initEntityLists();
 	}
 	
 	public EntityObject(List<Entity> entities, ObjectData objectData){
@@ -37,6 +47,20 @@ public class EntityObject {
 		this.multipleEntities = true;
 		this.amount = objectData.getObjectInitAmount();
 		//this.face = face;
+		initEntityLists();
+	}
+	
+	public void initEntityLists(){
+		preys = new ArrayList<ArrayList<EntityObject>>();
+		for (int i = 0; i < PREY_LEVELS_THRESHOLD; i++) {
+			ArrayList<EntityObject> tempList = new ArrayList<EntityObject>();
+			preys.add(tempList);
+		}
+		predators = new ArrayList<ArrayList<EntityObject>>();
+		for (int i = 0; i < PREY_LEVELS_THRESHOLD; i++) {
+			ArrayList<EntityObject> tempList = new ArrayList<EntityObject>();
+			predators.add(tempList);
+		}
 	}
 	
 	
@@ -56,6 +80,7 @@ public class EntityObject {
 	
 	public boolean checkObjectCanExistOnTerrain(TerrainSphere terrainSphere){
 		this.face = terrainSphere.getTargetFacePlucker(this.entity.getPosition());
+		/*
 		List<TerrainVertex> neighborVertices = face.getNeighorVerticesDefault();
 		for (TerrainVertex vertex:neighborVertices){
 			boolean hasTerrainType = false;
@@ -68,7 +93,13 @@ public class EntityObject {
 				return false;
 			}
 		}
-		return true;
+		*/
+		for(int desiredTerrainType : objectData.getTerrainTypes()){
+			if (this.face.getTerrainType().getObjectType() == desiredTerrainType) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void addEntity(Entity entity){
@@ -220,8 +251,22 @@ public class EntityObject {
 		return face;
 	}
 
+	public void updateFace(TerrainSphere terrainSphere){
+		this.face = terrainSphere.getTargetFacePlucker(this.entity.getPosition());
+	}
+
+	public boolean isFixed() {
+		return fixed;
+	}
+
+	public void setFixed(boolean fixed) {
+		this.fixed = fixed;
+	}
 	
-	
+	public void connectFaceWithEntity(){
+		this.fixed = true;
+		this.face.addEntityObject(this);
+	}
 	
 	
 	

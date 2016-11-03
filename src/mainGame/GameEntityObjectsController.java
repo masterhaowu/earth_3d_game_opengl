@@ -2,6 +2,7 @@ package mainGame;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -11,6 +12,7 @@ import entityObjects.EntityObject;
 import entityObjects.ObjectData;
 import gameDataBase.ObjectsNetwork;
 import models.TexturedModel;
+import terrainsSphere.TerrainSphere;
 
 public class GameEntityObjectsController {
 	
@@ -19,7 +21,11 @@ public class GameEntityObjectsController {
 	private List<Entity> normalMapEntities;
 	private List<Entity> entitiesWithShadows;
 	
+	
+	//private Map<Integer, EntityObject>
+	
 	private AnimationController animationController;
+	//private TerrainSphere terrainSphere;
 	
 	
 	
@@ -28,6 +34,7 @@ public class GameEntityObjectsController {
 		normalMapEntities = new ArrayList<Entity>();
 		entitiesWithShadows = new ArrayList<Entity>();
 		this.animationController = animationController;
+		
 	}
 	
 	
@@ -43,6 +50,8 @@ public class GameEntityObjectsController {
 		Entity newEntitiy = new Entity(texturedModel, new Vector3f(0, 0, -5), 90, 0, 0, objectData.getInitScale());
 		//System.out.println(objectData.getInitScale());
 		EntityObject newEntityObject = new EntityObject(newEntitiy, objectData);
+		//newEntityObject.updateFace(terrainSphere);
+		//newEntityObject.setFixed(true);
 		entityObjects.add(newEntityObject);
 		return newEntityObject;
 	}

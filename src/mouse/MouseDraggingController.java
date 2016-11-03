@@ -8,6 +8,7 @@ import renderEngine.Loader;
 import terrainsSphere.ColourController;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainSphere;
+import toolbox.Maths;
 
 public class MouseDraggingController {
 
@@ -42,7 +43,14 @@ public class MouseDraggingController {
 
 		Vector3f dragPos = picker.getCurrentTerrainPoint();
 		// System.out.println(dragPos);
+		
 		if (dragPos != null) {
+			Vector3f dragPolar = Maths.convertToPolar(dragPos);
+			float clampHeight = terrainSphere.getHeightAdvanced(dragPolar.y, dragPolar.z);
+			//System.out.println(clampHeight);
+			dragPolar.x = clampHeight;
+			dragPos = Maths.convertBackToCart(dragPolar);
+			
 			if (entityObject.isMultipleEntities()) {
 				for (Entity entity : entityObject.getEntityList()){
 					entity.setPosition(dragPos);
