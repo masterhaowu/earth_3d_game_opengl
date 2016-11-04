@@ -33,6 +33,8 @@ import toolbox.Maths;
 //import toolbox.Maths;
 
 public class TerrainSphere {
+	
+	public static final int FACE_NEIGHBOR_RANGE = 4;
 
 	// private Loader loader;
 	private RawModel model;

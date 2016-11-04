@@ -117,6 +117,7 @@ public class GameEventController {
 						this.showCircle = false;
 						//entityObjectToDrag.setFixed(true);
 						entityObjectToDrag.connectFaceWithEntity();
+						gameEntityObjectsController.checkNeighborFoodSourcesAndConnect(entityObjectToDrag, terrainSphere);
 						GameStateController.CTState = GameStateController.CT_IDLE;
 					}
 					break;
@@ -129,6 +130,7 @@ public class GameEventController {
 						this.showCircle = false;
 						//entityObjectToDrag.setFixed(true);
 						entityObjectToDrag.connectFaceWithEntity();
+						gameEntityObjectsController.checkNeighborFoodSourcesAndConnect(entityObjectToDrag, terrainSphere);
 						GameStateController.CTState = GameStateController.CT_IDLE;
 					}
 					break;
@@ -138,13 +140,43 @@ public class GameEventController {
 				}
 
 				break;
+			case GameStateController.CREATION_ANIMAL_MODE:
+				switch (GameStateController.CAState) {
+				case GameStateController.CA_HERBIVORE_DRAGGING:
+					entityObjectToDrag = guiEventController.getEntityObjectToReturn();
+					this.showCircle = true;
+					mouseDraggingController.drag(entityObjectToDrag);
+					if (mouseClicked) {
+						this.showCircle = false;
+						entityObjectToDrag.connectFaceWithEntity();
+						gameEntityObjectsController.checkNeighborFoodSourcesAndConnect(entityObjectToDrag, terrainSphere);
+						GameStateController.CAState = GameStateController.CA_IDLE;
+					}
+					break;
+				case GameStateController.CA_CARNIVORE_DRAGGING:
+					entityObjectToDrag = guiEventController.getEntityObjectToReturn();
+					this.showCircle = true;
+					mouseDraggingController.drag(entityObjectToDrag);
+					if (mouseClicked) {
+						this.showCircle = false;
+						entityObjectToDrag.connectFaceWithEntity();
+						gameEntityObjectsController.checkNeighborFoodSourcesAndConnect(entityObjectToDrag, terrainSphere);
+						GameStateController.CAState = GameStateController.CA_IDLE;
+					}
+					break;
+					
 
+				default:
+					break;
+				}
+				break;
 			default:
 				break;
 			}
 
 			break;
-
+			
+		
 		default:
 			break;
 		}

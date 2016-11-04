@@ -33,9 +33,7 @@ public class EntityGrowthController {
 		if (face == null) {
 			return;
 		}
-		if (!entityObject.isFixed()) {
-			return;
-		}
+		
 		float initAmount = entityObject.getAmount();
 		float temp = face.getTemperature();
 		float humidity = face.getHumidity();
@@ -62,7 +60,7 @@ public class EntityGrowthController {
 			}
 		}
 		
-		float humidDiff = Math.abs(humidity - humidityRange);
+		float humidDiff = Math.abs(humidity - humidityOptimal);
 		if (objectData.isAffectedByHumidity()){
 			humidityFactor = 1 + MAX_FACTOR - humidDiff/humidityRange * humidDiff/humidityRange * MAX_FACTOR;
 		}

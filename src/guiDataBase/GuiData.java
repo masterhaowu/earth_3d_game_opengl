@@ -81,6 +81,8 @@ public class GuiData {
 	public GuiDataTerrains guiDataTerrains;
 	public GuiDataGrasses guiDataGrasses;
 	public GuiDataTrees guiDataTrees;
+	public GuiDataHerbivores guiDataHerbivores;
+	public GuiDataCarnivores guiDataCarnivores;
 
 
 
@@ -102,6 +104,12 @@ public class GuiData {
 		
 		guiDataTrees = new GuiDataTrees();
 		guiDataTrees.loadTrees(loader);
+		
+		guiDataHerbivores = new GuiDataHerbivores();
+		guiDataHerbivores.loadHerbivores(loader);
+		
+		guiDataCarnivores = new GuiDataCarnivores();
+		guiDataCarnivores.loadCarnivores(loader);
 		
 		
 		Vector3f CT1 = new Vector3f(BLUE.x + blueToGreenInc.x, BLUE.y + blueToGreenInc.y, BLUE.z + blueToGreenInc.z);

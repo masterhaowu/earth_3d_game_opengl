@@ -320,6 +320,10 @@ public class TerrainFace {
 	public void addEntityObject(EntityObject entityObject){
 		entityObjects.add(entityObject);
 	}
+
+	public ArrayList<ArrayList<TerrainFace>> getNeighborFaces() {
+		return neighborFaces;
+	}
 	
 	
 	

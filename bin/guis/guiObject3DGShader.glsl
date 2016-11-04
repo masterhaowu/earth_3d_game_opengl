@@ -15,7 +15,7 @@ uniform float shineDamper;
 uniform float reflectivity;
 
 //uniform vec2 randomTexOffset;
-const vec3 toLight = vec3(0, 0, 1.0);
+const vec3 toLight = vec3(0.0, 1.0, -10.0);
 
 vec3 calculateTriangleNormal(){
     vec3 tangent = worldPosition[1].xyz - worldPosition[0].xyz;
@@ -40,7 +40,7 @@ vec4 calculateDiffuseAndSpecular(vec3 toCameraVector, vec3 unitNormal, vec4 aver
     vec3 unitCameraVector = normalize(toCameraVector.xyz);
     vec3 totalSpecular = vec3(0.0);
     vec3 totalDiffuse = vec3(0.0);
-    for (int i=0; i<4; i++){
+    //for (int i=0; i<4; i++){
         vec3 unitLightVector = normalize(toLight);
         float nDotl = dot(unitNormal, unitLightVector);
         float brightness = max(nDotl, 0.0);
@@ -52,13 +52,13 @@ vec4 calculateDiffuseAndSpecular(vec3 toCameraVector, vec3 unitNormal, vec4 aver
         specularFactor = max(specularFactor, 0.0);
         float dampedFactor = pow(specularFactor, shineDamper);
         
-        totalDiffuse = totalDiffuse + (brightness * vec3(1,1,1));
-        totalSpecular = totalSpecular + (dampedFactor * reflectivity * vec3(1,1,1));
-    }
+        totalDiffuse = totalDiffuse + (brightness * vec3(2,2,2));
+        totalSpecular = totalSpecular + (dampedFactor * reflectivity * vec3(2,2,2));
+    //}
     //totalDiffuse = max(totalDiffuse, terrainGlobalOffset);
     
     vec4 tempFinalColour = vec4(totalDiffuse, 1.0) * averageColour + vec4(totalSpecular, 1.0);
-    tempFinalColour = mix(tempFinalColour, averageColour, 0.8);
+    tempFinalColour = mix(tempFinalColour, averageColour, 0.3);
     return tempFinalColour;
     
 }

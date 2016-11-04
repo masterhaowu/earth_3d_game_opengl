@@ -31,6 +31,7 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	private HashSet<Integer> terrainTypes; //this is temp, need to replace this with better solution later
 	
 	
+	
 	private boolean affectedByHumidity = false;
 	private boolean affectedByTemperature = false;
 	private boolean affectedByHeight = false;
@@ -45,18 +46,22 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	private float temperatureRange;
 	private float heightRange;
 	
-	//private float humidityFactorAbove;
-	//private float humidityFactorBelow;
+	private HashSet<Integer> preys;
+	private HashSet<Integer> predators;
 	
-	
+	private boolean noPrey = false;
+
 	
 	private float initScale;
 	
+	
+	
+	public boolean marked = false;
+	
 	public ObjectData(int objectType){
 		this.objectType = objectType;
-		//foodSource1 = new HashSet<Integer>();
-		//foodSource2 = new HashSet<Integer>();
-		//foodSource3 = new HashSet<Integer>();
+		preys = new HashSet<Integer>();
+		predators = new HashSet<Integer>();
 		terrainTypes = new HashSet<Integer>();
 	}
 
@@ -235,6 +240,30 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 
 	public void setObjectExtinctAmount(float objectExtinctAmount) {
 		this.objectExtinctAmount = objectExtinctAmount;
+	}
+	
+	public void addPrey(int prey){
+		preys.add(prey);
+	}
+	
+	public void addPredator(int predator){
+		predators.add(predator);
+	}
+
+	public HashSet<Integer> getPreys() {
+		return preys;
+	}
+
+	public HashSet<Integer> getPredators() {
+		return predators;
+	}
+
+	public boolean isNoPrey() {
+		return noPrey;
+	}
+
+	public void setNoPrey(boolean noPrey) {
+		this.noPrey = noPrey;
 	}
 	
 	

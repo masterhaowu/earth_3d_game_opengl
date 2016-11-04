@@ -21,6 +21,9 @@ public class EntityModelDataBase {
 	
 
 	public static TexturedModel deer1Model;
+	
+	
+	public static TexturedModel lion1Model;
 
 	public static void loadAllObjects(Loader loader) {
 		loadLowGrass1Data(loader);
@@ -28,6 +31,7 @@ public class EntityModelDataBase {
 		loadPineTree1Data(loader);
 		loadSeasonalTree1Data(loader);
 		loadDeer1Data(loader);
+		loadLion1Data(loader);
 		loadTestingTreeData(loader);
 	}
 
@@ -46,7 +50,7 @@ public class EntityModelDataBase {
 	}
 	
 	public static void loadPineTree1Data(Loader loader) {
-		ModelData pineTree1Data = OBJFileLoader.loadOBJ("pine1");
+		ModelData pineTree1Data = OBJFileLoader.loadOBJ("pine1old");
 		RawModel pineTree1RawModel = loader.loadToVAOwithData(pineTree1Data.getVertices(),
 				pineTree1Data.getTextureCoords(), pineTree1Data.getIndices(), pineTree1Data);
 		pineTree1Model = new TexturedModel(pineTree1RawModel, new ModelTexture(loader.loadTexture("pine1")));
@@ -64,6 +68,12 @@ public class EntityModelDataBase {
 		ModelData deerData = OBJFileLoader.loadOBJ("deer");
 		RawModel deerRawModel = loader.loadToVAOwithData(deerData.getVertices(), deerData.getTextureCoords(), deerData.getIndices(), deerData);
 		deer1Model = new TexturedModel(deerRawModel, new ModelTexture(loader.loadTexture("deerFlipped")));
+	}
+	
+	public static void loadLion1Data(Loader loader) {
+		ModelData lion1Data = OBJFileLoader.loadOBJ("lionModel1");
+		RawModel lion1RawModel = loader.loadToVAOwithData(lion1Data.getVertices(), lion1Data.getTextureCoords(), lion1Data.getIndices(), lion1Data);
+		lion1Model = new TexturedModel(lion1RawModel, new ModelTexture(loader.loadTexture("lionModel1")));
 	}
 
 	public static void loadTestingTreeData(Loader loader) {

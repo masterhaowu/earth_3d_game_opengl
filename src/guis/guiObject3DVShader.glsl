@@ -18,7 +18,7 @@ void main(void){
     
     worldPosition = vec4(position.x, position.y, position.z, 1.0);
     
-    gl_Position = transformationMatrix * vec4(worldPosition.x, worldPosition.y, 0.0, 1.0);
+    gl_Position = transformationMatrix * vec4(worldPosition.x, worldPosition.y, worldPosition.z/100, 1.0);
     //gl_Position = vec4(textureCoords.x*2 - 1, textureCoords.y * 2 - 1, 0.0, 1.0);
    // gl_Position = vec4(worldPosition.x, worldPosition.y, worldPosition.z, 1.0);
     

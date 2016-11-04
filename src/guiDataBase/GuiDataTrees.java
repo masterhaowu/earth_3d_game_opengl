@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import gameDataBase.EntityModelDataBase;
 import gameDataBase.ObjectsNetwork;
+import gameDataBase.ObjectsNetworkTree;
 import guis.GuiObjectUnit;
 import renderEngine.Loader;
 
@@ -29,19 +30,19 @@ public class GuiDataTrees {
 		testingTree = new GuiObjectUnit(new Vector2f(0, 0), new Vector2f(0, 0), loader);
 		testingTree.setModel(EntityModelDataBase.testingTreeModel);
 		testingTree.setName("Testing Tree");
-		testingTree.setObjectUnit(ObjectsNetwork.simpleTree);
+		testingTree.setObjectUnit(ObjectsNetworkTree.simpleTree);
 		this.guiObjectUnits.add(testingTree);
 		
 		pine1 = new GuiObjectUnit(new Vector2f(0, 0), new Vector2f(0, 0), loader);
 		pine1.setModel(EntityModelDataBase.pineTree1Model);
 		pine1.setName("Pine Tree");
-		pine1.setObjectUnit(ObjectsNetwork.pineTree1);
+		pine1.setObjectUnit(ObjectsNetworkTree.pineTree1);
 		this.guiObjectUnits.add(pine1);
 		
 		seasonalTree1 = new GuiObjectUnit(new Vector2f(0, 0), new Vector2f(0, 0), loader);
 		seasonalTree1.setModel(EntityModelDataBase.seasonalTree1Model);
 		seasonalTree1.setName("Seasonal Tree");
-		seasonalTree1.setObjectUnit(ObjectsNetwork.seasonalTree1);
+		seasonalTree1.setObjectUnit(ObjectsNetworkTree.seasonalTree1);
 		this.guiObjectUnits.add(seasonalTree1);
 		
 	}

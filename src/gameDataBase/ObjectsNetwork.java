@@ -60,8 +60,9 @@ public class ObjectsNetwork {
 	public static final int SEASONAL_TREE1 = 1011;
 	public static final int SIMPLE_TREE = 1000;
 	
+	public static final int DEER1 = 4510;
 	
-	public static final int LION = 5000;
+	public static final int LION1 = 5010;
 	
 	
 	
@@ -110,9 +111,9 @@ public class ObjectsNetwork {
 	public static ObjectData lowGrass3;
 	
 	
-	public static ObjectData simpleTree;
-	public static ObjectData pineTree1;
-	public static ObjectData seasonalTree1;
+	//public static ObjectData simpleTree;
+	//public static ObjectData pineTree1;
+	//public static ObjectData seasonalTree1;
 	
 	
 	public static Map<Integer, ObjectData> ObjectsMap = new HashMap<Integer, ObjectData>();
@@ -128,6 +129,12 @@ public class ObjectsNetwork {
 	
 	
 	public static void fillObjectsController(){
+		
+		ObjectsNetworkTree.fillTree();
+		ObjectsNetworkHerbivore.fillAnimalsHerbivore();
+		ObjectsNetworkCarnivore.fillAnimalsCarnivore();
+		
+		
 		//snowTerrain
 		snowTerrain = new ObjectData(SNOW_TERRAIN);
 		snowTerrain.setColour(SNOW_COLOUR);
@@ -284,38 +291,7 @@ public class ObjectsNetwork {
 		lowGrass3.addTerrainType(STEPPE_TERRAIN);
 		ObjectsMap.put(LOW_GRASS3, lowGrass3);
 		
-		//pineTree1
-		pineTree1 = new ObjectData(PINE_TREE1);
-		pineTree1.setAffectTerrainColour(false);
-		pineTree1.setObjectInitAmount(1000);
-		pineTree1.setInitScale(2f);
-		pineTree1.addTerrainType(TAIGA_TERRAIN);
-		pineTree1.addTerrainType(TUNDRA_TERRAIN);
-		pineTree1.addTerrainType(FOREST_TERRAIN);
-		ObjectsMap.put(PINE_TREE1, pineTree1);
 		
-		//seasonalTree1
-		seasonalTree1 = new ObjectData(SEASONAL_TREE1);
-		seasonalTree1.setAffectTerrainColour(false);
-		seasonalTree1.setObjectInitAmount(1000);
-		seasonalTree1.setInitScale(3f);
-		seasonalTree1.setTemperatureInfo(15, 10);
-		seasonalTree1.setHumidityInfo(10, 15);
-		seasonalTree1.addTerrainType(MOUNTAIN_TERRAIN);
-		seasonalTree1.addTerrainType(FOREST_TERRAIN);
-		seasonalTree1.addTerrainType(STEPPE_TERRAIN);
-		seasonalTree1.addTerrainType(CANYON_TERRAIN);
-		ObjectsMap.put(SEASONAL_TREE1, seasonalTree1);
-		
-		
-		simpleTree = new ObjectData(SIMPLE_TREE);
-		simpleTree.setAffectTerrainColour(false);
-		simpleTree.setObjectInitAmount(1000);
-		simpleTree.setInitScale(2f);
-		simpleTree.addTerrainType(SNOW_TERRAIN);
-		simpleTree.addTerrainType(MOUNTAIN_TERRAIN);
-		simpleTree.addTerrainType(PLAIN_TERRAIN);
-		ObjectsMap.put(SIMPLE_TREE, simpleTree);
 	}
 
 }

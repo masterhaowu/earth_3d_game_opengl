@@ -7,17 +7,29 @@ import entityObjects.EntityObject;
 public class EntityCycleController {
 	
 	private EntityGrowthController entityGrowthController;
+	private EntityHuntingController entityHuntingController;
 	
 	public EntityCycleController(){
 		this.entityGrowthController = new EntityGrowthController();
+		this.entityHuntingController = new EntityHuntingController();
 	}
 	
 	
 	public void updateList(List<EntityObject> entityObjects){
+		
 		for (EntityObject entityObject : entityObjects){
-			entityGrowthController.calculateNetGrowthBasic(entityObject);
+			if (!entityObject.isFixed()) {
+				continue;
+			}
+			boolean capturedFood = entityHuntingController.calculateEntityHuntingBasic(entityObject);
+			if (capturedFood) {
+				entityGrowthController.calculateNetGrowthBasic(entityObject);
+			}
+			if (entityObject.getObjectData().marked) {
+				System.out.println(entityObject.getAmount());
+			}
 			checkUpperBound(entityObject);
-			checkExtinction(entityObject);
+			//checkExtinction(entityObject);
 			//System.out.println(entityObject.getAmount());
 		}
 		

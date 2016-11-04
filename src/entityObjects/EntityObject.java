@@ -13,7 +13,8 @@ import terrainsSphere.TerrainSphere;
 import terrainsSphere.TerrainVertex;
 
 public class EntityObject {
-	public static final int PREY_LEVELS_THRESHOLD = 4;
+	//public static final int PREY_LEVELS_THRESHOLD = 4;
+	public int prey_level_threshold = TerrainSphere.FACE_NEIGHBOR_RANGE + 1;
 	
 	private Entity entity;
 	private List<Entity> entityList; //first one will be base position
@@ -26,7 +27,9 @@ public class EntityObject {
 	private float amount = 0;
 	private boolean fixed = false;
 	
+	private int cyclesWithoutFood = 0;
 	
+	//private boolean noPrey = false;
 	private ArrayList<ArrayList<EntityObject>> preys;
 	private ArrayList<ArrayList<EntityObject>> predators;
 	
@@ -52,12 +55,12 @@ public class EntityObject {
 	
 	public void initEntityLists(){
 		preys = new ArrayList<ArrayList<EntityObject>>();
-		for (int i = 0; i < PREY_LEVELS_THRESHOLD; i++) {
+		for (int i = 0; i < prey_level_threshold; i++) {
 			ArrayList<EntityObject> tempList = new ArrayList<EntityObject>();
 			preys.add(tempList);
 		}
 		predators = new ArrayList<ArrayList<EntityObject>>();
-		for (int i = 0; i < PREY_LEVELS_THRESHOLD; i++) {
+		for (int i = 0; i < prey_level_threshold; i++) {
 			ArrayList<EntityObject> tempList = new ArrayList<EntityObject>();
 			predators.add(tempList);
 		}
@@ -267,6 +270,25 @@ public class EntityObject {
 		this.fixed = true;
 		this.face.addEntityObject(this);
 	}
+
+	public ArrayList<ArrayList<EntityObject>> getPreys() {
+		return preys;
+	}
+
+	public ArrayList<ArrayList<EntityObject>> getPredators() {
+		return predators;
+	}
+
+	public int getCyclesWithoutFood() {
+		return cyclesWithoutFood;
+	}
+
+	public void setCyclesWithoutFood(int cyclesWithoutFood) {
+		this.cyclesWithoutFood = cyclesWithoutFood;
+	}
+
+	
+	
 	
 	
 	

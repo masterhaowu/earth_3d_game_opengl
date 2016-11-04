@@ -26,6 +26,7 @@ public class GameStateController {
 	public static int gameModeState; // this depends on the left and right spheres of main game
 	
 	public static int CTState; //creation_terrain mode
+	public static int CAState; //creation_animal mode
 	
 	public static int gameLeftModeState;
 	public static int gameRightModeState;
@@ -48,6 +49,13 @@ public class GameStateController {
 	public static final int CT_GRASS_DRAGGING = 16;
 	public static final int CT_TREE = 20;
 	public static final int CT_TREE_DRAGGING = 21;
+	
+	public static final int CA_IDLE = 0;
+	
+	public static final int CA_HERBIVORE = 15;
+	public static final int CA_HERBIVORE_DRAGGING = 16;
+	public static final int CA_CARNIVORE = 20;
+	public static final int CA_CARNIVORE_DRAGGING = 21;
 	
 	
 	

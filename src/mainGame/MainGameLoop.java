@@ -108,7 +108,7 @@ public class MainGameLoop {
 		
 		// --------------------------TerrainSphere---------------------------------------------
 		TerrainSphere terrainSphere = new TerrainSphere(loader, 6, 400f);
-		terrainSphere.connectAllFacesWithNeighbors(4);
+		terrainSphere.connectAllFacesWithNeighbors(TerrainSphere.FACE_NEIGHBOR_RANGE);
 
 		// --------------------------Game Entity Object Controller
 		// --------------------------
