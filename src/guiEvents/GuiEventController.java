@@ -42,21 +42,24 @@ public class GuiEventController {
 	private TexturedModel texturedModel;
 	private EntityObject entityObjectToReturn;
 
-	private boolean clickDisabled = false;
+	private GuiCreationTerrainEventController guiCreationTerrainEventController;
+	private GuiCreationAnimalEventController guiCreationAnimalEventController;
 
 	public GuiEventController(Loader loader, MousePickerSphere picker,
 			GameEntityObjectsController gameEntityObjectsController) {
 		this.gameEntityObjectsController = gameEntityObjectsController;
-		// this.guis = new ArrayList<GuiTexture>();
+
+		this.guiCreationTerrainEventController = new GuiCreationTerrainEventController(gameEntityObjectsController,
+				picker);
+		this.guiCreationAnimalEventController = new GuiCreationAnimalEventController(gameEntityObjectsController,
+				picker);
+
 		this.picker = picker;
-		// this.guisToDisplay = new ArrayList<GuiTexture>();
 		this.level1Spheres = new ArrayList<GuiSphereTexture>();
 		this.level2Panel = new ArrayList<GuiTexture>();
 		this.level2ObjectUnits = new ArrayList<GuiObjectUnit>();
 		this.level2Texts = new ArrayList<GUIText>();
 		guiData = new GuiData(loader);
-
-		
 
 		GameStateController.CTState = GameStateController.CT_IDLE;
 
@@ -141,300 +144,16 @@ public class GuiEventController {
 		case GameStateController.PLAY_MODE_IDLE:
 			switch (GameStateController.gameModeState) {
 			case GameStateController.CREATION_TERRAIN_MODE:
-				if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
-						&& guiData.leftSphere.getCurrentState() == 0) {
-					guiData.leftSphere.setNextState(1);
-					setToolBarStates(2);
-					GameStateController.gameModeState = GameStateController.RESEARCH_TERRAIN_MODE;
-				} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
-						&& guiData.rightSphere.getCurrentState() == 0) {
-					guiData.rightSphere.setNextState(1);
-					setToolBarStates(1);
-					GameStateController.gameModeState = GameStateController.CREATION_ANIMAL_MODE;
-				} else if (checkSingleSphere(guiData.sphereLeft3) && Mouse.isButtonDown(0) && !clickDisabled
-						&& GameStateController.CTState != GameStateController.CT_TERRAIN_TYPE) {
+				mouseClicked = guiCreationTerrainEventController.updateCreationTerrainState(mouseClicked, guiData,
+						level1Spheres, level2Panel, level2ObjectUnits, level2Texts);
 
-					level2Panel.clear();
-					GameStateController.CTState = GameStateController.CT_TERRAIN_TYPE;
-					clickDisabled = true;
-					level2Panel.add(guiData.panelBackground);
-
-					level2ObjectUnits.clear();
-
-					for (int i = 0; i < GuiData.OBJECT_ROWS; i++) {
-						for (int j = 0; j < GuiData.OBJECT_COLS; j++) {
-							// guiObjectUnits.add(guiData.guiObjects[i][j]);
-							int index = i * GuiData.OBJECT_ROWS + j;
-							if (index < guiData.guiDataTerrains.guiObjectUnits.size()) {
-								GuiObjectUnit currentUnit = guiData.guiDataTerrains.guiObjectUnits.get(index);
-								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j],
-										guiData.guiObjectUnitScale);
-								level2ObjectUnits.add(currentUnit);
-							}
-						}
-					}
-
-				} else if (checkSingleSphere(guiData.sphereRight1) && Mouse.isButtonDown(0) && mouseClicked
-						&& GameStateController.CTState != GameStateController.CT_GRASS) {
-					mouseClicked = false;
-					level2Panel.clear();
-					GameStateController.CTState = GameStateController.CT_GRASS;
-					clickDisabled = true;
-					level2Panel.add(guiData.panelBackground);
-
-					level2ObjectUnits.clear();
-
-					for (int i = 0; i < GuiData.OBJECT_ROWS; i++) {
-						for (int j = 0; j < GuiData.OBJECT_COLS; j++) {
-							// guiObjectUnits.add(guiData.guiObjects[i][j]);
-							int index = i * GuiData.OBJECT_ROWS + j;
-							if (index < guiData.guiDataGrasses.guiObjectUnits.size()) {
-								GuiObjectUnit currentUnit = guiData.guiDataGrasses.guiObjectUnits.get(index);
-								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j],
-										guiData.guiObjectUnitScale);
-								level2ObjectUnits.add(currentUnit);
-							}
-						}
-					}
-
-				} else if (checkSingleSphere(guiData.sphereRight3) && Mouse.isButtonDown(0) && mouseClicked
-						&& GameStateController.CTState != GameStateController.CT_TREE) {
-					mouseClicked = false;
-					level2Panel.clear();
-					GameStateController.CTState = GameStateController.CT_TREE;
-					clickDisabled = true;
-					level2Panel.add(guiData.panelBackground);
-
-					level2ObjectUnits.clear();
-
-					for (int i = 0; i < GuiData.OBJECT_ROWS; i++) {
-						for (int j = 0; j < GuiData.OBJECT_COLS; j++) {
-							// guiObjectUnits.add(guiData.guiObjects[i][j]);
-							int index = i * GuiData.OBJECT_ROWS + j;
-							if (index < guiData.guiDataTrees.guiObjectUnits.size()) {
-								GuiObjectUnit currentUnit = guiData.guiDataTrees.guiObjectUnits.get(index);
-								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j],
-										guiData.guiObjectUnitScale);
-								level2ObjectUnits.add(currentUnit);
-							}
-						}
-					}
-
-				}
-
-				switch (GameStateController.CTState) {
-				case GameStateController.CT_IDLE:
-					if (!Mouse.isButtonDown(0)) {
-						clickDisabled = false;
-					}
-					break;
-				case GameStateController.CT_TERRAIN_TYPE:
-					if (!Mouse.isButtonDown(0)) {
-						clickDisabled = false;
-					}
-					if (checkSingleSphere(guiData.sphereLeft3) && Mouse.isButtonDown(0) && !clickDisabled) {
-						GameStateController.CTState = GameStateController.CT_IDLE;
-						clickDisabled = true;
-						level2ObjectUnits.clear();
-						level2Panel.clear();
-					}
-
-					for (int i = 0; i < level2ObjectUnits.size(); i++) {
-						if (checkSingleSphere(level2ObjectUnits.get(i).getComfirm()) && Mouse.isButtonDown(0)) {
-							dataTypeToReturn = RETURN_TERRAIN;
-							terrainToReturn = level2ObjectUnits.get(i).getObjectData();
-							GameStateController.CTState = GameStateController.CT_TERRAIN_DRAGGING;
-							// guiObjectUnits.clear();
-						}
-					}
-					break;
-
-				case GameStateController.CT_TERRAIN_DRAGGING:
-					level2ObjectUnits.clear();
-					level2Panel.clear();
-					break;
-
-				case GameStateController.CT_GRASS:
-
-					if (checkSingleSphere(guiData.sphereRight3) && mouseClicked) {
-						mouseClicked = false;
-						GameStateController.CTState = GameStateController.CT_IDLE;
-						level2ObjectUnits.clear();
-						level2Panel.clear();
-					}
-					for (int i = 0; i < level2ObjectUnits.size(); i++) {
-						if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
-							mouseClicked = false;
-
-							entityObjectData = level2ObjectUnits.get(i).getObjectData();
-							texturedModel = level2ObjectUnits.get(i).getModel();
-
-							entityObjectToReturn = gameEntityObjectsController
-									.createEntityObjectAndAddToList(texturedModel, entityObjectData);
-							entityObjectToReturn.getEntity().randomRotationOnSphere();
-							GameStateController.CTState = GameStateController.CT_GRASS_DRAGGING;
-						}
-					}
-					break;
-
-				case GameStateController.CT_GRASS_DRAGGING:
-					level2ObjectUnits.clear();
-					level2Panel.clear();
-					break;
-
-				case GameStateController.CT_TREE:
-
-					if (checkSingleSphere(guiData.sphereRight3) && mouseClicked) {
-						mouseClicked = false;
-						GameStateController.CTState = GameStateController.CT_IDLE;
-						level2ObjectUnits.clear();
-						level2Panel.clear();
-					}
-					for (int i = 0; i < level2ObjectUnits.size(); i++) {
-						if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
-							mouseClicked = false;
-							// dataTypeToReturn = RETURN_TERRAIN;
-							// terrainToReturn =
-							// guiObjectUnits.get(i).getObjectData();
-							// entityObjectToReturn =
-							// guiObjectUnits.get(i).getEntityObject();
-							entityObjectData = level2ObjectUnits.get(i).getObjectData();
-							texturedModel = level2ObjectUnits.get(i).getModel();
-
-							entityObjectToReturn = gameEntityObjectsController
-									.createEntityObjectAndAddToList(texturedModel, entityObjectData);
-							entityObjectToReturn.getEntity().randomRotationOnSphere();
-							GameStateController.CTState = GameStateController.CT_TREE_DRAGGING;
-							// guiObjectUnits.clear();
-						}
-					}
-					break;
-
-				case GameStateController.CT_TREE_DRAGGING:
-					level2ObjectUnits.clear();
-					level2Panel.clear();
-					break;
-
-				default:
-					break;
-				}
+				entityObjectToReturn = guiCreationTerrainEventController.getEntityObjectToReturn();
 				break;
 
 			case GameStateController.CREATION_ANIMAL_MODE:
-				if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
-						&& guiData.leftSphere.getCurrentState() == 0) {
-					guiData.leftSphere.setNextState(1);
-					setToolBarStates(3);
-					GameStateController.gameModeState = GameStateController.RESEARCH_ANIMAL_MODE;
-				} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
-						&& guiData.rightSphere.getCurrentState() == 1) {
-					guiData.rightSphere.setNextState(0);
-					setToolBarStates(0);
-					GameStateController.gameModeState = GameStateController.CREATION_TERRAIN_MODE;
-				} else if (checkSingleSphere(guiData.sphereMiddle) && mouseClicked
-						&& GameStateController.CAState != GameStateController.CA_HERBIVORE) {
-					mouseClicked = false;
-					level2Panel.clear();
-					GameStateController.CAState = GameStateController.CA_HERBIVORE;
-					level2Panel.add(guiData.panelBackground);
-
-					level2ObjectUnits.clear();
-
-					for (int i = 0; i < GuiData.OBJECT_ROWS; i++) {
-						for (int j = 0; j < GuiData.OBJECT_COLS; j++) {
-							// guiObjectUnits.add(guiData.guiObjects[i][j]);
-							int index = i * GuiData.OBJECT_ROWS + j;
-							if (index < guiData.guiDataHerbivores.guiObjectUnits.size()) {
-								GuiObjectUnit currentUnit = guiData.guiDataHerbivores.guiObjectUnits.get(index);
-								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j],
-										guiData.guiObjectUnitScale);
-								level2ObjectUnits.add(currentUnit);
-							}
-						}
-					}
-				}else if (checkSingleSphere(guiData.sphereRight2) && mouseClicked
-						&& GameStateController.CAState != GameStateController.CA_CARNIVORE) {
-					mouseClicked = false;
-					level2Panel.clear();
-					GameStateController.CAState = GameStateController.CA_CARNIVORE;
-					level2Panel.add(guiData.panelBackground);
-
-					level2ObjectUnits.clear();
-
-					for (int i = 0; i < GuiData.OBJECT_ROWS; i++) {
-						for (int j = 0; j < GuiData.OBJECT_COLS; j++) {
-							// guiObjectUnits.add(guiData.guiObjects[i][j]);
-							int index = i * GuiData.OBJECT_ROWS + j;
-							if (index < guiData.guiDataCarnivores.guiObjectUnits.size()) {
-								GuiObjectUnit currentUnit = guiData.guiDataCarnivores.guiObjectUnits.get(index);
-								currentUnit.updatePositionAndScale(guiData.guiObjectUnitPositions[i][j],
-										guiData.guiObjectUnitScale);
-								level2ObjectUnits.add(currentUnit);
-							}
-						}
-					}
-				}
-
-				switch (GameStateController.CAState) {
-				case GameStateController.CA_HERBIVORE:
-					if (checkSingleSphere(guiData.sphereMiddle) && mouseClicked) {
-						mouseClicked = false;
-						GameStateController.CAState = GameStateController.CA_IDLE;
-						level2ObjectUnits.clear();
-						level2Panel.clear();
-					}
-					for (int i = 0; i < level2ObjectUnits.size(); i++) {
-						if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
-							mouseClicked = false;
-
-							entityObjectData = level2ObjectUnits.get(i).getObjectData();
-							texturedModel = level2ObjectUnits.get(i).getModel();
-
-							entityObjectToReturn = gameEntityObjectsController
-									.createEntityObjectAndAddToList(texturedModel, entityObjectData);
-							entityObjectToReturn.getEntity().randomRotationOnSphere();
-							GameStateController.CAState = GameStateController.CA_HERBIVORE_DRAGGING;
-							// guiObjectUnits.clear();
-						}
-					}
-					break;
-
-				case GameStateController.CA_HERBIVORE_DRAGGING:
-					level2ObjectUnits.clear();
-					level2Panel.clear();
-					break;
-				case GameStateController.CA_CARNIVORE:
-					if (checkSingleSphere(guiData.sphereRight2) && mouseClicked) {
-						mouseClicked = false;
-						GameStateController.CAState = GameStateController.CA_IDLE;
-						level2ObjectUnits.clear();
-						level2Panel.clear();
-					}
-					for (int i = 0; i < level2ObjectUnits.size(); i++) {
-						if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
-							mouseClicked = false;
-
-							entityObjectData = level2ObjectUnits.get(i).getObjectData();
-							texturedModel = level2ObjectUnits.get(i).getModel();
-
-							entityObjectToReturn = gameEntityObjectsController
-									.createEntityObjectAndAddToList(texturedModel, entityObjectData);
-							entityObjectToReturn.getEntity().randomRotationOnSphere();
-							GameStateController.CAState = GameStateController.CA_CARNIVORE_DRAGGING;
-							// guiObjectUnits.clear();
-						}
-					}
-					break;
-
-				case GameStateController.CA_CARNIVORE_DRAGGING:
-					level2ObjectUnits.clear();
-					level2Panel.clear();
-					break;
-
-				default:
-					break;
-				}
-
+				mouseClicked = guiCreationAnimalEventController.updateCreationAnimalState(mouseClicked, guiData,
+						level1Spheres, level2Panel, level2ObjectUnits, level2Texts);
+				entityObjectToReturn = guiCreationAnimalEventController.getEntityObjectToReturn();
 				break;
 
 			case GameStateController.RESEARCH_TERRAIN_MODE:
