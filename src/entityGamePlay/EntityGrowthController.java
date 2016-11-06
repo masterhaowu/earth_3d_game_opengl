@@ -51,10 +51,12 @@ public class EntityGrowthController {
 		float heightOptimal = objectData.getHeightOptimal();
 		float heightRange = objectData.getHeightRange();
 		
+		float individualSmoothFactor = (float) Math.pow(EntityCycleController.SMOOTH_FACTOR, 0.5);
+		float smoothedMaxFactor = entityObject.getObjectData().getInitMaxGrowthRate() * individualSmoothFactor;
 		
 		float tempDiff = Math.abs(temp - tempOptimal);
 		if (objectData.isAffectedByTemperature()) {
-			tempFactor = 1 + MAX_FACTOR - tempDiff/tempRange * tempDiff/tempRange * MAX_FACTOR;
+			tempFactor = 1 + smoothedMaxFactor - tempDiff/tempRange * tempDiff/tempRange * smoothedMaxFactor;
 			if (tempFactor < 0) {
 				tempFactor = 0;
 			}
@@ -62,7 +64,7 @@ public class EntityGrowthController {
 		
 		float humidDiff = Math.abs(humidity - humidityOptimal);
 		if (objectData.isAffectedByHumidity()){
-			humidityFactor = 1 + MAX_FACTOR - humidDiff/humidityRange * humidDiff/humidityRange * MAX_FACTOR;
+			humidityFactor = 1 + smoothedMaxFactor - humidDiff/humidityRange * humidDiff/humidityRange * smoothedMaxFactor;
 		}
 		
 		float totalFactor = tempFactor * humidityFactor * heightFactor;

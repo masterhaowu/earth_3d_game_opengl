@@ -15,8 +15,9 @@ public class ObjectsNetworkCarnivore {
 		lion1.setInitScale(1f);
 		lion1.setTemperatureInfo(25, 10);
 		lion1.setHumidityInfo(10, 15);
-		lion1.addPrey(ObjectsNetwork.DEER1);
-		//lion1.marked = true;
+		//lion1.addPrey(ObjectsNetwork.DEER1);
+		lion1.marked = true;
+		lion1.setObjectName("Savanna Lion");
 		ObjectsNetwork.ObjectsMap.put(ObjectsNetwork.LION1, lion1);
 		
 	}

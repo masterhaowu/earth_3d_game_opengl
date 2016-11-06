@@ -1,7 +1,10 @@
 package entityObjects;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -46,8 +49,13 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	private float temperatureRange;
 	private float heightRange;
 	
-	private HashSet<Integer> preys;
+	private float initMaxGrowthRate = 0.01f;
+	
+	//private HashSet<Integer> preys;
+	private HashMap<Integer, PredationUnit> preys;
 	private HashSet<Integer> predators;
+	
+	//private HashSet<PredationUnit> predationUnits;
 	
 	private boolean noPrey = false;
 
@@ -60,9 +68,10 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	
 	public ObjectData(int objectType){
 		this.objectType = objectType;
-		preys = new HashSet<Integer>();
+		preys = new HashMap<Integer, PredationUnit>();
 		predators = new HashSet<Integer>();
 		terrainTypes = new HashSet<Integer>();
+		//predationUnits = new HashSet<PredationUnit>(); //only predators store this info in itself -- therefore its contains all the preys
 	}
 
 	public String getObjectName() {
@@ -242,18 +251,18 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 		this.objectExtinctAmount = objectExtinctAmount;
 	}
 	
-	public void addPrey(int prey){
-		preys.add(prey);
+	public void addPrey(int prey, PredationUnit preyPreditionUnit){
+		preys.put(prey, preyPreditionUnit);
 	}
 	
 	public void addPredator(int predator){
 		predators.add(predator);
 	}
-
-	public HashSet<Integer> getPreys() {
+	
+	public HashMap<Integer, PredationUnit> getPreys() {
 		return preys;
 	}
-
+	
 	public HashSet<Integer> getPredators() {
 		return predators;
 	}
@@ -265,8 +274,20 @@ public class ObjectData { //objectData dont keep track of the amount, terrainObj
 	public void setNoPrey(boolean noPrey) {
 		this.noPrey = noPrey;
 	}
+
+	public float getInitMaxGrowthRate() {
+		return initMaxGrowthRate;
+	}
+
+	public void setInitMaxGrowthRate(float initMaxGrowthRate) {
+		this.initMaxGrowthRate = initMaxGrowthRate;
+	}
+	/*
+	public HashSet<PredationUnit> getPredationUnits() {
+		return predationUnits;
+	}
 	
-	
+	*/
 	
 
 }

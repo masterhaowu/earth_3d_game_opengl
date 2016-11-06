@@ -1,6 +1,7 @@
 package mainGame;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +12,15 @@ import animations.AnimationController;
 import entities.Entity;
 import entityObjects.EntityObject;
 import entityObjects.ObjectData;
+import entityObjects.PredationUnit;
 import gameDataBase.ObjectsNetwork;
 import models.TexturedModel;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainSphere;
 
 public class GameEntityObjectsController {
+	
+	public static int currentObjectID = 0;
 	
 	
 	private List<EntityObject> entityObjects;
@@ -73,7 +77,8 @@ public class GameEntityObjectsController {
 	
 	
 	public void checkNeighborFoodSourcesAndConnect(EntityObject entityObject, TerrainSphere terrainSphere){
-		HashSet<Integer> preys = entityObject.getObjectData().getPreys();
+		//HashSet<Integer> preys = entityObject.getObjectData().getPreys();
+		HashMap<Integer, PredationUnit> preys = entityObject.getObjectData().getPreys();
 		HashSet<Integer> predators = entityObject.getObjectData().getPredators();
 		//ArrayList<ArrayList<EntityObject>> preys = entityObject.getPreys()
 		TerrainFace currentFace = entityObject.getFace();
@@ -85,7 +90,7 @@ public class GameEntityObjectsController {
 				for (EntityObject checkObject : objects){
 					int objectType = checkObject.getObjectData().getObjectType();
 					
-					if (preys.contains(objectType)) {
+					if (preys.containsKey(objectType)) {
 						//System.out.println(i);
 						entityObject.getPreys().get(i).add(checkObject);
 						checkObject.getPredators().get(i).add(entityObject);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import entityObjects.EntityObject;
+import entityObjects.PredationUnit;
 import terrainsSphere.TerrainSphere;
 
 public class EntityHuntingController {
@@ -20,7 +21,7 @@ public class EntityHuntingController {
 		if (entityObject.getObjectData().isNoPrey()) {
 			return true;
 		}
-		float captureRate = 0.1f; // change this later
+		//float captureRate = 0.1f; // change this later
 		
 		float amount = entityObject.getAmount();
 		for (int i=0; i<TerrainSphere.FACE_NEIGHBOR_RANGE + 1; i++){
@@ -32,11 +33,13 @@ public class EntityHuntingController {
 			}
 			for (int j=0; j<currentRangeSize; j++){
 				int index = (j + startingOffset) % currentRangeSize;
-				float preyAmount = currentRangePreys.get(index).getAmount();
-				float chance = captureRate * preyAmount / amount;
+				EntityObject currentPrey = currentRangePreys.get(index);
+				float preyAmount = currentPrey.getAmount();
+				PredationUnit predationUnit = entityObject.getObjectData().getPreys().get(currentPrey.getObjectData().getObjectType());
+				float chance = predationUnit.getBaseCaptureRate() * preyAmount / amount / (i + 2);
 				float capturing = random.nextFloat();
 				if (chance > capturing) {
-					currentRangePreys.get(index).setAmount(preyAmount - amount * captureRate * 3f);
+					currentRangePreys.get(index).setAmount(preyAmount - amount * predationUnit.getBaseKillRate() * EntityCycleController.SMOOTH_FACTOR);
 					entityObject.setCyclesWithoutFood(0);
 					return true;
 				}
@@ -45,8 +48,8 @@ public class EntityHuntingController {
 		}
 		int cyclesWithoutFood = entityObject.getCyclesWithoutFood() + 1;
 		entityObject.setCyclesWithoutFood(cyclesWithoutFood);
-		entityObject.setAmount(amount * 0.9f);
-		//entityObject.setAmount(amount * (10 - cyclesWithoutFood) / 10f);
+		//entityObject.setAmount(amount * 0.9f);
+		entityObject.setAmount(amount * (1 - cyclesWithoutFood * cyclesWithoutFood * EntityCycleController.SMOOTH_FACTOR / 5f));
 		return false;
 	}
 

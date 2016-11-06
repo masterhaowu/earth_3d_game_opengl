@@ -7,13 +7,16 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Entity;
 import gameDataBase.ObjectsNetwork;
+import mainGame.GameEntityObjectsController;
 import terrainsSphere.TerrainFace;
 import terrainsSphere.TerrainObject;
 import terrainsSphere.TerrainSphere;
 import terrainsSphere.TerrainVertex;
 
 public class EntityObject {
-	//public static final int PREY_LEVELS_THRESHOLD = 4;
+
+	public int entityObjectID;
+	
 	public int prey_level_threshold = TerrainSphere.FACE_NEIGHBOR_RANGE + 1;
 	
 	private Entity entity;
@@ -40,7 +43,9 @@ public class EntityObject {
 		this.objectData = objectData;
 		this.multipleEntities = false;
 		this.amount = objectData.getObjectInitAmount();
-		//this.face = face;
+		this.entityObjectID = GameEntityObjectsController.currentObjectID;
+		GameEntityObjectsController.currentObjectID++;
+		//System.out.println(entityObjectID);
 		initEntityLists();
 	}
 	
@@ -49,7 +54,9 @@ public class EntityObject {
 		this.objectData = objectData;
 		this.multipleEntities = true;
 		this.amount = objectData.getObjectInitAmount();
-		//this.face = face;
+		this.entityObjectID = GameEntityObjectsController.currentObjectID;
+		//GameEntityObjectsController.currentObjectID++;
+		System.out.println(entityObjectID);
 		initEntityLists();
 	}
 	
@@ -63,6 +70,48 @@ public class EntityObject {
 		for (int i = 0; i < prey_level_threshold; i++) {
 			ArrayList<EntityObject> tempList = new ArrayList<EntityObject>();
 			predators.add(tempList);
+		}
+	}
+	
+	public void removeCurrentObjectAndConnections(){
+		for (int i = 0; i < prey_level_threshold; i++) {
+			ArrayList<EntityObject> preysList = preys.get(i);
+			for (EntityObject prey : preysList){
+				prey.removeEntityObjectFromPredators(this, i);
+			}
+			ArrayList<EntityObject> predatorList = predators.get(i);
+			for (EntityObject predator : predatorList){
+				predator.removeEntityObjectFromPreys(this, i);
+			}
+		}
+	}
+	
+	
+	public void removeEntityObjectFromPreys(EntityObject objectToRemove, int range){
+		int objectID = objectToRemove.getEntityObjectID();
+		if (range >= prey_level_threshold) {
+			return;
+		}
+		ArrayList<EntityObject> preysAtRange = preys.get(range);
+		for (int i=0; i<preysAtRange.size(); i++){
+			if (preysAtRange.get(i).getEntityObjectID() == objectID) {
+				preysAtRange.remove(i);
+				return;
+			}
+		}
+	}
+	
+	public void removeEntityObjectFromPredators(EntityObject objectToRemove, int range){
+		int objectID = objectToRemove.getEntityObjectID();
+		if (range >= prey_level_threshold) {
+			return;
+		}
+		ArrayList<EntityObject> predatorsAtRange = predators.get(range);
+		for (int i=0; i<predatorsAtRange.size(); i++){
+			if (predatorsAtRange.get(i).getEntityObjectID() == objectID) {
+				predatorsAtRange.remove(i);
+				return;
+			}
 		}
 	}
 	
@@ -285,6 +334,10 @@ public class EntityObject {
 
 	public void setCyclesWithoutFood(int cyclesWithoutFood) {
 		this.cyclesWithoutFood = cyclesWithoutFood;
+	}
+
+	public int getEntityObjectID() {
+		return entityObjectID;
 	}
 
 	

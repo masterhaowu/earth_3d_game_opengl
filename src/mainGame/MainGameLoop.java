@@ -31,6 +31,7 @@ import fontRendering.TextMapController;
 import fontRendering.TextMaster;
 import gameDataBase.EntityModelDataBase;
 import gameDataBase.ObjectsNetwork;
+import gameDataBase.PredationNetwork;
 import guiDataBase.GuiData;
 import guiEvents.GuiEventController;
 import guis.Gui3DObjectRenderer;
@@ -98,6 +99,8 @@ public class MainGameLoop {
 		// --------------------------Objects Controller
 		// -------------------------------------
 		ObjectsNetwork.fillObjectsController();
+		// ----------Predation Network----------
+		PredationNetwork.fillPredationNetwork();
 
 		// -------------------------EntityObjectModel
 		// Data-----------------------------------

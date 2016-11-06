@@ -15,7 +15,7 @@ public class ObjectsNetworkTree {
 		pineTree1.setObjectInitAmount(1000);
 		pineTree1.setInitScale(2f);
 		pineTree1.setNoPrey(true);
-		pineTree1.addPredator(ObjectsNetwork.DEER1);
+		//pineTree1.addPredator(ObjectsNetwork.DEER1);
 		ObjectsNetwork.ObjectsMap.put(ObjectsNetwork.PINE_TREE1, pineTree1);
 				
 		//seasonalTree1
@@ -26,7 +26,7 @@ public class ObjectsNetworkTree {
 		seasonalTree1.setTemperatureInfo(15, 10);
 		seasonalTree1.setHumidityInfo(10, 15);
 		seasonalTree1.setNoPrey(true);
-		seasonalTree1.addPredator(ObjectsNetwork.DEER1);
+		//seasonalTree1.addPredator(ObjectsNetwork.DEER1);
 		ObjectsNetwork.ObjectsMap.put(ObjectsNetwork.SEASONAL_TREE1, seasonalTree1);
 				
 				
