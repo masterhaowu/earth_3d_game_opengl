@@ -31,9 +31,9 @@ public class DisplayManager {
 			//Display.setFullscreen(true);
 			//Display.setDisplayModeAndFullscreen(new DisplayMode(WIDTH, HEIGHT));
 			
-			Display.create(new PixelFormat().withSamples(4).withDepthBits(24), attribs);
-			//Display.create(new PixelFormat().withDepthBits(24), attribs);
-			Display.setTitle("First Display");
+			//Display.create(new PixelFormat().withSamples(4).withDepthBits(24), attribs);
+			Display.create(new PixelFormat().withDepthBits(24), attribs);
+			Display.setTitle("3D Planet Alpha Build");
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
 			// TODO Auto-generated catch block

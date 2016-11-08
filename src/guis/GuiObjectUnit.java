@@ -68,15 +68,15 @@ public class GuiObjectUnit {
 				new Vector2f(position.x, position.y - scale.y * 0.15f), scale.y * orbScale);
 		this.mainOrbBackground.setTransparency(0.5f);
 		this.guiTextures.add(mainOrbBackground);
-		this.mainOrb = new GuiSphereTexture(loader.loadTexture("locked"), loader.loadTexture("greyCircle"),
-				new Vector3f(0, 0, 0), 1.0f, new Vector2f(position.x, position.y - scale.y * 0.15f),
+		this.mainOrb = new GuiSphereTexture(loader.loadTexture("transparent"), loader.loadTexture("greyCircle"),
+				new Vector3f(1, 1, 1), 1.0f, new Vector2f(position.x, position.y - scale.y * 0.15f),
 				scale.y * orbScale);
 		mainOrb.disableAutoRotate();
-		mainOrb.setTransparency(0.1f);
+		mainOrb.setTransparency(0.2f);
 		this.guiSphereTextures.add(mainOrb);
 		this.comfirmBackground = new GuiTexture(loader.loadTexture("greenCircle"),
 				new Vector2f(position.x + scale.x * 0.7f, position.y - scale.y * 0.7f), scale.y * 0.3f);
-		this.comfirmBackground.setTransparency(0.5f);
+		this.comfirmBackground.setTransparency(0.2f);
 		this.guiTextures.add(comfirmBackground);
 		/*
 		 * this.comfirm = new GuiSphereTexture(loader.loadTexture("locked"),

@@ -19,6 +19,8 @@ public class Fbo {
 	private final int height;
 
 	private int frameBuffer;
+	
+	private boolean multisampled = false;
 
 	private int colourTexture;
 	private int depthTexture;
@@ -42,6 +44,13 @@ public class Fbo {
 		this.width = width;
 		this.height = height;
 		initialiseFrameBuffer(depthBufferType);
+	}
+	
+	public Fbo(int width, int height) {
+		this.multisampled = true;
+		this.width = width;
+		this.height = height;
+		initialiseFrameBuffer(DEPTH_RENDER_BUFFER);
 	}
 
 	/**

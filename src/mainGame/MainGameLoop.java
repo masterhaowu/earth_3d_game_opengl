@@ -314,7 +314,7 @@ public class MainGameLoop {
 			//particleSystemFire.generateParticles(new Vector3f(150, 10, -150));
 
 			ParticleMaster.update(camera);
-
+			//fbo.bindFrameBuffer();
 			renderer.renderShadowMap(gameEntityObjectsController.getEntitiesWithShadows(), sun);
 			
 
@@ -327,10 +327,10 @@ public class MainGameLoop {
 			}
 			
 			
-
+			fbo.bindFrameBuffer();
 			renderer.renderScene(gameEntityObjectsController.getEntityObjects(),
 					gameEntityObjectsController.getNormalMapEntities(), lights, camera, new Vector4f(0, 1, 0, 50),
-					terrainSphere);
+					terrainSphere, player);
 			// waterRenderer.render(waters, camera, sun);
 			if (eventController.isShowCircle()) {
 				renderer.renderHightlightedCircle(highlightedCircle, camera);
@@ -338,10 +338,12 @@ public class MainGameLoop {
 
 			waterSphereRenderer.render(waters, camera, sun);
 
-			// fbo.unbindFrameBuffer();
+			//fbo.unbindFrameBuffer();
 			// GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			ParticleMaster.renderParticles(camera);
-			// PostProcessing.doPostProcessing(fbo.getColourTexture());
+			fbo.unbindFrameBuffer();
+			PostProcessing.doPostProcessing(fbo.getColourTexture());
+			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 			guiRendererController.render(eventController);
 			//guiRenderer.render(eventController.getGuisToDisplay());
 			//gui3dRenderer.render(eventController.getGuisSphere3D());

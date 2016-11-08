@@ -37,17 +37,17 @@ public class GuiCreationTerrainEventController {
 		
 
 		
-		if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
+		if (GuiEventTools.checkSingleSphere(guiData.leftSphere, picker) && Mouse.isButtonDown(0)
 				&& guiData.leftSphere.getCurrentState() == 0) {
 			guiData.leftSphere.setNextState(1);
-			setToolBarStates(guiData, 2);
+			GuiEventTools.setToolBarStates(guiData, 2);
 			GameStateController.gameModeState = GameStateController.RESEARCH_TERRAIN_MODE;
-		} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
+		} else if (GuiEventTools.checkSingleSphere(guiData.rightSphere, picker) && Mouse.isButtonDown(0)
 				&& guiData.rightSphere.getCurrentState() == 0) {
 			guiData.rightSphere.setNextState(1);
-			setToolBarStates(guiData, 1);
+			GuiEventTools.setToolBarStates(guiData, 1);
 			GameStateController.gameModeState = GameStateController.CREATION_ANIMAL_MODE;
-		}  else if (checkSingleSphere(guiData.sphereRight1) && Mouse.isButtonDown(0) && mouseClicked
+		}  else if (GuiEventTools.checkSingleSphere(guiData.sphereRight1, picker) && Mouse.isButtonDown(0) && mouseClicked
 				&& GameStateController.CTState != GameStateController.CT_GRASS) {
 			mouseClicked = false;
 			level2Panel.clear();
@@ -69,7 +69,7 @@ public class GuiCreationTerrainEventController {
 				}
 			}
 
-		} else if (checkSingleSphere(guiData.sphereRight3) && Mouse.isButtonDown(0) && mouseClicked
+		} else if (GuiEventTools.checkSingleSphere(guiData.sphereRight3, picker) && Mouse.isButtonDown(0) && mouseClicked
 				&& GameStateController.CTState != GameStateController.CT_TREE) {
 			mouseClicked = false;
 			level2Panel.clear();
@@ -101,14 +101,14 @@ public class GuiCreationTerrainEventController {
 		
 		case GameStateController.CT_GRASS:
 
-			if (checkSingleSphere(guiData.sphereRight3) && mouseClicked) {
+			if (GuiEventTools.checkSingleSphere(guiData.sphereRight3, picker) && mouseClicked) {
 				mouseClicked = false;
 				GameStateController.CTState = GameStateController.CT_IDLE;
 				level2ObjectUnits.clear();
 				level2Panel.clear();
 			}
 			for (int i = 0; i < level2ObjectUnits.size(); i++) {
-				if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
+				if (GuiEventTools.checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground(), picker) && mouseClicked) {
 					mouseClicked = false;
 
 					entityObjectData = level2ObjectUnits.get(i).getObjectData();
@@ -129,14 +129,14 @@ public class GuiCreationTerrainEventController {
 
 		case GameStateController.CT_TREE:
 
-			if (checkSingleSphere(guiData.sphereRight3) && mouseClicked) {
+			if (GuiEventTools.checkSingleSphere(guiData.sphereRight3, picker) && mouseClicked) {
 				mouseClicked = false;
 				GameStateController.CTState = GameStateController.CT_IDLE;
 				level2ObjectUnits.clear();
 				level2Panel.clear();
 			}
 			for (int i = 0; i < level2ObjectUnits.size(); i++) {
-				if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
+				if (GuiEventTools.checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground(), picker) && mouseClicked) {
 					mouseClicked = false;
 					// dataTypeToReturn = RETURN_TERRAIN;
 					// terrainToReturn =
@@ -170,42 +170,7 @@ public class GuiCreationTerrainEventController {
 	}
 	
 	
-	public boolean checkSingleSphere(GuiSphereTexture gui) {
-		Vector2f mousePos = picker.getNormalizedXY();
-		gui.setHighlighted(false);
-		float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
-		float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
-		if (xDiff <= gui.getScale().x && yDiff <= gui.getScale().y) {
-			gui.setHighlighted(true);
-			return true;
-			// System.out.println("gg!");
-		}
-		return false;
-	}
 	
-	public boolean checkSingleGui(GuiTexture gui) {
-		Vector2f mousePos = picker.getNormalizedXY();
-		gui.setHighlighted(false);
-		float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
-		float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
-		if (xDiff <= gui.getScale().x && yDiff <= gui.getScale().y) {
-			gui.setHighlighted(true);
-			return true;
-			// System.out.println("gg!");
-		}
-		return false;
-	}
-	
-	
-	private void setToolBarStates(GuiData guiData, int i) {
-		guiData.sphereMiddle.setNextState(i);
-		guiData.sphereLeft1.setNextState(i);
-		guiData.sphereLeft2.setNextState(i);
-		guiData.sphereLeft3.setNextState(i);
-		guiData.sphereRight1.setNextState(i);
-		guiData.sphereRight2.setNextState(i);
-		guiData.sphereRight3.setNextState(i);
-	}
 
 	public ObjectData getEntityObjectData() {
 		return entityObjectData;

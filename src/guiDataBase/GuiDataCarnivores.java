@@ -28,6 +28,8 @@ public class GuiDataCarnivores {
 		lion1.setModel(EntityModelDataBase.lion1Model);
 		lion1.setName("Savanna Lion");
 		lion1.setObjectUnit(ObjectsNetworkCarnivore.lion1);
+		lion1.setModelScaleDown(1.55f);
+		lion1.setPositionOffsets(new Vector2f(0, 0.3f));
 		this.guiObjectUnits.add(lion1);
 	}
 	

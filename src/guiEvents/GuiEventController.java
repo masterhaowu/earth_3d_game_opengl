@@ -65,57 +65,6 @@ public class GuiEventController {
 
 	}
 
-	public GuiSphereTexture checkMouseoverSphere() { // this method do not check
-														// spheres in guiUnits
-
-		Vector2f mousePos = picker.getNormalizedXY();
-		/*
-		 * for(GuiTexture gui:guisToDisplay){ gui.setHighlighted(false); float
-		 * xDiff = Math.abs(mousePos.x - gui.getPosition().x); float yDiff =
-		 * Math.abs(mousePos.y - gui.getPosition().y); if (xDiff <=
-		 * gui.getScale().x && yDiff <= gui.getScale().y) {
-		 * gui.setHighlighted(true); return gui; //System.out.println("gg!"); }
-		 * }
-		 */
-		for (GuiSphereTexture gui : level1Spheres) {
-			gui.setHighlighted(false);
-			float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
-			float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
-			if (xDiff <= gui.getScale().x && yDiff <= gui.getScale().y) {
-				gui.setHighlighted(true);
-				return gui;
-				// System.out.println("gg!");
-			}
-		}
-		return null;
-	}
-
-	public boolean checkSingleSphere(GuiSphereTexture gui) {
-		Vector2f mousePos = picker.getNormalizedXY();
-		gui.setHighlighted(false);
-		float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
-		float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
-		if (xDiff <= gui.getScale().x && yDiff <= gui.getScale().y) {
-			gui.setHighlighted(true);
-			return true;
-			// System.out.println("gg!");
-		}
-		return false;
-	}
-
-	public boolean checkSingleGui(GuiTexture gui) {
-		Vector2f mousePos = picker.getNormalizedXY();
-		gui.setHighlighted(false);
-		float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
-		float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
-		if (xDiff <= gui.getScale().x && yDiff <= gui.getScale().y) {
-			gui.setHighlighted(true);
-			return true;
-			// System.out.println("gg!");
-		}
-		return false;
-	}
-
 	public boolean update(boolean mouseClicked) {
 		dataTypeToReturn = RETURN_NULL;
 		level1Spheres.clear();
@@ -157,29 +106,29 @@ public class GuiEventController {
 				break;
 
 			case GameStateController.RESEARCH_TERRAIN_MODE:
-				if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
+				if (GuiEventTools.checkSingleSphere(guiData.leftSphere, picker) && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 1) {
 					guiData.leftSphere.setNextState(0);
-					setToolBarStates(0);
+					GuiEventTools.setToolBarStates(guiData, 0);
 					GameStateController.gameModeState = GameStateController.CREATION_TERRAIN_MODE;
-				} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
+				} else if (GuiEventTools.checkSingleSphere(guiData.rightSphere, picker) && Mouse.isButtonDown(0)
 						&& guiData.rightSphere.getCurrentState() == 0) {
 					guiData.rightSphere.setNextState(1);
-					setToolBarStates(3);
+					GuiEventTools.setToolBarStates(guiData, 3);
 					GameStateController.gameModeState = GameStateController.RESEARCH_ANIMAL_MODE;
 				}
 				break;
 
 			case GameStateController.RESEARCH_ANIMAL_MODE:
-				if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
+				if (GuiEventTools.checkSingleSphere(guiData.leftSphere, picker) && Mouse.isButtonDown(0)
 						&& guiData.leftSphere.getCurrentState() == 1) {
 					guiData.leftSphere.setNextState(0);
-					setToolBarStates(1);
+					GuiEventTools.setToolBarStates(guiData, 1);
 					GameStateController.gameModeState = GameStateController.CREATION_ANIMAL_MODE;
-				} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
+				} else if (GuiEventTools.checkSingleSphere(guiData.rightSphere, picker) && Mouse.isButtonDown(0)
 						&& guiData.rightSphere.getCurrentState() == 1) {
 					guiData.rightSphere.setNextState(0);
-					setToolBarStates(2);
+					GuiEventTools.setToolBarStates(guiData, 2);
 					GameStateController.gameModeState = GameStateController.RESEARCH_TERRAIN_MODE;
 				}
 				break;
@@ -211,15 +160,7 @@ public class GuiEventController {
 		return mouseClicked;
 	}
 
-	private void setToolBarStates(int i) {
-		guiData.sphereMiddle.setNextState(i);
-		guiData.sphereLeft1.setNextState(i);
-		guiData.sphereLeft2.setNextState(i);
-		guiData.sphereLeft3.setNextState(i);
-		guiData.sphereRight1.setNextState(i);
-		guiData.sphereRight2.setNextState(i);
-		guiData.sphereRight3.setNextState(i);
-	}
+	
 	/*
 	 * public List<GuiTexture> getGuisToDisplay() { return guisToDisplay; }
 	 */

@@ -32,6 +32,8 @@ public class PostProcessing {
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+		//GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 	
 	private static void end(){

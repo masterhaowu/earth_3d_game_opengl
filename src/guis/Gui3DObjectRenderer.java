@@ -71,7 +71,7 @@ public class Gui3DObjectRenderer {
 			GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVerticesCount(), GL11.GL_UNSIGNED_INT, 0);
 
 			RendererController.enableCulling();
-			//GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			//GL11.glDisable(GL11.GL_BLEND);
 			GL20.glDisableVertexAttribArray(0);
 			GL20.glDisableVertexAttribArray(1);

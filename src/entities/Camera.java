@@ -151,7 +151,7 @@ public class Camera {
 
 	private void calculateCameraPositionLookAt(Player player) {
 		float radius = distanceFromPlayer;
-		float theta1 = (float) Math.toRadians(75 + pitchOffset);
+		float theta1 = (float) Math.toRadians(90 + pitchOffset);
 		float theta2 = (float) Math.toRadians(180 + angleAroundPlayer);
 		// theta1 = 0;
 		// theta2 = 0;
@@ -244,5 +244,17 @@ public class Camera {
 	public Player getPlayer() {
 		return player;
 	}
+
+	public float getPitchOffset() {
+		return pitchOffset;
+	}
+
+	public float getDistanceFromPlayer() {
+		return distanceFromPlayer;
+	}
+	
+	
+	
+	
 
 }

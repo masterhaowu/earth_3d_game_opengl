@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Vector4f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import entityObjects.EntityObject;
 import models.TexturedModel;
 import mouse.HighlightedCircle;
@@ -23,6 +24,7 @@ import normalMappingRenderer.NormalMappingRenderer;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import shadows.ShadowMapMasterRenderer;
+import skybox.AtomsphereRenderer;
 import skybox.SkyboxRednerer;
 import terrains.Terrain;
 import terrainsSphere.TerrainSphere;
@@ -33,7 +35,7 @@ public class RendererController {
 
 	public static final float FOV = 50;
 	public static final float NEAR_PLANE = 0.1f;
-	public static final float FAR_PLANE = 2000;
+	public static final float FAR_PLANE = 3000;
 
 	public static final float RED = 0.4f;
 	public static final float GREEN = 0.4f;
@@ -55,7 +57,7 @@ public class RendererController {
 	// private List<Terrain> terrains = new ArrayList<Terrain>();
 
 	private SkyboxRednerer skyboxRednerer;
-
+	private AtomsphereRenderer atomsphereRenderer;
 	private NormalMappingRenderer normalMappingRenderer;
 
 	private ShadowMapMasterRenderer shadowMapRenderer;
@@ -67,17 +69,16 @@ public class RendererController {
 		enableCulling();
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
-		// terrainRenderer = new TerrainRenderer(terrainShader,
-		// projectionMatrix);
 		terrainSphereRenderer = new TerrainSphereRenderer(terrainSphereShader, projectionMatrix);
 		skyboxRednerer = new SkyboxRednerer(loader, projectionMatrix);
+		atomsphereRenderer = new AtomsphereRenderer(loader, projectionMatrix);
 		normalMappingRenderer = new NormalMappingRenderer(projectionMatrix);
 		shadowMapRenderer = new ShadowMapMasterRenderer(camera);
 		highlightedCircleRenderer = new HighlightedCircleRenderer(highlightedCircleShader, projectionMatrix);
 	}
 
 	public void renderScene(List<EntityObject> entityObjects, List<Entity> normalMapEntities, List<Light> lights,
-			Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere) {
+			Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere, Player player) {
 
 		for (EntityObject entityObject : entityObjects) {
 			if (entityObject.isMultipleEntities()) {
@@ -92,11 +93,11 @@ public class RendererController {
 		for (Entity entity : normalMapEntities) {
 			processNormalMapEntity(entity);
 		}
-		render(lights, camera, clipPlane, terrainSphere);
+		render(lights, camera, clipPlane, terrainSphere, player);
 
 	}
 
-	public void render(List<Light> lights, Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere) {
+	public void render(List<Light> lights, Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere, Player player) {
 		prepare();
 		shader.start();
 		shader.loadClipPlane(clipPlane);
@@ -115,6 +116,7 @@ public class RendererController {
 		// terrainRenderer.render(terrains,
 		// shadowMapRenderer.getToShadowMapSpaceMatrix());
 		// terrainShader.stop();
+		//atomsphereRenderer.render(camera, RED, GREEN, BLUE);
 		terrainSphereShader.start();
 		terrainSphereShader.loadClipPlane(clipPlane);
 		terrainSphereShader.loadSkyColour(RED, GREEN, BLUE);
@@ -124,6 +126,7 @@ public class RendererController {
 		terrainSphereRenderer.render(terrainSphere, shadowMapRenderer.getToShadowMapSpaceMatrix());
 		terrainSphereShader.stop();
 		skyboxRednerer.render(camera, RED, GREEN, BLUE);
+		atomsphereRenderer.render(camera, RED, GREEN, BLUE, player);
 		entities.clear();
 		// terrains.clear();
 		normalMapEntities.clear();

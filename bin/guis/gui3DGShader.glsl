@@ -40,10 +40,10 @@ void main(void) {
     float averageCos = nDotl;
     
     vec4 tempPosition = gl_in[0].gl_Position;
-    float temoValueX = -tempPosition.x/10;
-    float tempValueY = -tempPosition.y/10;
-    float tempAverageX = (textureCoords[0].x + textureCoords[1].x + textureCoords[2].x)/3;
-    float tempAverageY = 1 - (textureCoords[0].y + textureCoords[1].y + textureCoords[2].y)/3;
+    float temoValueX = -tempPosition.x/10.0;
+    float tempValueY = -tempPosition.y/10.0;
+    float tempAverageX = (textureCoords[0].x + textureCoords[1].x + textureCoords[2].x)/3.0;
+    float tempAverageY = 1 - (textureCoords[0].y + textureCoords[1].y + textureCoords[2].y)/3.0;
     
     gl_Position = tempPosition;
     //pass_textureCoords = vec2(textureCoords[0].x + temoValueX, textureCoords[0].y + tempValueY);

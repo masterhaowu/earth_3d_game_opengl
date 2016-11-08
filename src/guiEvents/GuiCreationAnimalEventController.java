@@ -36,17 +36,17 @@ public class GuiCreationAnimalEventController {
 	public boolean updateCreationAnimalState(Boolean mouseClicked, GuiData guiData, List<GuiSphereTexture> level1Spheres,
 			List<GuiTexture> level2Panel, List<GuiObjectUnit> level2ObjectUnits, List<GUIText> level2Texts) {
 		
-		if (checkSingleSphere(guiData.leftSphere) && Mouse.isButtonDown(0)
+		if (GuiEventTools.checkSingleSphere(guiData.leftSphere, picker) && Mouse.isButtonDown(0)
 				&& guiData.leftSphere.getCurrentState() == 0) {
 			guiData.leftSphere.setNextState(1);
-			setToolBarStates(guiData, 3);
+			GuiEventTools.setToolBarStates(guiData, 3);
 			GameStateController.gameModeState = GameStateController.RESEARCH_ANIMAL_MODE;
-		} else if (checkSingleSphere(guiData.rightSphere) && Mouse.isButtonDown(0)
+		} else if (GuiEventTools.checkSingleSphere(guiData.rightSphere, picker) && Mouse.isButtonDown(0)
 				&& guiData.rightSphere.getCurrentState() == 1) {
 			guiData.rightSphere.setNextState(0);
-			setToolBarStates(guiData, 0);
+			GuiEventTools.setToolBarStates(guiData, 0);
 			GameStateController.gameModeState = GameStateController.CREATION_TERRAIN_MODE;
-		} else if (checkSingleSphere(guiData.sphereMiddle) && mouseClicked
+		} else if (GuiEventTools.checkSingleSphere(guiData.sphereMiddle, picker) && mouseClicked
 				&& GameStateController.CAState != GameStateController.CA_HERBIVORE) {
 			mouseClicked = false;
 			level2Panel.clear();
@@ -67,7 +67,7 @@ public class GuiCreationAnimalEventController {
 					}
 				}
 			}
-		} else if (checkSingleSphere(guiData.sphereRight2) && mouseClicked
+		} else if (GuiEventTools.checkSingleSphere(guiData.sphereRight2, picker) && mouseClicked
 				&& GameStateController.CAState != GameStateController.CA_CARNIVORE) {
 			mouseClicked = false;
 			level2Panel.clear();
@@ -92,14 +92,14 @@ public class GuiCreationAnimalEventController {
 
 		switch (GameStateController.CAState) {
 		case GameStateController.CA_HERBIVORE:
-			if (checkSingleSphere(guiData.sphereMiddle) && mouseClicked) {
+			if (GuiEventTools.checkSingleSphere(guiData.sphereMiddle, picker) && mouseClicked) {
 				mouseClicked = false;
 				GameStateController.CAState = GameStateController.CA_IDLE;
 				level2ObjectUnits.clear();
 				level2Panel.clear();
 			}
 			for (int i = 0; i < level2ObjectUnits.size(); i++) {
-				if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
+				if (GuiEventTools.checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground(), picker) && mouseClicked) {
 					mouseClicked = false;
 
 					entityObjectData = level2ObjectUnits.get(i).getObjectData();
@@ -119,14 +119,14 @@ public class GuiCreationAnimalEventController {
 			level2Panel.clear();
 			break;
 		case GameStateController.CA_CARNIVORE:
-			if (checkSingleSphere(guiData.sphereRight2) && mouseClicked) {
+			if (GuiEventTools.checkSingleSphere(guiData.sphereRight2, picker) && mouseClicked) {
 				mouseClicked = false;
 				GameStateController.CAState = GameStateController.CA_IDLE;
 				level2ObjectUnits.clear();
 				level2Panel.clear();
 			}
 			for (int i = 0; i < level2ObjectUnits.size(); i++) {
-				if (checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground()) && mouseClicked) {
+				if (GuiEventTools.checkSingleGui(level2ObjectUnits.get(i).getComfirmBackground(), picker) && mouseClicked) {
 					mouseClicked = false;
 
 					entityObjectData = level2ObjectUnits.get(i).getObjectData();
@@ -155,43 +155,7 @@ public class GuiCreationAnimalEventController {
 	}
 	
 	
-	public boolean checkSingleSphere(GuiSphereTexture gui) {
-		Vector2f mousePos = picker.getNormalizedXY();
-		gui.setHighlighted(false);
-		float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
-		float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
-		if (xDiff <= gui.getScale().x && yDiff <= gui.getScale().y) {
-			gui.setHighlighted(true);
-			return true;
-			// System.out.println("gg!");
-		}
-		return false;
-	}
 	
-	public boolean checkSingleGui(GuiTexture gui) {
-		Vector2f mousePos = picker.getNormalizedXY();
-		gui.setHighlighted(false);
-		float xDiff = Math.abs(mousePos.x - gui.getPosition().x);
-		float yDiff = Math.abs(mousePos.y - gui.getPosition().y);
-		if (xDiff <= gui.getScale().x && yDiff <= gui.getScale().y) {
-			gui.setHighlighted(true);
-			return true;
-			// System.out.println("gg!");
-		}
-		return false;
-	}
-	
-	
-	private void setToolBarStates(GuiData guiData, int i) {
-		guiData.sphereMiddle.setNextState(i);
-		guiData.sphereLeft1.setNextState(i);
-		guiData.sphereLeft2.setNextState(i);
-		guiData.sphereLeft3.setNextState(i);
-		guiData.sphereRight1.setNextState(i);
-		guiData.sphereRight2.setNextState(i);
-		guiData.sphereRight3.setNextState(i);
-	}
-
 	public ObjectData getEntityObjectData() {
 		return entityObjectData;
 	}

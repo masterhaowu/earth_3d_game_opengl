@@ -26,6 +26,8 @@ public class GuiDataHerbivores {
 		deer1.setModel(EntityModelDataBase.deer1Model);
 		deer1.setName("Forrest Deer");
 		deer1.setObjectUnit(ObjectsNetworkHerbivore.deer1);
+		deer1.setModelScaleDown(1.25f);
+		deer1.setPositionOffsets(new Vector2f(0, 0.2f));
 		this.guiObjectUnits.add(deer1);
 	}
 
