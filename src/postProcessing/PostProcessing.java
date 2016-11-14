@@ -15,20 +15,23 @@ public class PostProcessing {
 	private static ContrastChanger contrastChanger;
 	private static BlurEffect blurEffectHorizontal;
 	private static BlurEffect blurEffectVertical;
+	private static BlurMixer blurMixer;
 	
 
 	public static void init(Loader loader){
 		quad = loader.loadToVAO(POSITIONS, 2);
 		contrastChanger = new ContrastChanger();
-		blurEffectHorizontal = new BlurEffect(Display.getWidth(), Display.getHeight(), true);
-		blurEffectVertical = new BlurEffect(Display.getWidth(), Display.getHeight(), false);
+		blurEffectHorizontal = new BlurEffect(Display.getWidth()/4, Display.getHeight()/4, true);
+		blurEffectVertical = new BlurEffect(Display.getWidth()/4, Display.getHeight()/4, false);
+		blurMixer = new BlurMixer(Display.getWidth(), Display.getHeight());
 	}
 	
 	public static void doPostProcessing(int colourTexture, int depthTexture){
 		start();
-		blurEffectHorizontal.render(colourTexture, depthTexture);
-		blurEffectVertical.render(blurEffectHorizontal.getRenderedTexture(), depthTexture);
-		contrastChanger.render(blurEffectVertical.getRenderedTexture());
+		blurEffectHorizontal.render(colourTexture);
+		blurEffectVertical.render(blurEffectHorizontal.getRenderedTexture());
+		blurMixer.render(colourTexture, blurEffectVertical.getRenderedTexture(), depthTexture);
+		contrastChanger.render(blurMixer.getRenderedTexture());
 		end();
 	}
 	

@@ -351,7 +351,7 @@ public class MainGameLoop {
 			PostProcessing.doPostProcessing(outputFbo.getColourTexture(), depthFbo.getDepthTexture());
 			//PostProcessing.doPostProcessing(depthFbo.getDepthTexture());
 			//PostProcessing.doPostProcessing(renderer.getShadowMapTexture());
-			//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 			guiRendererController.render(eventController);
 
 			// guiRenderer.render(eventController.getGuisToDisplay());

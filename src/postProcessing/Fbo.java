@@ -173,7 +173,7 @@ public class Fbo {
 	 */
 	private void createDepthTextureAttachment() {
 		//System.out.println("here");
-		/*
+		
 		depthTexture = GL11.glGenTextures();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, depthTexture);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT24, width, height, 0, GL11.GL_DEPTH_COMPONENT,
@@ -181,7 +181,8 @@ public class Fbo {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture, 0);
-		*/
+		
+		/*
 		depthTexture = GL11.glGenTextures();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, depthTexture);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT16, width, height, 0,
@@ -191,6 +192,7 @@ public class Fbo {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 		GL32.glFramebufferTexture(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, depthTexture, 0);
+		*/
 	}
 
 	private void createMultisampleColourAttachment() {
