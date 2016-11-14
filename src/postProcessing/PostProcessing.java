@@ -1,5 +1,6 @@
 package postProcessing;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -12,15 +13,22 @@ public class PostProcessing {
 	private static final float[] POSITIONS = { -1, 1, -1, -1, 1, 1, 1, -1 };	
 	private static RawModel quad;
 	private static ContrastChanger contrastChanger;
+	private static BlurEffect blurEffectHorizontal;
+	private static BlurEffect blurEffectVertical;
+	
 
 	public static void init(Loader loader){
 		quad = loader.loadToVAO(POSITIONS, 2);
 		contrastChanger = new ContrastChanger();
+		blurEffectHorizontal = new BlurEffect(Display.getWidth(), Display.getHeight(), true);
+		blurEffectVertical = new BlurEffect(Display.getWidth(), Display.getHeight(), false);
 	}
 	
-	public static void doPostProcessing(int colourTexture){
+	public static void doPostProcessing(int colourTexture, int depthTexture){
 		start();
-		contrastChanger.render(colourTexture);
+		blurEffectHorizontal.render(colourTexture, depthTexture);
+		blurEffectVertical.render(blurEffectHorizontal.getRenderedTexture(), depthTexture);
+		contrastChanger.render(blurEffectVertical.getRenderedTexture());
 		end();
 	}
 	

@@ -58,6 +58,7 @@ import postProcessing.PostProcessing;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.RendererController;
+import shadows.ShadowMapMasterRenderer;
 //import renderEngine.OBJLoader;
 import terrains.Terrain;
 import terrainsSphere.ColourController;
@@ -85,12 +86,11 @@ public class MainGameLoop {
 		// TODO Auto-generated method stub
 
 		DisplayManager.createDisplay();
-		
-		//----Game Timer-----
+
+		// ----Game Timer-----
 		GameTimeController.init();
-		
-		
-		//-----Loader-----
+
+		// -----Loader-----
 		Loader loader = new Loader();
 		// --------------------------Game State--------------------
 		GameStateController.setCurrentState(GameStateController.PLAY_MODE_IDLE);
@@ -108,7 +108,7 @@ public class MainGameLoop {
 
 		// --------------------------Animation Controller ---------------------
 		AnimationController animationController = new AnimationController();
-		
+
 		// --------------------------TerrainSphere---------------------------------------------
 		TerrainSphere terrainSphere = new TerrainSphere(loader, 6, 400f);
 		terrainSphere.connectAllFacesWithNeighbors(TerrainSphere.FACE_NEIGHBOR_RANGE);
@@ -116,34 +116,28 @@ public class MainGameLoop {
 		// --------------------------Game Entity Object Controller
 		// --------------------------
 		GameEntityObjectsController gameEntityObjectsController = new GameEntityObjectsController(animationController);
-		
-		//---------------Game Play Controllers-----------
-		//EntityGrowthController entityGrowthController = new EntityGrowthController();
+
+		// ---------------Game Play Controllers-----------
+		// EntityGrowthController entityGrowthController = new
+		// EntityGrowthController();
 		EntityCycleController entityCycleController = new EntityCycleController();
 
 		// --------------------------Font----------------------------------------------------
-		//TextMaster.init(loader);
+		// TextMaster.init(loader);
 		FontController.init(loader);
-		//TextMapController textMapController = new TextMapController(loader);
+		// TextMapController textMapController = new TextMapController(loader);
 
-		//FontType font = new FontType(loader.loadFontTexture("candara"), "candara");
+		// FontType font = new FontType(loader.loadFontTexture("candara"),
+		// "candara");
 		GUIText text = new GUIText("testing", 3f, FontController.candara, new Vector2f(0.5f, 0.5f), 0.2f, true);
 		text.loadText(loader);
-		
+
 		// ----------------Gui Renderer--------------------------
 		GuiRendererController guiRendererController = new GuiRendererController(loader);
 
-		
-
-		
-
 		Random random = new Random();
-		
 
-		
-		
-		
-		//------------Climate Particle Systems------------------------------
+		// ------------Climate Particle Systems------------------------------
 		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("glow"), 1, false);
 		particleTexture.useColour(new Vector3f(1, 1, 1));
 		SnowSystem snowSystem = new SnowSystem(particleTexture, terrainSphere);
@@ -152,7 +146,7 @@ public class MainGameLoop {
 		// Controllers------------------------------------------
 		ColourController colourController = new ColourController(terrainSphere);
 		TemperatureController temperatureController = new TemperatureController(terrainSphere);
-		//temperatureController.updateSphereTemp();
+		// temperatureController.updateSphereTemp();
 		HumidityController humidityController = new HumidityController(terrainSphere);
 
 		TerrainTypeController terrainTypeController = new TerrainTypeController(loader, terrainSphere, colourController,
@@ -216,14 +210,10 @@ public class MainGameLoop {
 
 		Entity deer1Entity = new Entity(EntityModelDataBase.deer1Model, new Vector3f(0, 0, terrainSphere.getScale()),
 				90, 0, 0, 5);
-				// entities.add(deerEntity);
-				// System.out.println(deerEntity.getModel().getRawModel().getVaoID());
+		// entities.add(deerEntity);
+		// System.out.println(deerEntity.getModel().getRawModel().getVaoID());
 
-		
-
-		
 		MousePickerSphere picker = new MousePickerSphere(camera, renderer.getProjectionMatrix(), terrainSphere);
-
 
 		// --------------------------WaterSphere----------------------------------------------------
 
@@ -234,21 +224,18 @@ public class MainGameLoop {
 		WaterSphere water = new WaterSphere(terrainSphere, 1, loader);
 		waters.add(water);
 
-		
 		/*
-		ParticleSystem particleSystem = new ParticleSystem(particleTexture, 150, 35, 0.3f, 4, 1);
-		particleSystem.randomizeRotation();
-		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
-		particleSystem.setLifeError(0.1f);
-		particleSystem.setSpeedError(0.5f);
-		particleSystem.setScaleError(0.8f);
-	*/
-		//ParticleTexture particleTextureFire = new ParticleTexture(loader.loadTexture("fire"), 8, true);
-		//ParticleSystem particleSystemFire = new ParticleSystem(particleTextureFire, 2, 1, 0, 6, 50);
-
-		// --------------------------FBO----------------------------------------------------
-		Fbo fbo = new Fbo(Display.getWidth(), Display.getWidth(), Fbo.DEPTH_RENDER_BUFFER);
-		PostProcessing.init(loader);
+		 * ParticleSystem particleSystem = new ParticleSystem(particleTexture,
+		 * 150, 35, 0.3f, 4, 1); particleSystem.randomizeRotation();
+		 * particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
+		 * particleSystem.setLifeError(0.1f);
+		 * particleSystem.setSpeedError(0.5f);
+		 * particleSystem.setScaleError(0.8f);
+		 */
+		// ParticleTexture particleTextureFire = new
+		// ParticleTexture(loader.loadTexture("fire"), 8, true);
+		// ParticleSystem particleSystemFire = new
+		// ParticleSystem(particleTextureFire, 2, 1, 0, 6, 50);
 
 		// terrainSphere.updataColourVBO(loader);
 		// TerrainFace testFace =
@@ -299,35 +286,52 @@ public class MainGameLoop {
 		// 0.22f);
 		// System.out.println(gui3dTesting.getPosition());
 		// guis.add(gui3dTesting);
-		//Particle marked = new Particle(particleTexture, new Vector3f(0, 0 , 440), new Vector3f(0, 0, -1), 0, 20, 0, 1);
-		//marked.marked = true;
+		// Particle marked = new Particle(particleTexture, new Vector3f(0, 0 ,
+		// 440), new Vector3f(0, 0, -1), 0, 20, 0, 1);
+		// marked.marked = true;
+
+		// --------------------------FBO----------------------------------------------------
+		Fbo multisampledFbo = new Fbo(Display.getWidth(), Display.getWidth());
+		Fbo outputFbo = new Fbo(Display.getWidth(), Display.getWidth(), Fbo.DEPTH_TEXTURE);
+		
+		Fbo depthFbo = new Fbo(Display.getWidth(), Display.getWidth(), Fbo.DEPTH_TEXTURE);
+		
+		PostProcessing.init(loader);
 
 		while (!Display.isCloseRequested()) {
 			TimeController.updateTime();
 			GameTimeController.updateGameTime();
-			
+
 			player.move(terrainSphere);
 			camera.move();
 
-			//particleSystem.generateParticles(player.getPosition());
+			// particleSystem.generateParticles(player.getPosition());
 			snowSystem.updateSnowSystem();
-			//particleSystemFire.generateParticles(new Vector3f(150, 10, -150));
+			// particleSystemFire.generateParticles(new Vector3f(150, 10,
+			// -150));
 
 			ParticleMaster.update(camera);
-			//fbo.bindFrameBuffer();
-			renderer.renderShadowMap(gameEntityObjectsController.getEntitiesWithShadows(), sun);
-			
+			// fbo.bindFrameBuffer();
+			//renderer.renderShadowMap(gameEntityObjectsController.getEntitiesWithShadows(), sun);
 
 			animationController.update();
 
 			eventController.updateEvents(gameEntityObjectsController.getEntityObjects());
-			
+
 			if (GameTimeController.basicCycleHit) {
 				entityCycleController.updateList(gameEntityObjectsController.getEntityObjects());
 			}
 			
+			depthFbo.bindFrameBuffer();
+			renderer.renderScene(gameEntityObjectsController.getEntityObjects(),
+					gameEntityObjectsController.getNormalMapEntities(), lights, camera, new Vector4f(0, 1, 0, 50),
+					terrainSphere, player);
+			//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			depthFbo.unbindFrameBuffer();
 			
-			fbo.bindFrameBuffer();
+			
+
+			multisampledFbo.bindFrameBuffer();
 			renderer.renderScene(gameEntityObjectsController.getEntityObjects(),
 					gameEntityObjectsController.getNormalMapEntities(), lights, camera, new Vector4f(0, 1, 0, 50),
 					terrainSphere, player);
@@ -338,37 +342,42 @@ public class MainGameLoop {
 
 			waterSphereRenderer.render(waters, camera, sun);
 
-			//fbo.unbindFrameBuffer();
+			// fbo.unbindFrameBuffer();
 			// GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			ParticleMaster.renderParticles(camera);
-			fbo.unbindFrameBuffer();
-			PostProcessing.doPostProcessing(fbo.getColourTexture());
-			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			//guiRendererController.render(eventController);
+			//multisampledFbo.unbindFrameBuffer();
+			multisampledFbo.resolveToFbo(outputFbo);
+			PostProcessing.doPostProcessing(outputFbo.getColourTexture(), depthFbo.getDepthTexture());
+			//PostProcessing.doPostProcessing(depthFbo.getDepthTexture());
+			//PostProcessing.doPostProcessing(renderer.getShadowMapTexture());
+			//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 			guiRendererController.render(eventController);
-			//guiRenderer.render(eventController.getGuisToDisplay());
-			//gui3dRenderer.render(eventController.getGuisSphere3D());
-			//System.out.println(eventController.getGuiObjectUnit().size());
-			//gui3dObjectRenderer.render(eventController.getGuiObjectUnit());
-			//gui3dRenderer.render(eventController.getGuisSphere3D());
-			
-			//textMapController.clearMap();
-			//textMapController.processListOfText(eventController.geGuiTexts());
-			
-			//textMapController.render();
 
+			// guiRenderer.render(eventController.getGuisToDisplay());
+			// gui3dRenderer.render(eventController.getGuisSphere3D());
+			// System.out.println(eventController.getGuiObjectUnit().size());
+			// gui3dObjectRenderer.render(eventController.getGuiObjectUnit());
+			// gui3dRenderer.render(eventController.getGuisSphere3D());
+
+			// textMapController.clearMap();
+			// textMapController.processListOfText(eventController.geGuiTexts());
+
+			// textMapController.render();
 
 			DisplayManager.updateDisplay();
 		}
 
 		PostProcessing.cleanUp();
-		fbo.cleanUp();
+		multisampledFbo.cleanUp();
+		outputFbo.cleanUp();
 		ParticleMaster.cleanUp();
-		//TextMaster.cleanUp();
-		//textMapController.cleanUp();
+		// TextMaster.cleanUp();
+		// textMapController.cleanUp();
 		// fbos.cleanUp();
 		// waterShader.cleanUp();
 		waterSphereShader.cleanUp();
-		//guiRenderer.cleanUp();
+		// guiRenderer.cleanUp();
 		guiRendererController.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
