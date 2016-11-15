@@ -16,6 +16,7 @@ public class Camera {
 	private float angleAroundPlayer = 0;
 
 	private Vector3f position = new Vector3f(100, 30, 0);
+	private Vector3f polar = new Vector3f(0, 0, 0);
 	private float pitch;
 	private float yaw;
 	private float roll;
@@ -175,7 +176,7 @@ public class Camera {
 
 		Vector3f cameraWorldSpacePolar = new Vector3f(cameraPosModelSpacePolar.x,
 				cameraPosModelSpacePolar.y + theta1Offset, cameraPosModelSpacePolar.z + theta2Offset);
-		
+		this.polar = cameraWorldSpacePolar;
 		this.position = Maths.convertBackToCart(cameraWorldSpacePolar);
 	}
 
@@ -251,6 +252,14 @@ public class Camera {
 
 	public float getDistanceFromPlayer() {
 		return distanceFromPlayer;
+	}
+
+	public float getAngleAroundPlayer() {
+		return angleAroundPlayer;
+	}
+
+	public Vector3f getPolar() {
+		return polar;
 	}
 	
 	

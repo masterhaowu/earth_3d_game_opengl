@@ -10,8 +10,10 @@ public class AtomsphereShader extends ShaderProgram {
 	
 	
 	private int location_projectionMatrix;
-	private int location_viewMatrix;
-	private int location_transformationMatrix;
+	//private int location_viewMatrix;
+	//private int location_transformationMatrix;
+	
+	private int location_modelViewMatrix;
 	
 	public AtomsphereShader(){
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -21,6 +23,7 @@ public class AtomsphereShader extends ShaderProgram {
 		super.loadMatrix(location_projectionMatrix, projectionMatrix);
 	}
 	
+	/*
 	public void loadTransformationMatrix(Matrix4f transformationMatrix){
 		super.loadMatrix(location_transformationMatrix, transformationMatrix);
 	}
@@ -28,13 +31,17 @@ public class AtomsphereShader extends ShaderProgram {
 	public void loadViewMatrix(Matrix4f viewMatrix){
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
-	
+	*/
+	public void loadModelViewMatrix(Matrix4f modelViewMatrix){
+		super.loadMatrix(location_modelViewMatrix, modelViewMatrix);
+	}
 
 	@Override
 	protected void getAllUniformLocations() {
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		location_viewMatrix = super.getUniformLocation("viewMatrix");
+		//location_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		//location_viewMatrix = super.getUniformLocation("viewMatrix");
+		location_modelViewMatrix = super.getUniformLocation("modelViewMatrix");
 		
 	}
 
