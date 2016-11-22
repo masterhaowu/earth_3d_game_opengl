@@ -8,27 +8,51 @@ uniform sampler2D originalColourTexture;
 uniform sampler2D blurredColourTexture;
 uniform sampler2D depthTexture;
 
-const float near = 0.1;
-const float far = 3000;
+uniform float near;
+uniform float far;
 
 
-const float farBlurThreshold = 1.3;
-const float farBlurRange = 0.5;
+const float farBlurThreshold = 1.7;
+const float farBlurRange = 1.0;
 
-const float nearBlurThreshold = 0.3;
+const float nearBlurThreshold = 0.6;
 const float nearBlurRange = 0.1; // this should be smaller than nearBlurThreshold
 
 void main(void){
     float applyBlur = 0;
     
-    float centerDepth = texture(depthTexture, vec2(0.5, 0.5)).r;
-    //float depth = texture(depthTexture, textureCoords[5]).r - depthOffset;
-    float centerDistance = 2.0 * near * far / (far + near - (2.0 * centerDepth - 1.0) * (far - near));
+    //float centerDepth = texture(depthTexture, vec2(0.5, 0.5)).r;
+    float upperCenterDepth = texture(depthTexture, vec2(0.5, 0.65)).r;
+    float lowerCenterDepth = texture(depthTexture, vec2(0.5, 0.35)).r;
+    //float centerDistance = 2.0 * near * far / (far + near - (2.0 * centerDepth - 1.0) * (far - near));
+    float upperCenterDistance = 2.0 * near * far / (far + near - (2.0 * upperCenterDepth - 1.0) * (far - near));
+    float lowerCenterDistance = 2.0 * near * far / (far + near - (2.0 * lowerCenterDepth - 1.0) * (far - near));
+
+
     float depth = texture(depthTexture, textureCoords).r;
     float distance = 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
     
     //float ratio = (depth - centerDepth)/centerDepth;
-    float ratio = distance/centerDistance;
+    
+    //float centerRatio = distance/centerDistance;
+    float upperCenterRatio = distance/upperCenterDistance;
+    float lowerCenterRatio = distance/lowerCenterDistance;
+    
+    //float ratio = 1;
+    
+    float maxRatio = 1;
+    float minRatio = 1;
+    
+    if (upperCenterRatio > lowerCenterRatio) {
+        maxRatio = upperCenterRatio;
+        minRatio = lowerCenterRatio;
+    }
+    else {
+        minRatio = upperCenterRatio;
+        maxRatio = lowerCenterRatio;
+    }
+    
+    //float ratio = distance/centerDistance;
     out_Colour = vec4(0.0, 0.0, 0.0, 0.0);
     /*
     if (ratio > 0.0003){
@@ -39,12 +63,12 @@ void main(void){
     }
      */
     
-    if (ratio > farBlurThreshold) {
-        applyBlur = (ratio - farBlurThreshold) / farBlurRange;
+    if (minRatio > farBlurThreshold) {
+        applyBlur = (minRatio - farBlurThreshold) / farBlurRange;
     }
     
-    else if (ratio < nearBlurThreshold){
-        applyBlur = (nearBlurThreshold - ratio) / nearBlurRange;
+    else if (maxRatio < nearBlurThreshold){
+        applyBlur = (nearBlurThreshold - maxRatio) / nearBlurRange;
     }
     
     /*

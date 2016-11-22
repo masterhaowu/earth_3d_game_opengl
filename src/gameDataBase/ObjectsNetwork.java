@@ -23,6 +23,7 @@ public class ObjectsNetwork {
 	public static final int RAIN_FOREST_TERRAIN = 109;
 	
 	
+	
 	public static final Vector3f ICE_CAP_COLOUR = new Vector3f((float) 160 / 255, (float) 160 / 255, (float) 160 / 255);
 	public static final Vector3f TUNDRA_COLOUR = new Vector3f((float) 135 / 255, (float) 160 / 255, (float) 145 / 255);
 	public static final Vector3f TAIGA_COLOUR = new Vector3f((float) 115 / 255, (float) 160 / 255, (float) 135 / 255);
@@ -48,6 +49,10 @@ public class ObjectsNetwork {
 	
 	
 	
+	public static final int BEACH_TERRAIN = 50;
+	public static final Vector3f BEACH_COLOUR = new Vector3f((float) 112 / 255, (float) 102 / 255, (float) 79 / 255);
+	
+	
 	//objects that affects terrain colour
 	public static final int SHORT_GRASS = 500;
 	public static final int LOW_GRASS1 = 501;
@@ -70,8 +75,8 @@ public class ObjectsNetwork {
 	public static final Vector3f SNOW_COLOUR = new Vector3f(1, 1, 1);
 	public static final Vector3f MOUNTAIN_COLOUR = new Vector3f((float) 90 / 255, (float) 90 / 255, (float) 90 / 255);
 	public static final Vector3f CLIFF_COLOUR = new Vector3f((float) 134 / 255, (float) 95 / 255, (float) 47 / 255);
-	public static final Vector3f SHALLOW_WATER_COLOUR = new Vector3f((float) 20 / 255, (float) 56 / 255,
-			(float) 78 / 255);
+	public static final Vector3f SHALLOW_WATER_COLOUR = new Vector3f((float) 35 / 255, (float) 86 / 255,
+			(float) 128 / 255);
 	public static final Vector3f DEEEP_WATER_COLOUR = new Vector3f((float) 04 / 255, (float) 14 / 255,
 			(float) 128 / 255);
 	public static final Vector3f PLAIN_COLOUR = new Vector3f((float) 158 / 255, (float) 149 / 255, (float) 100 / 255);
@@ -88,6 +93,9 @@ public class ObjectsNetwork {
 	public static ObjectData mountainTerrain;
 	public static ObjectData plainTerrain;
 	public static ObjectData cliffTerrain;
+	
+	
+	public static ObjectData beachTerrain;
 	
 	
 	public static ObjectData iceCapTerrain;
@@ -158,9 +166,12 @@ public class ObjectsNetwork {
 		
 		
 		
-		
-		
-		
+		//beachTerrain
+		beachTerrain = new ObjectData(BEACH_TERRAIN);
+		beachTerrain.setColour(BEACH_COLOUR);
+		beachTerrain.setAffectTerrainColour(true);
+		beachTerrain.setObjectInitAmount(100);
+		ObjectsMap.put(BEACH_TERRAIN, beachTerrain);
 		
 		
 		

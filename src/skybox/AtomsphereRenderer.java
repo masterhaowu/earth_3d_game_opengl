@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
-import entities.Player;
+import entities.CameraCenter;
 import models.RawModel;
 import renderEngine.Loader;
 import renderEngine.RendererController;
@@ -34,7 +34,7 @@ public class AtomsphereRenderer {
 		shader.stop();
 	}
 
-	public void render(Camera camera, float r, float g, float b, Player player) {
+	public void render(Camera camera, float r, float g, float b, CameraCenter player) {
 		shader.start();
 		RendererController.disableCulling();
 		GL11.glEnable(GL11.GL_BLEND);
@@ -53,9 +53,12 @@ public class AtomsphereRenderer {
 		// Matrix4f transformationMatrix = Maths.createTransformationMatrix(new
 		// Vector3f(0, 0, 0), 0, 0, 0, 500);
 		// shader.loadTransformationMatrix(transformationMatrix);
+		float atomScale = 1600 - 2 * camera.getDistanceFromPlayer();
 		Matrix4f modelViewMatrix = createModelViewMatrix(new Vector3f(-mirrorPos.x, -mirrorPos.y, -mirrorPos.z), 0,
-				1600 - 2 * camera.getDistanceFromPlayer(), viewMatrix);
+				atomScale, viewMatrix);
 		shader.loadModelViewMatrix(modelViewMatrix);
+		shader.loadScales(400.0f, atomScale);
+		//System.out.println(400/atomScale);
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);

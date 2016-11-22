@@ -15,6 +15,11 @@ public class AtomsphereShader extends ShaderProgram {
 	
 	private int location_modelViewMatrix;
 	
+	private int location_terrainScale;
+	private int location_atomScale;
+	
+	//private int location_zoom;
+	
 	public AtomsphereShader(){
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
@@ -35,6 +40,11 @@ public class AtomsphereShader extends ShaderProgram {
 	public void loadModelViewMatrix(Matrix4f modelViewMatrix){
 		super.loadMatrix(location_modelViewMatrix, modelViewMatrix);
 	}
+	
+	public void loadScales(float terrainScale, float atomScale){
+		super.loadFloat(location_terrainScale, terrainScale);
+		super.loadFloat(location_atomScale, atomScale);
+	}
 
 	@Override
 	protected void getAllUniformLocations() {
@@ -42,6 +52,9 @@ public class AtomsphereShader extends ShaderProgram {
 		//location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		//location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_modelViewMatrix = super.getUniformLocation("modelViewMatrix");
+		//location_zoom = super.getUniformLocation("zoom");
+		location_terrainScale = super.getUniformLocation("terrainScale");
+		location_atomScale = super.getUniformLocation("atomScale");
 		
 	}
 

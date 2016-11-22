@@ -20,7 +20,7 @@ import clock.GameTimeController;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import entities.Player;
+import entities.CameraCenter;
 import entityGamePlay.EntityCycleController;
 import entityGamePlay.EntityGrowthController;
 import entityObjects.EntityObject;
@@ -142,8 +142,7 @@ public class MainGameLoop {
 		particleTexture.useColour(new Vector3f(1, 1, 1));
 		SnowSystem snowSystem = new SnowSystem(particleTexture, terrainSphere);
 
-		// ------------------TerrainType
-		// Controllers------------------------------------------
+		// ------------------TerrainTypeControllers--------------------------
 		ColourController colourController = new ColourController(terrainSphere);
 		TemperatureController temperatureController = new TemperatureController(terrainSphere);
 		// temperatureController.updateSphereTemp();
@@ -195,7 +194,7 @@ public class MainGameLoop {
 
 		// Player player = new Player(texturedModelBunny, new Vector3f(8400, 0,
 		// 7600), 0, 180, 0, 1);
-		Player player = new Player(texturedModelBunny, new Vector3f(0, 0, terrainSphere.getScale() + 10), 0, 0, 0, 1f);
+		CameraCenter player = new CameraCenter(texturedModelBunny, new Vector3f(0, 0, terrainSphere.getScale() + 10), 0, 0, 0, 1f);
 		// Player player = new Player(texturedModelBunny, new Vector3f(0, 0, 0),
 		// 90, 180, 0, 1);
 		// Player player = new Player(texturedModelBunny, new Vector3f(0, 0, 0),
@@ -327,6 +326,7 @@ public class MainGameLoop {
 					gameEntityObjectsController.getNormalMapEntities(), lights, camera, new Vector4f(0, 1, 0, 50),
 					terrainSphere, player);
 			//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			waterSphereRenderer.render(waters, camera, sun);
 			depthFbo.unbindFrameBuffer();
 			
 			

@@ -14,7 +14,12 @@ public class BlurEffect {
 		imageRenderer = new ImageRenderer(width, height);
 		blurShader = new BlurEffectShader();
 		blurShader.start();
-		blurShader.loadHorizontalInfo(width);
+		if (isHorizontal) {
+			blurShader.loadHorizontalInfo(width);
+		} else{
+			blurShader.loadVerticalInfo(height);
+		}
+		
 		blurShader.connectTextureUnits();
 		blurShader.stop();
 	}

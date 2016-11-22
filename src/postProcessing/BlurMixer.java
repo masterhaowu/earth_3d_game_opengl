@@ -3,6 +3,8 @@ package postProcessing;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
+import renderEngine.RendererController;
+
 public class BlurMixer {
 	
 	private	ImageRenderer imageRenderer;
@@ -14,6 +16,7 @@ public class BlurMixer {
 		blurMixerShader = new BlurMixerShader();
 		blurMixerShader.start();
 		blurMixerShader.connectTextures();
+		blurMixerShader.loadViewPlanes(RendererController.FAR_PLANE, RendererController.NEAR_PLANE);
 		blurMixerShader.stop();
 	}
 	

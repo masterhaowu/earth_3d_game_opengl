@@ -9,9 +9,10 @@ uniform float targetHeight;
 uniform bool horizontal;
 
 void main(void){
-
+    //horizontal = false;
 	gl_Position = vec4(position, 0.0, 1.0);
 	vec2 centerTextureCoords = position * 0.5 + 0.5;
+    
     if (horizontal == true) {
         float pixelWidth = 1.0 / targetWidth;
         for (int i=-5; i<=5; i++) {
@@ -23,6 +24,11 @@ void main(void){
             textureCoords[i+5] = centerTextureCoords + vec2(0.0, pixelHeight * i);
         }
     }
+     /*
+    float pixelWidth = 1.0 / targetWidth;
+    for (int i=-5; i<=5; i++) {
+        textureCoords[i+5] = centerTextureCoords + vec2(pixelWidth * i, 0.0);
+    }
+     */
     
-	
 }

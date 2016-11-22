@@ -27,6 +27,7 @@ public class WaterSphereShader extends ShaderProgram {
 	private int location_lightPosition;
 	private int location_depthMap;
 	private int location_time;
+	private int location_waterColour;
 
 	public WaterSphereShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE, GEOMETRY_FILE);
@@ -53,6 +54,7 @@ public class WaterSphereShader extends ShaderProgram {
 		location_lightPosition = getUniformLocation("lightPosition");
 		//location_depthMap = getUniformLocation("depthMap");
 		location_time = getUniformLocation("time");
+		location_waterColour = getUniformLocation("waterColour");
 	}
 	
 	public void connectTextureUnits(){
@@ -88,6 +90,10 @@ public class WaterSphereShader extends ShaderProgram {
 
 	public void loadModelMatrix(Matrix4f modelMatrix){
 		loadMatrix(location_modelMatrix, modelMatrix);
+	}
+	
+	public void loadWaterColour(Vector3f waterColour){
+		loadVector(location_waterColour, waterColour);
 	}
 
 }

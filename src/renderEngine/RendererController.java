@@ -14,7 +14,7 @@ import org.lwjgl.util.vector.Vector4f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import entities.Player;
+import entities.CameraCenter;
 import entityObjects.EntityObject;
 import models.TexturedModel;
 import mouse.HighlightedCircle;
@@ -78,7 +78,7 @@ public class RendererController {
 	}
 
 	public void renderScene(List<EntityObject> entityObjects, List<Entity> normalMapEntities, List<Light> lights,
-			Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere, Player player) {
+			Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere, CameraCenter player) {
 
 		for (EntityObject entityObject : entityObjects) {
 			if (entityObject.isMultipleEntities()) {
@@ -97,7 +97,7 @@ public class RendererController {
 
 	}
 
-	public void render(List<Light> lights, Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere, Player player) {
+	public void render(List<Light> lights, Camera camera, Vector4f clipPlane, TerrainSphere terrainSphere, CameraCenter player) {
 		prepare();
 		shader.start();
 		shader.loadClipPlane(clipPlane);

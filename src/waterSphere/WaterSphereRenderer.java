@@ -22,6 +22,7 @@ public class WaterSphereRenderer {
 	private static final String DUDV_MAP = "waterDUDV"; 
 	private static final String NORMAL_MAP = "matchingNormalMap"; 
 	private static final float WAVE_SPEED = 0.3f;
+	private static final Vector3f WATER_COLOUR = new Vector3f(0.65f, 0.95f, 1.0f);
 
 	//private RawModel quad;
 	private WaterSphereShader shader;
@@ -68,6 +69,7 @@ public class WaterSphereRenderer {
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLight(sun);
+		shader.loadWaterColour(WATER_COLOUR);
 		updateTime();
 		GL30.glBindVertexArray(tile.getModel().getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -84,6 +86,7 @@ public class WaterSphereRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE4);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbos.getRefractionDepthTexture());
 		*/
+		//GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}

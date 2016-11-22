@@ -95,6 +95,10 @@ public class TerrainTypeController {
 		if (height < 0){
 			colourController.setTerrain(face, ObjectsNetwork.shallowWaterTerrain);
 		}
+		
+		if (Math.abs(height) < HeightGeneratorSphere.AMPLITUDE/16) {
+			colourController.setTerrain(face, ObjectsNetwork.beachTerrain);
+		}
 
 	}
 	

@@ -26,10 +26,11 @@ public class Camera {
 	private float pitchOffset = -40;
 	private float rollOffset = 0;
 
-	private Player player;
+	private CameraCenter cameraCenter;
 
-	public Camera(Player player) {
-		this.player = player;
+	public Camera(CameraCenter player) {
+		this.cameraCenter = player;
+		player.setCamera(this);
 		// this.polar = Maths.convertToPolar(position);
 	}
 
@@ -41,7 +42,7 @@ public class Camera {
 		// float verticalDistance = calculateVerticalDistance();
 		// calculateCameraPosition(horizontalDistance, verticalDistance);
 		// calculateCameraPosition(player);
-		calculateCameraPositionLookAt(player);
+		calculateCameraPositionLookAt(cameraCenter);
 		// calculateCameraPositionAdvanced(player);
 		// calculateCameraPositionWithOffsets(player);
 	}
@@ -70,7 +71,7 @@ public class Camera {
 		return roll;
 	}
 
-	private void calculateCameraPosition(Player player) {
+	private void calculateCameraPosition(CameraCenter player) {
 		// Vector3f polar = new Vector3f(player.getPolar().x +
 		// distanceFromPlayer,(float) (-player.getRotX() * Math.PI / 180),
 		// (float) (-player.getRotZ() * Math.PI / 180));
@@ -86,7 +87,7 @@ public class Camera {
 		// this.pitch = 90;
 	}
 
-	private void calculateCameraPositionAdvanced(Player player) {
+	private void calculateCameraPositionAdvanced(CameraCenter player) {
 		// Vector3f polar = new Vector3f(distanceFromPlayer +
 		// player.getPolar().x, player.getPolar().y, player.getPolar().z);
 		// Vector3f startPosition = Maths.convertBackToCart(polar);
@@ -104,7 +105,7 @@ public class Camera {
 
 	}
 
-	private void calculateCameraPositionWithOffsets(Player player) {
+	private void calculateCameraPositionWithOffsets(CameraCenter player) {
 		float rOnRing = (float) (distanceFromPlayer * Math.sin(Math.toRadians(-pitchOffset)));
 		// this.position.y = (float) (this.position.y + (rOnRing - rOnRing *
 		// Math.cos(Math.toRadians(angleAroundPlayer)))* Math.sin(Math.PI / 2 -
@@ -150,7 +151,7 @@ public class Camera {
 
 	}
 
-	private void calculateCameraPositionLookAt(Player player) {
+	private void calculateCameraPositionLookAt(CameraCenter player) {
 		float radius = distanceFromPlayer;
 		float theta1 = (float) Math.toRadians(90 + pitchOffset);
 		float theta2 = (float) Math.toRadians(180 + angleAroundPlayer);
@@ -189,7 +190,7 @@ public class Camera {
 	}
 
 	private void calculateZoom() {
-		float zoomLevel = Mouse.getDWheel() * 0.03f;
+		float zoomLevel = Mouse.getDWheel() * 0.01f;
 		distanceFromPlayer -= zoomLevel;
 		if (distanceFromPlayer < MIN_DISTANCE_TO_PLAYER) {
 			distanceFromPlayer = MIN_DISTANCE_TO_PLAYER;
@@ -225,7 +226,7 @@ public class Camera {
 
 		}
 		// yaw = -player.getRotZ();// + yawOffset;
-		yaw = player.getYawForCamera() + yawOffset;
+		yaw = cameraCenter.getYawForCamera() + yawOffset;
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
 			yawOffset -= 1;
 		}
@@ -242,8 +243,8 @@ public class Camera {
 		roll = rollOffset;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public CameraCenter getPlayer() {
+		return cameraCenter;
 	}
 
 	public float getPitchOffset() {

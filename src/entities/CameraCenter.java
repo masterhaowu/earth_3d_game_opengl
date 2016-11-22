@@ -12,7 +12,7 @@ import terrains.Terrain;
 import terrainsSphere.TerrainSphere;
 import toolbox.MousePicker;
 
-public class Player extends Entity {
+public class CameraCenter extends Entity {
 
 	private static final float RUNSPEED = 20;
 	private static final float TURNSPEED = 160;
@@ -43,10 +43,12 @@ public class Player extends Entity {
 	private boolean isInAir = false;
 	
 	private float playerHeight;
+	
+	private Camera camera;
 
 	// private float playerCenter = 0;
 
-	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+	public CameraCenter(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 		playerHeight = position.z;
 		
@@ -55,11 +57,14 @@ public class Player extends Entity {
 	public void move(TerrainSphere terrainSphere){
 		checkInputs();
 		//super.setPolar(polar);
-		super.increasePolar(0, currentSpeedTheta1/THETA_SCALE, currentSpeedTheta2/THETA_SCALE);
+		//System.out.println(camera.getAngleAroundPlayer());
+		float theta1Inc = (float) (currentSpeedTheta1/THETA_SCALE);
+		float theta2Inc = (float) (currentSpeedTheta2/THETA_SCALE * Math.cos(camera.getAngleAroundPlayer()));
+		super.increasePolar(0, theta1Inc, theta2Inc);
 		//super.increasePosition(currentSpeedTheta1/800, 0, 0);
-		float rotX = (float)( - currentSpeedTheta1/THETA_SCALE * 180/Math.PI);
-		float rotY = (float)( - currentSpeedTheta2/THETA_SCALE * 180/Math.PI);
-		float rotZ = (float) (- currentSpeedTheta2/THETA_SCALE * 180/Math.PI);
+		//float rotX = (float)( - currentSpeedTheta1/THETA_SCALE * 180/Math.PI);
+		//float rotY = (float)( - currentSpeedTheta2/THETA_SCALE * 180/Math.PI);
+		//float rotZ = (float) (- currentSpeedTheta2/THETA_SCALE * 180/Math.PI);
 		yawForCamera += (float) (currentSpeedTheta2/THETA_SCALE * 180/Math.PI);
 		pitchForCamera -= (float) (currentSpeedTheta1/THETA_SCALE * 180/Math.PI);
 		//super.increaseRotation(rotX, rotY, rotZ);
@@ -80,6 +85,7 @@ public class Player extends Entity {
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
 		float distanceOrtho = currentSpeedOrtho * DisplayManager.getFrameTimeSeconds();
 		//float totalDistance = Math.abs((float) Math.pow(Math.pow(distance, 2) + Math.pow(distanceOrtho, 2), 0.5));
+		//System.out.println(camera.getAngleAroundPlayer());
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
 		dx += (float) (distanceOrtho * Math.cos(Math.toRadians(super.getRotY())));
@@ -169,6 +175,9 @@ public class Player extends Entity {
 		} else {
 			this.currentSpeedTheta2 = 0;
 		}
+		
+		currentSpeedTheta1 = currentSpeedTheta1 * camera.getDistanceFromPlayer() / 200;
+		currentSpeedTheta2 = currentSpeedTheta2 * camera.getDistanceFromPlayer() / 300;
 
 		
 
@@ -255,6 +264,14 @@ public class Player extends Entity {
 
 	public float getPlayerHeight() {
 		return playerHeight;
+	}
+
+	public Camera getCamera() {
+		return camera;
+	}
+
+	public void setCamera(Camera camera) {
+		this.camera = camera;
 	}
 	
 	
